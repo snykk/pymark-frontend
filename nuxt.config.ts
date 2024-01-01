@@ -16,6 +16,7 @@ export default defineNuxtConfig({
             token: process.env.API_TOKEN,
             my_env: process.env.MY_ENV,
             api_base: process.env.PYMARK_BASE_URL,
+            facebook_app_id: process.env.FACEBOOK_APP_ID,
         },
     },
     app: {
@@ -35,4 +36,23 @@ export default defineNuxtConfig({
         { src: "~/plugins/facebook-sdk.ts", mode: "client" },
         // Plugin lainnya...
     ],
+    modules: [
+        // ...
+        "@pinia/nuxt",
+    ],
+    // hooks: {
+    //     "pages:extend"(pages) {
+    //         function setMiddleware(pages: NuxtPage[]) {
+    //             for (const page of pages) {
+    //                 page.meta ||= {};
+    //                 // Menetapkan middleware 'check-hard-refresh' ke halaman tertentu berdasarkan kondisi
+    //                 page.meta.middleware = ["bruteforce-hidrate"];
+    //                 if (page.children) {
+    //                     setMiddleware(page.children);
+    //                 }
+    //             }
+    //         }
+    //         setMiddleware(pages);
+    //     },
+    // },
 });
