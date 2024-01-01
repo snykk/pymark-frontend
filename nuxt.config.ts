@@ -18,4 +18,21 @@ export default defineNuxtConfig({
             api_base: process.env.PYMARK_BASE_URL,
         },
     },
+    app: {
+        head: {
+            script: [
+                {
+                    id: "facebook-jssdk",
+                    src: "https://connect.facebook.net/en_US/sdk.js",
+                    defer: true,
+                    async: true,
+                    crossorigin: "anonymous",
+                },
+            ],
+        },
+    },
+    plugins: [
+        { src: "~/plugins/facebook-sdk.ts", mode: "client" },
+        // Plugin lainnya...
+    ],
 });
