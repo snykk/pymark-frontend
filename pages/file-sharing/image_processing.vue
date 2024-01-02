@@ -103,6 +103,12 @@
 </template>
 
 <script setup lang="ts">
+const filesharing = useFileSharingStore();
+
+definePageMeta({
+    middleware: ["auth-filesharing"],
+});
+
 import type { ImageProcessingApiResponse } from "~/types/ImageProcessingResponse";
 import { ProcessingParameters } from "~/types/ProcessingParameters";
 const selectedProcessingType = ref<string>("salt_and_pepper"); // Default selected processing type
@@ -182,13 +188,12 @@ async function submitForm() {
         const response = await $fetch<ImageProcessingApiResponse>(config.public.api_base + "/pymark/image_processing", {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + config.public.token,
+                Authorization: "Bearer " + filesharing.userJWTToken,
             },
             body: formData,
         });
 
         responseData.value = response;
-        console.log(response);
         formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);

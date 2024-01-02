@@ -41,7 +41,6 @@ const shareInstagramPost = async () => {
 
     try {
         const facebookPages = await getFacebookPages(facebook.userAccessToken);
-        console.log("facebook pages nih bos", facebookPages);
 
         if (facebookPages.length > 0) {
             const instagramAccountId = await getInstagramAccountId(facebookPages[0].id, facebook.userAccessToken);

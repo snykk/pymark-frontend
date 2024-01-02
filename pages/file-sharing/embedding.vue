@@ -76,6 +76,12 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    middleware: ["auth-filesharing"],
+});
+
+const filesharing = useFileSharingStore();
+
 import type { EmbeddingApiResponse } from "~/types/EmbeddingApiResponse";
 
 const config = useRuntimeConfig();
@@ -144,17 +150,15 @@ async function submitForm() {
     formData.append("alpha", alpha.value.toString());
 
     try {
-        console.log("buat request");
         const response = await $fetch<EmbeddingApiResponse>(config.public.api_base + "/pymark/embed_gray", {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + config.public.token,
+                Authorization: "Bearer " + filesharing.userJWTToken,
             },
             body: formData,
         });
 
         responseData.value = response;
-        console.log(response);
         formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);

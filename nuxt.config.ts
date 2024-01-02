@@ -13,8 +13,6 @@ export default defineNuxtConfig({
         my_secret: "",
         // Keys within public, will be also exposed to the client-side
         public: {
-            token: process.env.API_TOKEN,
-            my_env: process.env.MY_ENV,
             api_base: process.env.PYMARK_BASE_URL,
             facebook_app_id: process.env.FACEBOOK_APP_ID,
         },

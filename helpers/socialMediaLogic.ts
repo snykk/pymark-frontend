@@ -2,12 +2,10 @@ export async function getFacebookPages(userAccessToken: string) {
     try {
         const response = await new Promise((resolve, reject) => {
             window.FB.api("me/accounts", { access_token: userAccessToken }, (response) => {
-                console.log("response pages", response);
                 if (!response || response.error) {
                     console.error("Error fetching Facebook pages:", response.error);
                     reject(response.error);
                 } else {
-                    console.log("Facebook pages:", response.data);
                     resolve(response.data);
                 }
             });
@@ -29,7 +27,6 @@ export async function getInstagramAccountId(facebookPageId: string, userAccessTo
                     fields: "instagram_business_account",
                 },
                 (response) => {
-                    console.log("response instagram account:", response);
                     const instagramAccountId = response?.instagram_business_account?.id;
                     if (instagramAccountId) {
                         resolve(instagramAccountId);
@@ -56,7 +53,6 @@ export function createMediaObjectContainer(instagramAccountId: string, userAcces
                 caption: postCaption,
             },
             (response) => {
-                console.log("response media obj", response);
                 resolve(response.id || null);
             }
         );

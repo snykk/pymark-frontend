@@ -6,8 +6,12 @@
     </div>
 </template>
 
-<script setup>
-// Logika atau impor yang diperlukan untuk fitur Embedding
+<script setup lang="ts">
+definePageMeta({
+    middleware: ["auth-filesharing"],
+});
+
+const filesharing = useFileSharingStore();
 </script>
 
 <style scoped>

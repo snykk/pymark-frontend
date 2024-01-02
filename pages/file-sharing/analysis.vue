@@ -76,6 +76,12 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    middleware: ["auth-filesharing"],
+});
+
+const filesharing = useFileSharingStore();
+
 const config = useRuntimeConfig();
 
 const formImperceptSubmitted = ref(false);
@@ -156,7 +162,7 @@ async function submitImperceptibilityForm() {
         imperceptibilityResponseData.value = await $fetch<ImperceptibilityApiResponse>(config.public.api_base + "/pymark/analysis?type=imperceptibility", {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + config.public.token,
+                Authorization: "Bearer " + filesharing.userJWTToken,
             },
             body: formData,
         });
@@ -187,7 +193,7 @@ async function submitRobustnessForm() {
         robustnessResponseData.value = await $fetch<RobustnessApiResponse>(config.public.api_base + "/pymark/analysis?type=robustness", {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + config.public.token,
+                Authorization: "Bearer " + filesharing.userJWTToken,
             },
             body: formData,
         });

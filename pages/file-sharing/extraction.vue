@@ -96,6 +96,12 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+    middleware: ["auth-filesharing"],
+});
+
+const filesharing = useFileSharingStore();
+
 import type { ExtractionApiResponse } from "~/types/ExtractionApiResponse";
 
 const config = useRuntimeConfig();
@@ -179,17 +185,15 @@ async function submitForm() {
     formData.append("alpha", alpha.value.toString());
 
     try {
-        console.log("buat request");
         const response = await $fetch<ExtractionApiResponse>(config.public.api_base + "/pymark/extract_gray", {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + config.public.token,
+                Authorization: "Bearer " + filesharing.userJWTToken,
             },
             body: formData,
         });
 
         responseData.value = response;
-        console.log(response);
         formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);

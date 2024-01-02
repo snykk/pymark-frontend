@@ -4,7 +4,6 @@ import type { Plugin } from "@nuxt/types";
 const initFacebookSDK: Plugin = ({ app }) => {
     const config = useRuntimeConfig();
     const FACEBOOK_APP_ID = config.public.facebook_app_id;
-    console.log("ini facebook id:", FACEBOOK_APP_ID);
 
     return new Promise<void>((resolve) => {
         window.fbAsyncInit = () => {

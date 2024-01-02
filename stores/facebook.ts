@@ -6,18 +6,16 @@ interface FacebookStore {
 
 export const useFacebookStore = defineStore("facebookStore", {
     state: (): FacebookStore => ({
-        userAccessToken: "", // Load from localStorage if available
+        userAccessToken: "", // Load from cookies if available
     }),
     actions: {
-        initialize(this: FacebookStore) {
-            if (!process.server) {
-                this.userAccessToken = localStorage.getItem("userAccessToken") || "";
-            }
-            console.log("hidrate complete");
-        },
-
         setUserAccessToken(this: FacebookStore, userAccessToken: string) {
             this.userAccessToken = userAccessToken;
+            // const expirationDate = new Date();
+            // expirationDate.setTime(expirationDate.getTime() + 5 * 60 * 60 * 1000); // Set expiration date 5 hours from now
+
+            // const expires = `expires=${expirationDate.toUTCString()}`;
+            // document.cookie = `userAccessToken=${encodeURIComponent(this.userAccessToken)}; ${expires}; path=/`; // Save to cookies with expiration date
         },
 
         async login(this: FacebookStore) {
@@ -25,14 +23,18 @@ export const useFacebookStore = defineStore("facebookStore", {
                 window.FB.login(
                     (response: fb.StatusResponse) => {
                         this.userAccessToken = response.authResponse?.accessToken || "";
-                        localStorage.setItem("userAccessToken", this.userAccessToken); // Save to localStorage
+                        // const expirationDate = new Date();
+                        // expirationDate.setTime(expirationDate.getTime() + 5 * 60 * 60 * 1000); // Set expiration date 5 hours from now
+
+                        // const expires = `expires=${expirationDate.toUTCString()}`;
+                        // document.cookie = `userAccessToken=${encodeURIComponent(this.userAccessToken)}; ${expires}; path=/`; // Save to cookies with expiration date
+
                         if (response.authResponse) {
                             console.log("Welcome! Fetching your information.... ");
                             window.FB.api("/me", (apiResponse: { name: string }) => {
                                 console.log("Good to see you, " + apiResponse.name + ".");
                             });
                         } else {
-                            console.log("User cancelled login or did not fully authorize.");
                         }
                     },
                     {
@@ -46,7 +48,7 @@ export const useFacebookStore = defineStore("facebookStore", {
             if (window.FB) {
                 window.FB.logout(() => {
                     this.userAccessToken = "";
-                    localStorage.removeItem("userAccessToken"); // Remove from localStorage on logout
+                    // document.cookie = "userAccessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Remove cookie on logout
                 });
             }
         },
