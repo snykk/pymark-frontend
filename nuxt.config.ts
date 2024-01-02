@@ -19,6 +19,12 @@ export default defineNuxtConfig({
     },
     app: {
         head: {
+            link: [
+                {
+                    rel: "stylesheet",
+                    href: "https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css",
+                },
+            ],
             script: [
                 {
                     id: "facebook-jssdk",
@@ -26,6 +32,10 @@ export default defineNuxtConfig({
                     defer: true,
                     async: true,
                     crossorigin: "anonymous",
+                },
+                {
+                    src: "https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js",
+                    body: true, // Placing the script before </body>
                 },
             ],
         },

@@ -4,6 +4,8 @@ import type RegisFileSharingResponse from "~/types/RegisFileSharingResponse";
 
 interface FileSharingStore {
     userJWTToken: string;
+    username: string;
+    email: string;
 }
 
 interface LoginPayload {
@@ -20,14 +22,27 @@ interface RegisPayload {
 export const useFileSharingStore = defineStore("fileSharingStore", {
     state: (): FileSharingStore => ({
         userJWTToken: "", // Load from cookies if available
+        username: "",
+        email: "",
     }),
     actions: {
-        setUserJWTToken(this: FileSharingStore, userJWTToken: string) {
+        setUserJWTToken(this: FileSharingStore, userJWTToken: string, username: string, email: string) {
             this.userJWTToken = userJWTToken;
+            this.username = username;
+            this.email = email;
+
             const jwtToken = useCookie("userJWTToken", {
                 maxAge: 60 * 60 * 5, // for 5 hour
             });
             jwtToken.value = userJWTToken;
+            const userUsername = useCookie("pymarkUsername", {
+                maxAge: 60 * 60 * 5, // for 5 hour
+            });
+            userUsername.value = username;
+            const userEmail = useCookie("pymarkEmail", {
+                maxAge: 60 * 60 * 5, // for 5 hour
+            });
+            userEmail.value = email;
         },
 
         async regis(this: FileSharingStore, { username, email, password }: RegisPayload) {
@@ -38,7 +53,7 @@ export const useFileSharingStore = defineStore("fileSharingStore", {
             formData.append("email", email);
             formData.append("password", password);
 
-            const response = await $fetch<LoginFileSharingResponse>(config.public.api_base + "/auth/regis", {
+            const response = await $fetch<RegisFileSharingResponse>(config.public.api_base + "/auth/regis", {
                 method: "POST",
                 body: formData,
             });
@@ -64,8 +79,15 @@ export const useFileSharingStore = defineStore("fileSharingStore", {
         async logout(this: FileSharingStore) {
             console.log("logout nihu");
             this.userJWTToken = "";
+            this.username = "";
+            this.email = "";
             const userJWTToken = useCookie("userJWTToken");
             userJWTToken.value = null;
+            const usernaem = useCookie("pymarkUsername");
+            usernaem.value = null;
+            const email = useCookie("pymarkEmail");
+            email.value = null;
+
             navigateTo("/auth/file-sharing/login");
         },
     },

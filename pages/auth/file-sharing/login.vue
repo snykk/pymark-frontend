@@ -60,7 +60,7 @@ const submitForm = async () => {
             .then((response: unknown) => {
                 const typedResponse = response as LoginFileSharingResponse;
                 if (typedResponse.status) {
-                    filesharing.setUserJWTToken(typedResponse.data!.access_token!);
+                    filesharing.setUserJWTToken(typedResponse.data!.access_token!, typedResponse.data!.user!.username, typedResponse.data!.user!.email);
                     navigateTo("/file-sharing");
                     return;
                 }

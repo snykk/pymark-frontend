@@ -1,5 +1,5 @@
 <template>
-    <div class="p-4">
+    <div class="px-4">
         <h1 class="text-2xl font-bold mb-4">Form Pymark Embedding</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <div class="flex flex-col">
