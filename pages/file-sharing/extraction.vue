@@ -40,18 +40,15 @@
                 <span v-if="formSubmitted && !key_matrix" class="text-red-500">Key Matrix (.npy) is required</span>
             </div>
             <div class="flex flex-col">
-                <label for="imageType" class="mb-1">Jenis Gambar</label>
-                <select id="imageType" v-model="imageType" class="p-2 border rounded">
-                    <option value="gray">gray</option>
-                    <option value="color">color</option>
-                </select>
-                <span v-if="formSubmitted && !imageType" class="text-red-500">Image Type is required</span>
+                <DropdownInput v-model="type" label="type" :options="typeOptions" />
+                <span v-if="formSubmitted && !type" class="text-red-500">Image Type is required</span>
             </div>
             <div class="flex flex-col">
-                <label for="alpha" class="mb-1">Alpha</label>
+                <!-- <label for="alpha" class="mb-1">Alpha</label>
                 <select id="alpha" v-model="alpha" class="p-2 border rounded">
-                    <option v-for="value in alphaValues" :key="value" :value="value">{{ value }}</option>
-                </select>
+                    <option v-for="value in alphaOptions" :key="value" :value="value">{{ value }}</option>
+                </select> -->
+                <DropdownInput v-model="alpha" label="alpha" :options="alphaOptions" />
                 <span v-if="formSubmitted && !alpha" class="text-red-500">Alpha is required</span>
             </div>
             <div class="flex justify-center">
@@ -115,11 +112,13 @@ const watermarked_image = ref<File | null>(null);
 const block_position = ref<File | null>(null);
 const key_matrix = ref<File | null>(null); // Tambahkan variabel untuk file .npy
 
-const imagePreviews = ref<(string | null)[]>([null, null]);
+const imagePreviews = ref<(string | null)[]>([null]);
 
-const imageType = ref("gray");
-const alpha = ref(0.01);
-const alphaValues = [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
+const typeOptions = ["grayscale", "color"];
+const type = ref("grayscale");
+
+const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
+const alpha = ref("0.01");
 
 var responseData = ref<ExtractionApiResponse | null>(null);
 
@@ -159,7 +158,7 @@ function validateForm() {
         block_position: !!block_position.value,
         // Memvalidasi key_matrix
         key_matrix: !!key_matrix.value,
-        imageType: !!imageType.value,
+        type: !!type.value,
         alpha: !!alpha.value,
     };
 }
@@ -182,7 +181,7 @@ async function submitForm() {
     if (block_position.value) formData.append("block_position", block_position.value);
     // Mengirim key_matrix
     if (key_matrix.value) formData.append("key_matrix", key_matrix.value);
-    formData.append("imageType", imageType.value);
+    formData.append("type", type.value);
     formData.append("alpha", alpha.value.toString());
 
     try {

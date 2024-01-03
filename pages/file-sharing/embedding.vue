@@ -2,37 +2,57 @@
     <div class="px-4">
         <h1 class="text-2xl font-bold mb-4">Form Pymark Embedding</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
-            <div class="flex flex-col">
-                <label for="host_image" class="mb-1">Host Image</label>
-                <input type="file" id="host_image" accept="image/*" ref="fileInput1" style="display: none" @change="handleImageChange(1, $event)" class="p-2 border rounded" />
-                <div class="flex items-center">
-                    <label for="host_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 1</label>
-                    <img v-if="imagePreviews[0]" :src="imagePreviews[0]" class="ml-4 h-20" alt="Preview Image 1" />
+            <div class="flex flex-col md:flex-row">
+                <div class="flex flex-col md:w-1/2">
+                    <label for="host_image" class="block mb-2 text-sm font-medium">Host Image</label>
+                    <img v-if="imagePreviews[0]" :src="imagePreviews[0]" class="ml-4 h-40 w-40 mb-3" alt="Preview Host Image" />
+                    <input
+                        type="file"
+                        id="host_image"
+                        accept="image/*"
+                        ref="fileInput1"
+                        class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                        @change="handleImageChange(1, $event)"
+                    />
+                    <span v-if="formSubmitted && !host_image" class="text-red-500">Host Image is required</span>
                 </div>
-                <span v-if="formSubmitted && !host_image" class="text-red-500">Host Image is required</span>
-            </div>
-            <div class="flex flex-col">
-                <label for="watermark_image" class="mb-1">Watermark Image</label>
-                <input type="file" id="watermark_image" accept="image/*" ref="fileInput2" style="display: none" @change="handleImageChange(2, $event)" class="p-2 border rounded" />
-                <div class="flex items-center">
-                    <label for="watermark_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 2</label>
-                    <img v-if="imagePreviews[1]" :src="imagePreviews[1]" class="ml-4 h-20" alt="Preview Image 2" />
+                <div class="flex flex-col md:ms-3 md:w-1/2">
+                    <label for="watermark_image" class="block mb-2 text-sm font-medium">Watermark Image</label>
+                    <img v-if="imagePreviews[1]" :src="imagePreviews[1]" class="ml-4 h-40 w-40 mb-3" alt="Preview Watermark Image" />
+                    <input
+                        type="file"
+                        id="watermark_image"
+                        accept="image/*"
+                        ref="fileInput1"
+                        class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                        @change="handleImageChange(2, $event)"
+                    />
+                    <span v-if="formSubmitted && !watermark_image" class="text-red-500">Watermark Image is required</span>
                 </div>
-                <span v-if="formSubmitted && !watermark_image" class="text-red-500">Watermark Image is required</span>
             </div>
             <div class="flex flex-col">
-                <label for="imageType" class="mb-1">Jenis Gambar</label>
-                <select id="imageType" v-model="imageType" class="p-2 border rounded">
-                    <option value="gray">gray</option>
-                    <option value="color">color</option>
-                </select>
-                <span v-if="formSubmitted && !imageType" class="text-red-500">Image Type is required</span>
+                <!-- <label for="type" class="block mb-2 text-sm font-medium">Jenis Gambar</label>
+                <select
+                    id="type"
+                    v-model="type"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
+                    <option value="gray">Gray</option>
+                    <option value="color">Color</option>
+                </select> -->
+                <DropdownInput v-model="type" label="type" :options="typeOptions" />
+                <span v-if="formSubmitted && !type" class="text-red-500">Image Type is required</span>
             </div>
             <div class="flex flex-col">
-                <label for="alpha" class="mb-1">Alpha</label>
-                <select id="alpha" v-model="alpha" class="p-2 border rounded">
+                <!-- <label for="alpha" class="block mb-2 text-sm font-medium">Alpha</label>
+                <select
+                    id="alpha"
+                    v-model="alpha"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                >
                     <option v-for="value in alphaValues" :key="value" :value="value">{{ value }}</option>
-                </select>
+                </select> -->
+                <DropdownInput v-model="alpha" label="alpha" :options="alphaOptions" />
                 <span v-if="formSubmitted && !alpha" class="text-red-500">Alpha is required</span>
             </div>
             <div class="flex justify-center">
@@ -94,9 +114,11 @@ const host_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
 const imagePreviews = ref<(string | null)[]>([null, null]);
 
-const imageType = ref("gray");
-const alpha = ref(0.01);
-const alphaValues = [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
+const typeOptions = ["grayscale", "color"];
+const type = ref("grayscale");
+
+const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
+const alpha = ref("0.01");
 
 var responseData = ref<EmbeddingApiResponse | null>(null);
 function handleImageChange(index: number, event: Event) {
@@ -126,7 +148,7 @@ function validateForm() {
     return {
         host_image: !!host_image.value,
         watermark_image: !!watermark_image.value,
-        imageType: !!imageType.value,
+        type: !!type.value,
         alpha: !!alpha.value,
     };
 }
@@ -147,7 +169,7 @@ async function submitForm() {
 
     if (host_image.value) formData.append("host_image", host_image.value);
     if (watermark_image.value) formData.append("watermark_image", watermark_image.value);
-    formData.append("imageType", imageType.value);
+    formData.append("type", type.value);
     formData.append("alpha", alpha.value.toString());
 
     try {

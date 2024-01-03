@@ -13,39 +13,70 @@
             </div>
             <!-- Add a dropdown/select field for processing type -->
             <div class="flex flex-col">
-                <label for="processingType" class="mb-1">Processing Type</label>
-                <select v-model="selectedProcessingType" id="processingType" class="p-2 border rounded">
-                    <option v-for="type in processingTypes" :key="type" :value="type">{{ type }}</option>
-                </select>
+                <!-- <label for="processingType" class="mb-1">Processing Type</label>
+                <select v-model="processingType" id="processingType" class="p-2 border rounded">
+                    <option v-for="type in processingTypeOptions" :key="type" :value="type">{{ type }}</option>
+                </select> -->
+                <DropdownInput v-model="processingType" label="processintType" :options="processingTypeOptions" />
             </div>
 
-            <div v-if="selectedProcessingType !== ''">
-                <div v-if="selectedProcessingType === 'cropping'">
-                    <h3 class="text-lg font-semibold mt-4">{{ selectedProcessingType }} Parameters:</h3>
-                    <div v-for="(param, index) in ProcessingParameters[selectedProcessingType]" :key="index" class="flex flex-col">
+            <div v-if="processingType !== ''">
+                <div v-if="processingType === 'cropping'">
+                    <h3 class="text-lg font-semibold mt-4">{{ processingType }} Parameters:</h3>
+                    <div v-for="(param, index) in ProcessingParameters[processingType]" :key="index" class="flex flex-col">
                         <label :for="`cropping_type`" class="mb-1">Crop Type</label>
-                        <select :id="`cropping_type`" class="p-2 border rounded">
+                        <select
+                            :id="`cropping_type`"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
                             <option value="inner">Inner</option>
                             <option value="outer">Outer</option>
                         </select>
                         <div class="mt-2">
                             <label class="mb-1">Crop Edge (left, top, righ, bottom)</label>
                             <div class="flex">
-                                <input type="number" :id="`cropping_edge_left`" class="p-2 border rounded mr-2" placeholder="Left" />
-                                <input type="number" :id="`cropping_edge_top`" class="p-2 border rounded mr-2" placeholder="Top" />
-                                <input type="number" :id="`cropping_edge_right`" class="p-2 border rounded mr-2" placeholder="Right" />
-                                <input type="number" :id="`cropping_edge_bottom`" class="p-2 border rounded" placeholder="Bottom" />
+                                <NumberInput id="cropping_edge_left" placeholder="left" />
+                                <NumberInput id="cropping_edge_top" placeholder="Top" />
+                                <NumberInput id="cropping_edge_right" placeholder="Right" />
+                                <NumberInput id="cropping_edge_bottom" placeholder="Bottom" />
+                                <!-- <input
+                                    type="number"
+                                    :id="`cropping_edge_left`"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 me-1"
+                                    placeholder="Left"
+                                /> -->
+                                <!-- <input
+                                    type="number"
+                                    :id="`cropping_edge_top`"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mx-1"
+                                    placeholder="Top"
+                                />
+                                <input
+                                    type="number"
+                                    :id="`cropping_edge_right`"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mx-1"
+                                    placeholder="Right"
+                                />
+                                <input
+                                    type="number"
+                                    :id="`cropping_edge_bottom`"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ms-1"
+                                    placeholder="Bottom"
+                                /> -->
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div v-else>
-                    <h3 class="text-lg font-semibold mt-4">{{ selectedProcessingType }} Parameters:</h3>
-                    <div v-if="ProcessingParameters[selectedProcessingType]">
-                        <div v-for="(param, index) in ProcessingParameters[selectedProcessingType]" :key="index" class="flex flex-col">
-                            <label :for="`${selectedProcessingType}_param_${index}`" class="mb-1">{{ param.label }}</label>
-                            <select :id="`${selectedProcessingType}_param_${index}`" class="p-2 border rounded">
+                    <h3 class="text-md font-semibold mt-4 capitalize">{{ processingType }} Parameters:</h3>
+                    <div v-if="ProcessingParameters[processingType]">
+                        <div v-for="(param, index) in ProcessingParameters[processingType]" :key="index" class="flex flex-col">
+                            <label :for="`${processingType}_param_${index}`" class="block mb-2 text-sm font-medium">{{ param.label }}</label>
+                            <select
+                                :id="`${processingType}_param_${index}`"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            >
                                 <option v-for="(value, vIndex) in param.values" :key="vIndex" :value="[value]">
                                     {{ value }}
                                 </option>
@@ -112,10 +143,10 @@ definePageMeta({
 
 import type { ImageProcessingApiResponse } from "~/types/ImageProcessingResponse";
 import { ProcessingParameters } from "~/types/ProcessingParameters";
-const selectedProcessingType = ref<string>("salt_and_pepper"); // Default selected processing type
 
 // List of processing types
-const processingTypes = ["salt_and_pepper", "blur", "gaussian", "sharpening", "median", "cropping", "jpeg_compression"];
+const processingTypeOptions = ["salt_and_pepper", "blur", "gaussian", "sharpening", "median", "cropping", "jpeg_compression"];
+const processingType = ref<string>("salt_and_pepper"); // Default selected processing type
 
 const config = useRuntimeConfig();
 
@@ -168,20 +199,20 @@ async function submitForm() {
     if (image.value) formData.append("image", image.value);
 
     // Append the selected processing type to formData
-    formData.append("processing_type", selectedProcessingType.value);
+    formData.append("processing_type", processingType.value);
 
     // Loop through the processing parameters and append their values to formData
-    if (selectedProcessingType.value === "cropping") {
+    if (processingType.value === "cropping") {
         formData.append("cropping_type", (document.getElementById("cropping_type") as HTMLSelectElement).value);
         formData.append("cropping_edge_left", (document.getElementById("cropping_edge_left") as HTMLSelectElement).value);
         formData.append("cropping_edge_top", (document.getElementById("cropping_edge_top") as HTMLSelectElement).value);
         formData.append("cropping_edge_right", (document.getElementById("cropping_edge_right") as HTMLSelectElement).value);
         formData.append("cropping_edge_bottom", (document.getElementById("cropping_edge_bottom") as HTMLSelectElement).value);
-    } else if (ProcessingParameters[selectedProcessingType.value]) {
-        ProcessingParameters[selectedProcessingType.value].forEach((param: any, index: any) => {
-            const selectElement = document.getElementById(`${selectedProcessingType.value}_param_${index}`) as HTMLSelectElement;
+    } else if (ProcessingParameters[processingType.value]) {
+        ProcessingParameters[processingType.value].forEach((param: any, index: any) => {
+            const selectElement = document.getElementById(`${processingType.value}_param_${index}`) as HTMLSelectElement;
             const selectedValue = selectElement.value;
-            formData.append(`${selectedProcessingType.value}_${param.label}`, selectedValue);
+            formData.append(`${processingType.value}_${param.label}`, selectedValue);
         });
     }
 
