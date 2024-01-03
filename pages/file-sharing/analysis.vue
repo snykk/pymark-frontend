@@ -1,6 +1,19 @@
 <template>
-    <div class="p-4">
-        <div>
+    <main>
+        <nav class="flex mb-4">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+                <li
+                    :class="{ 'font-extrabold': selectedForm === 'imperceptibility' }"
+                    @click="selectedForm = 'imperceptibility'"
+                    class="inline-flex items-center text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer"
+                >
+                    Imperceptibility
+                </li>
+                <span class="mx-2 text-gray-400 text-xl">/</span>
+                <li :class="{ 'font-extrabold': selectedForm === 'robustness' }" @click="selectedForm = 'robustness'" class="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer">Robustness</li>
+            </ol>
+        </nav>
+        <div v-if="selectedForm === 'imperceptibility'">
             <h1 class="text-2xl font-bold mb-4">Form Imperceptibility Analysis</h1>
             <form @submit.prevent="submitImperceptibilityForm" class="space-y-4" enctype="multipart/form-data">
                 <div class="flex flex-col md:flex-row">
@@ -25,7 +38,7 @@
             </div>
         </div>
 
-        <div>
+        <div v-else-if="selectedForm === 'robustness'">
             <h1 class="text-2xl font-bold mb-4">Form Robustness Analysis</h1>
             <form @submit.prevent="submitRobustnessForm" class="space-y-4" enctype="multipart/form-data">
                 <div class="flex flex-col md:flex-row">
@@ -49,7 +62,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </template>
 
 <script setup lang="ts">
@@ -57,6 +70,8 @@ definePageMeta({
     layout: "filesharing",
     middleware: ["auth-filesharing"],
 });
+
+const selectedForm = ref<"imperceptibility" | "robustness">("imperceptibility");
 
 const filesharing = useFileSharingStore();
 
@@ -73,39 +88,8 @@ const watermarked_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
 const extracted_watermark_image = ref<File | null>(null);
 
-const imagePreviews = ref<(string | null)[]>([null, null]);
-
 var imperceptibilityResponseData = ref<ImperceptibilityApiResponse | null>(null);
 var robustnessResponseData = ref<RobustnessApiResponse | null>(null);
-
-function handleImageChange(index: number, event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (!target || !target.files) return;
-
-    const file = target.files[0];
-    if (!file) return;
-
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-        const result = e.target?.result;
-        if (typeof result === "string") {
-            if (index === 1) {
-                host_image.value = file;
-                imagePreviews.value[0] = result;
-            } else if (index === 2) {
-                watermarked_image.value = file;
-                imagePreviews.value[1] = result;
-            } else if (index === 3) {
-                watermark_image.value = file;
-                imagePreviews.value[2] = result;
-            } else if (index === 4) {
-                extracted_watermark_image.value = file;
-                imagePreviews.value[3] = result;
-            }
-        }
-    };
-    fileReader.readAsDataURL(file);
-}
 
 function validateImperceptibilityForm() {
     return {
