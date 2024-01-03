@@ -24,14 +24,17 @@
             </div>
         </div>
         <div v-if="currrentRoute === ''">
-            <div class="text-center">
+            <div class="text-center px-3 xs:px-6 md:px-0">
+                <div class="flex justify-center pt-8 pb-5 md:pt-24 md:pb-10">
+                    <img alt="Vue logo" class="logo" src="~/assets/logo/vue.svg" width="125" height="125" />
+                </div>
                 <h1 class="text-4xl font-bold mb-4">PyMark Watermarking App</h1>
-                <p>Aplikasi PyMark Watermarking memungkinkan Anda untuk menambahkan watermark pada berbagai jenis file gambar dan melakukan analisis terhadapnya.</p>
-                <div class="flex justify-center gap-[10px] mb-4">
-                    <NuxtLink @click="changeRoute('embedding')" to="/file-sharing/embedding" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Embedding </NuxtLink>
-                    <NuxtLink @click="changeRoute('extraction')" to="/file-sharing/extraction" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Extraction </NuxtLink>
-                    <NuxtLink @click="changeRoute('analysis')" to="/file-sharing/analysis" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Analysis </NuxtLink>
-                    <NuxtLink @click="changeRoute('image_processing')" to="/file-sharing/image_processing" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Image Processing </NuxtLink>
+                <p class="max-w-2xl mx-auto mb-8">Aplikasi PyMark Watermarking memungkinkan Anda untuk menambahkan watermark pada berbagai jenis file gambar dan melakukan analisis terhadapnya.</p>
+                <div class="flex flex-wrap justify-center md:justify-center">
+                    <NavigationButton @click="changeRoute('embedding')" label="embedding" to="/file-sharing/embedding" />
+                    <NavigationButton @click="changeRoute('extraction')" label="extraction" to="/file-sharing/extraction" />
+                    <NavigationButton @click="changeRoute('analysis')" label="analysis" to="/file-sharing/analysis" />
+                    <NavigationButton @click="changeRoute('image_processing')" label="image processing" to="/file-sharing/image_processing" />
                     <button @click="filesharing.logout" class="block py-2 px-4 rounded-md hover:bg-slate-500">Logout</button>
                 </div>
             </div>
@@ -48,10 +51,10 @@
                             <h1 class="text-3xl font-bold mb-4">PyMark Watermarking App</h1>
                             <p>Aplikasi PyMark Watermarking memungkinkan Anda dengan mudah menambahkan watermark pada berbagai jenis file gambar dan melakukan analisis terhadapnya.</p>
                             <nav class="flex flex-wrap justify-center md:justify-center">
-                                <NuxtLink @click="changeRoute('embedding')" to="/file-sharing/embedding" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Embedding</NuxtLink>
-                                <NuxtLink @click="changeRoute('extraction')" to="/file-sharing/extraction" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Extraction</NuxtLink>
-                                <NuxtLink @click="changeRoute('analysis')" to="/file-sharing/analysis" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Analysis</NuxtLink>
-                                <NuxtLink @click="changeRoute('image_processing')" to="/file-sharing/image_processing" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Image Processing</NuxtLink>
+                                <NavigationButton label="embedding" to="/file-sharing/embedding" />
+                                <NavigationButton label="extraction" to="/file-sharing/extraction" />
+                                <NavigationButton label="analysis" to="/file-sharing/analysis" />
+                                <NavigationButton label="image processing" to="/file-sharing/image_processing" />
                             </nav>
                         </div>
                     </header>
@@ -80,6 +83,8 @@ onMounted(() => {
         dropdownButton.setAttribute("data-dropdown-placement", "bottom");
     }
 });
+
+// Export components, variables, or functions for use in the template
 </script>
 
 <style scoped>
