@@ -31,27 +31,10 @@
                 </div>
             </div>
             <div class="flex flex-col">
-                <!-- <label for="type" class="block mb-2 text-sm font-medium">Jenis Gambar</label>
-                <select
-                    id="type"
-                    v-model="type"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                    <option value="gray">Gray</option>
-                    <option value="color">Color</option>
-                </select> -->
                 <DropdownInput v-model="type" label="type" :options="typeOptions" />
                 <span v-if="formSubmitted && !type" class="text-red-500">Image Type is required</span>
             </div>
             <div class="flex flex-col">
-                <!-- <label for="alpha" class="block mb-2 text-sm font-medium">Alpha</label>
-                <select
-                    id="alpha"
-                    v-model="alpha"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                    <option v-for="value in alphaValues" :key="value" :value="value">{{ value }}</option>
-                </select> -->
                 <DropdownInput v-model="alpha" label="alpha" :options="alphaOptions" />
                 <span v-if="formSubmitted && !alpha" class="text-red-500">Alpha is required</span>
             </div>
@@ -59,7 +42,6 @@
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formSubtmitting ? "submitting" : "submit" }}</button>
             </div>
         </form>
-
         <!-- Bagian untuk menampilkan preview dari respons API -->
         <div v-if="responseData && responseData.data">
             <h2 class="text-2xl font-bold mb-4">Hasil dari Respons API</h2>

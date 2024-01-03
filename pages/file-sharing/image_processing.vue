@@ -13,10 +13,6 @@
             </div>
             <!-- Add a dropdown/select field for processing type -->
             <div class="flex flex-col">
-                <!-- <label for="processingType" class="mb-1">Processing Type</label>
-                <select v-model="processingType" id="processingType" class="p-2 border rounded">
-                    <option v-for="type in processingTypeOptions" :key="type" :value="type">{{ type }}</option>
-                </select> -->
                 <DropdownInput v-model="processingType" label="processintType" :options="processingTypeOptions" />
             </div>
 
@@ -39,30 +35,6 @@
                                 <NumberInput id="cropping_edge_top" placeholder="Top" />
                                 <NumberInput id="cropping_edge_right" placeholder="Right" />
                                 <NumberInput id="cropping_edge_bottom" placeholder="Bottom" />
-                                <!-- <input
-                                    type="number"
-                                    :id="`cropping_edge_left`"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 me-1"
-                                    placeholder="Left"
-                                /> -->
-                                <!-- <input
-                                    type="number"
-                                    :id="`cropping_edge_top`"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mx-1"
-                                    placeholder="Top"
-                                />
-                                <input
-                                    type="number"
-                                    :id="`cropping_edge_right`"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mx-1"
-                                    placeholder="Right"
-                                />
-                                <input
-                                    type="number"
-                                    :id="`cropping_edge_bottom`"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ms-1"
-                                    placeholder="Bottom"
-                                /> -->
                             </div>
                         </div>
                     </div>
@@ -91,12 +63,10 @@
             </div>
         </form>
         <!-- API Response Display Section -->
-        <!-- API Response Display Section -->
         <div v-if="responseData">
             <div class="border rounded-lg p-6 bg-white shadow-lg mt-8">
                 <!-- API Response Details -->
                 <h2 class="text-lg font-semibold mb-4">API Response:</h2>
-
                 <!-- Attacked Image Preview -->
                 <div v-if="responseData.data && responseData.data.uploaded_file_responses.attacked_image">
                     <h4 class="text-sm font-semibold mb-2">Attacked Image Preview:</h4>
@@ -104,7 +74,6 @@
                         <img :src="responseData.data.uploaded_file_responses.attacked_image.download_link" alt="Attacked Image" />
                     </div>
                 </div>
-
                 <!-- Detailed Response Data -->
                 <div class="mt-6">
                     <p class="text-sm font-semibold">Status: {{ responseData.status }}</p>
@@ -112,7 +81,6 @@
 
                     <div v-if="responseData.data">
                         <h3 class="text-md font-semibold mt-4">Folder Result: {{ responseData.data.folder_result }}</h3>
-
                         <!-- Uploaded File Responses -->
                         <div v-if="responseData.data.uploaded_file_responses">
                             <h4 class="text-sm font-semibold mt-4">Uploaded File Responses:</h4>

@@ -44,10 +44,6 @@
                 <span v-if="formSubmitted && !type" class="text-red-500">Image Type is required</span>
             </div>
             <div class="flex flex-col">
-                <!-- <label for="alpha" class="mb-1">Alpha</label>
-                <select id="alpha" v-model="alpha" class="p-2 border rounded">
-                    <option v-for="value in alphaOptions" :key="value" :value="value">{{ value }}</option>
-                </select> -->
                 <DropdownInput v-model="alpha" label="alpha" :options="alphaOptions" />
                 <span v-if="formSubmitted && !alpha" class="text-red-500">Alpha is required</span>
             </div>
