@@ -1,6 +1,6 @@
 <template>
     <div class="p-4">
-        <h1 class="text-2xl font-bold mb-4">Form Pymark Extraction</h1>
+        <h1 class="text-2xl font-bold mb-4">Pymark Extraction</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <!-- watermarked and block position section input -->
             <div class="flex flex-col md:flex-row md:items-end">
@@ -36,9 +36,7 @@
                 <DropdownInput v-model="alpha" label="alpha" :options="alphaOptions" />
                 <span v-if="formSubmitted && !alpha" class="text-red-500">Alpha is required</span>
             </div>
-            <div class="flex justify-center">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formSubtmitting ? "submitting" : "submit" }}</button>
-            </div>
+            <FileSharingSubmit class="!mt-5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
 
         <!-- Bagian untuk menampilkan preview dari respons API -->
@@ -123,7 +121,7 @@ async function submitForm() {
 
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
-        // Handle error messages or prevent form submission
+        formSubtmitting.value = false;
         return;
     }
 

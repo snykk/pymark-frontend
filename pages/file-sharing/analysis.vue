@@ -14,19 +14,21 @@
             </ol>
         </nav>
         <div v-if="selectedForm === 'imperceptibility'">
-            <h1 class="text-2xl font-bold mb-4">Form Imperceptibility Analysis</h1>
+            <h1 class="text-2xl font-bold mb-4">Imperceptibility Analysis</h1>
             <form @submit.prevent="submitImperceptibilityForm" class="space-y-4" enctype="multipart/form-data">
-                <div class="flex flex-col md:flex-row">
+                <div class="flex flex-col md:flex-row items-end">
                     <ImageInput class="md:me-1 w-full" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formImperceptSubmitted" />
                     <ImageInput class="md:ms-1 w-full" v-model="watermarked_image" id="watermarked_image" label="Watermarked Image" :formSubmitted="formImperceptSubmitted" />
                 </div>
                 <div class="flex flex-col md:flex-row" style="margin: 0">
-                    <span v-if="formImperceptSubmitted && !host_image" class="text-red-500 md:me-1 w-full">Host Image is required</span>
-                    <span v-if="formImperceptSubmitted && !watermarked_image" class="text-red-500 md:ms-1 w-full">Watermarked Image is required</span>
+                    <div class="md:me-1 w-full">
+                        <span v-if="formImperceptSubmitted && !host_image" class="text-red-500">Host Image is required</span>
+                    </div>
+                    <div class="md:ms-1 w-full">
+                        <span v-if="formImperceptSubmitted && !watermarked_image" class="text-red-500">Watermarked Image is required</span>
+                    </div>
                 </div>
-                <div class="flex justify-center mt-20">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formImperceptSubtmitting ? "submitting" : "submit" }}</button>
-                </div>
+                <FileSharingSubmit class="flex justify-center mt-10">{{ formImperceptSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
             </form>
             <!-- Imperceptibility Analysis Response -->
             <div v-if="imperceptibilityResponseData" class="mt-8 mb-5">
@@ -39,9 +41,9 @@
         </div>
 
         <div v-else-if="selectedForm === 'robustness'">
-            <h1 class="text-2xl font-bold mb-4">Form Robustness Analysis</h1>
+            <h1 class="text-2xl font-bold mb-4">Robustness Analysis</h1>
             <form @submit.prevent="submitRobustnessForm" class="space-y-4" enctype="multipart/form-data">
-                <div class="flex flex-col md:flex-row">
+                <div class="flex flex-col md:flex-row items-end">
                     <ImageInput class="md:me-1 w-full" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formRobustSubmitted" />
                     <ImageInput class="md:ms-1 w-full" v-model="extracted_watermark_image" id="extracted_watermark_image" label="Watermarked Image" :formSubmitted="formRobustSubmitted" />
                 </div>
@@ -49,9 +51,7 @@
                     <span v-if="formRobustSubmitted && !watermark_image" class="text-red-500 md:me-1 w-full">Watermark image is required</span>
                     <span v-if="formRobustSubmitted && !extracted_watermark_image" class="text-red-500 md:ms-1 w-full">Extracted watermark image is required</span>
                 </div>
-                <div class="flex justify-center mt-20">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formRobustnesSubtmitting ? "submitting" : "submit" }}</button>
-                </div>
+                <FileSharingSubmit class="flex justify-center">{{ formRobustnesSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
             </form>
             <!-- Robustness Analysis Response -->
             <div v-if="robustnessResponseData" class="mt-8">

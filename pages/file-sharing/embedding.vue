@@ -1,22 +1,27 @@
 <template>
     <div class="px-4">
-        <h1 class="text-2xl font-bold mb-4">Form Pymark Embedding</h1>
+        <h1 class="text-2xl font-bold mb-4">Pymark Embedding</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
-            <div class="flex flex-col md:flex-row">
+            <div class="flex flex-col md:flex-row items-end">
                 <ImageInput class="md:me-2 md:w-1/2" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formSubmitted" />
                 <ImageInput class="md:ms-2 md:w-1/2" v-model="watermark_image" id="" label="Watermark Image" :formSubmitted="formSubmitted" />
             </div>
+            <div class="flex flex-col md:flex-row" style="margin: 0">
+                <div class="md:me-2 md:w-1/2">
+                    <span v-if="formSubmitted && !host_image" class="text-red-500">Host image is required</span>
+                </div>
+                <div class="md:ms-2 md:w-1/2">
+                    <span v-if="formSubmitted && !watermark_image" class="text-red-500">Watermark image is required</span>
+                </div>
+            </div>
             <div class="flex flex-col">
                 <DropdownInput v-model="type" label="type" :options="typeOptions" />
-                <span v-if="formSubmitted && !type" class="text-red-500">Image Type is required</span>
             </div>
             <div class="flex flex-col">
                 <DropdownInput v-model="alpha" label="alpha" :options="alphaOptions" />
-                <span v-if="formSubmitted && !alpha" class="text-red-500">Alpha is required</span>
             </div>
-            <div class="flex justify-center">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formSubtmitting ? "submitting" : "submit" }}</button>
-            </div>
+
+            <FileSharingSubmit class="!mt-5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
         <!-- Bagian untuk menampilkan preview dari respons API -->
         <div v-if="responseData && responseData.data">
@@ -96,6 +101,7 @@ async function submitForm() {
 
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
+        formSubtmitting.value = false;
         // Handle error messages or prevent form submission
         return;
     }
