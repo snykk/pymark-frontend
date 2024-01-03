@@ -1,30 +1,25 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md w-full">
-            <h1 class="text-2xl font-bold mb-6 text-center">Regis</h1>
-            <form @submit.prevent="submitForm" class="space-y-4">
-                <div class="flex flex-col">
-                    <label for="username" class="mb-1">Username:</label>
-                    <input type="text" id="username" v-model="user.username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                    <span v-if="formSubmitted && !user.username" class="text-red-500">Username is required</span>
-                </div>
-                <div class="flex flex-col">
-                    <label for="email" class="mb-1">Email:</label>
-                    <input type="text" id="email" v-model="user.email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                    <span v-if="formSubmitted && !user.email" class="text-red-500">Email is required</span>
-                </div>
-                <div class="flex flex-col">
-                    <label for="password" class="mb-1">Password:</label>
-                    <input type="password" id="password" v-model="user.password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
-                    <span v-if="formSubmitted && !user.password" class="text-red-500">Password is required</span>
-                </div>
-                <span v-if="formSubmitted && errorMessage" class="text-red-500">{{ errorMessage }}</span>
-                <div class="flex items-center justify-between">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
-                </div>
-            </form>
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Sign Up to PyMark</h2>
+    <form class="mt-8 space-y-6" @submit.prevent="submitForm">
+        <div>
+            <AuthInput v-model="user.username" placeholder="John Doe" label="username" />
+            <span v-if="formSubmitted && !user.username" class="text-red-500">Username is required</span>
         </div>
-    </div>
+        <div>
+            <AuthInput v-model="user.email" placeholder="name@company.com" label="email" />
+            <span v-if="formSubmitted && !user.email" class="text-red-500">Email is required</span>
+        </div>
+        <div>
+            <AuthInput v-model="user.password" placeholder="************" label="password" />
+            <span v-if="formSubmitted && !user.password" class="text-red-500">Password is required</span>
+        </div>
+        <div v-if="formSubmitted && errorMessage" class="text-red-500">{{ errorMessage }}</div>
+        <AuthSubmit>Create an account</AuthSubmit>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+            Already have an account?
+            <NuxtLink to="/auth/file-sharing/login" class="text-blue-600 hover:underline dark:text-blue-500">Login Now!</NuxtLink>
+        </div>
+    </form>
 </template>
 
 <script setup lang="ts">
@@ -32,13 +27,14 @@ import type RegisFileSharingResponse from "~/types/RegisFileSharingResponse";
 
 const filesharing = useFileSharingStore();
 definePageMeta({
+    layout: "auth-filesharing",
     middleware: [
-        async function (to, from) {
+        function (to, from) {
             const { userJWTToken } = storeToRefs(useFileSharingStore());
             const jwtTOken = useCookie("userJWTToken");
             if (jwtTOken.value) {
                 userJWTToken.value = jwtTOken.value;
-                await navigateTo("/file-sharing");
+                useRouter().push("/file-sharing/embedding");
             }
         },
     ],
