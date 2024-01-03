@@ -77,6 +77,7 @@
 
 <script setup lang="ts">
 definePageMeta({
+    layout: "filesharing",
     middleware: ["auth-filesharing"],
 });
 

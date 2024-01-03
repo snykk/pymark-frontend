@@ -9,5 +9,5 @@
 </template>
 
 <script setup lang="ts">
-const { label } = defineProps(["label"]);
+const { label, to } = defineProps(["label", "to"]);
 </script>

@@ -106,6 +106,7 @@
 const filesharing = useFileSharingStore();
 
 definePageMeta({
+    layout: "filesharing",
     middleware: ["auth-filesharing"],
 });
 
