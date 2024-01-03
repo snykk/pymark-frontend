@@ -1,6 +1,6 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
-        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md w-full">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md w-full">
             <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
             <form @submit.prevent="submitForm" class="space-y-4">
                 <div class="flex flex-col">

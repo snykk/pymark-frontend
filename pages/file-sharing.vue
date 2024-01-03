@@ -19,20 +19,20 @@
                     <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ filesharing.email ?? "no email" }}</span>
                 </div>
                 <ul class="py-2" aria-labelledby="user-menu-button">
-                    <button @click="filesharing.logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
+                    <button @click="filesharing.logout" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
                 </ul>
             </div>
         </div>
         <div v-if="currrentRoute === ''">
             <div class="text-center">
                 <h1 class="text-4xl font-bold mb-4">PyMark Watermarking App</h1>
-                <p class="text-gray-700 mb-6">Aplikasi PyMark Watermarking memungkinkan Anda untuk menambahkan watermark pada berbagai jenis file gambar dan melakukan analisis terhadapnya.</p>
+                <p>Aplikasi PyMark Watermarking memungkinkan Anda untuk menambahkan watermark pada berbagai jenis file gambar dan melakukan analisis terhadapnya.</p>
                 <div class="flex justify-center gap-[10px] mb-4">
-                    <NuxtLink @click="changeRoute('embedding')" to="/file-sharing/embedding" class="block py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300"> Embedding </NuxtLink>
-                    <NuxtLink @click="changeRoute('extraction')" to="/file-sharing/extraction" class="block py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300"> Extraction </NuxtLink>
-                    <NuxtLink @click="changeRoute('analysis')" to="/file-sharing/analysis" class="block py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300"> Analysis </NuxtLink>
-                    <NuxtLink @click="changeRoute('image_processing')" to="/file-sharing/image_processing" class="block py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300"> Image Processing </NuxtLink>
-                    <button @click="filesharing.logout" class="block py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300">Logout</button>
+                    <NuxtLink @click="changeRoute('embedding')" to="/file-sharing/embedding" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Embedding </NuxtLink>
+                    <NuxtLink @click="changeRoute('extraction')" to="/file-sharing/extraction" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Extraction </NuxtLink>
+                    <NuxtLink @click="changeRoute('analysis')" to="/file-sharing/analysis" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Analysis </NuxtLink>
+                    <NuxtLink @click="changeRoute('image_processing')" to="/file-sharing/image_processing" class="block py-2 px-4 rounded-md hover:bg-slate-500"> Image Processing </NuxtLink>
+                    <button @click="filesharing.logout" class="block py-2 px-4 rounded-md hover:bg-slate-500">Logout</button>
                 </div>
             </div>
         </div>
@@ -46,12 +46,12 @@
                                 <img alt="Vue logo" class="logo" src="~/assets/logo/vue.svg" width="125" height="125" />
                             </div>
                             <h1 class="text-3xl font-bold mb-4">PyMark Watermarking App</h1>
-                            <p class="text-gray-700 mb-6">Aplikasi PyMark Watermarking memungkinkan Anda dengan mudah menambahkan watermark pada berbagai jenis file gambar dan melakukan analisis terhadapnya.</p>
+                            <p>Aplikasi PyMark Watermarking memungkinkan Anda dengan mudah menambahkan watermark pada berbagai jenis file gambar dan melakukan analisis terhadapnya.</p>
                             <nav class="flex flex-wrap justify-center md:justify-center">
-                                <NuxtLink @click="changeRoute('embedding')" to="/file-sharing/embedding" class="py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300 m-2 md:inline-block">Embedding</NuxtLink>
-                                <NuxtLink @click="changeRoute('extraction')" to="/file-sharing/extraction" class="py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300 m-2 md:inline-block">Extraction</NuxtLink>
-                                <NuxtLink @click="changeRoute('analysis')" to="/file-sharing/analysis" class="py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300 m-2 md:inline-block">Analysis</NuxtLink>
-                                <NuxtLink @click="changeRoute('image_processing')" to="/file-sharing/image_processing" class="py-2 px-4 rounded-md text-gray-700 hover:bg-gray-300 m-2 md:inline-block">Image Processing</NuxtLink>
+                                <NuxtLink @click="changeRoute('embedding')" to="/file-sharing/embedding" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Embedding</NuxtLink>
+                                <NuxtLink @click="changeRoute('extraction')" to="/file-sharing/extraction" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Extraction</NuxtLink>
+                                <NuxtLink @click="changeRoute('analysis')" to="/file-sharing/analysis" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Analysis</NuxtLink>
+                                <NuxtLink @click="changeRoute('image_processing')" to="/file-sharing/image_processing" class="py-2 px-4 rounded-md hover:bg-slate-500 m-2 md:inline-block">Image Processing</NuxtLink>
                             </nav>
                         </div>
                     </header>
