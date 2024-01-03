@@ -2,42 +2,31 @@
     <div class="p-4">
         <h1 class="text-2xl font-bold mb-4">Form Pymark Extraction</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
-            <div class="flex flex-col">
-                <label for="watermark_image" class="mb-1">Watermark Image (Opsional if you wanna see the analysis result)</label>
-                <input type="file" id="watermark_image" accept="image/*" ref="fileInput1" style="display: none" @change="handleFileChange(1, $event)" class="p-2 border rounded" />
-                <div class="flex items-center">
-                    <label for="watermark_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 1</label>
-                    <img v-if="imagePreviews[0]" :src="imagePreviews[0]" class="ml-4 h-20" alt="Preview Image 1" />
-                </div>
-                <span v-if="formSubmitted && !watermark_image" class="text-red-500">Watermark Image is required</span>
+            <!-- watermarked and block position section input -->
+            <div class="flex flex-col md:flex-row md:items-end">
+                <ImageInput class="md:me-1 md:w-full" v-model="watermarked_image" id="watermarked_image" label="Watermarked Image" :formSubmitted="formSubmitted" />
+                <ImageInput class="md:ms-1 md: md:w-full" v-model="block_position" id="block_position" label="Block Position" :formSubmitted="formSubmitted" />
             </div>
-            <div class="flex flex-col">
-                <label for="watermarked_image" class="mb-1">Watermarked Image</label>
-                <input type="file" id="watermarked_image" accept="image/*" ref="fileInput1" style="display: none" @change="handleFileChange(2, $event)" class="p-2 border rounded" />
-                <div class="flex items-center">
-                    <label for="watermarked_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 1</label>
-                    <img v-if="imagePreviews[1]" :src="imagePreviews[1]" class="ml-4 h-20" alt="Preview Image 1" />
+            <!-- alert of watermarked and block position -->
+            <div class="flex flex-col md:flex-row" style="margin: 0">
+                <div class="md:w-1/2">
+                    <span v-if="formSubmitted && !watermarked_image" class="text-red-500">Watermarked image is required</span>
                 </div>
-                <span v-if="formSubmitted && !watermarked_image" class="text-red-500">Watermarked Image is required</span>
+                <div class="md:w-1/2">
+                    <span v-if="formSubmitted && !block_position" class="text-red-500">Block position image is required</span>
+                </div>
             </div>
-            <div class="flex flex-col">
-                <label for="block_position" class="mb-1">Block Position</label>
-                <input type="file" id="block_position" accept="image/*" ref="fileInput2" style="display: none" @change="handleFileChange(3, $event)" class="p-2 border rounded" />
-                <div class="flex items-center">
-                    <label for="block_position" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 2</label>
-                    <img v-if="imagePreviews[2]" :src="imagePreviews[2]" class="ml-4 h-20" alt="Preview Image 2" />
-                </div>
-                <span v-if="formSubmitted && !block_position" class="text-red-500">Block Position is required</span>
+            <!-- watermark and npy file section input -->
+            <div class="flex flex-col md:flex-row md:items-end">
+                <ImageInput class="md:me-1 md:w-full" v-model="watermark_image" id="watermark_image" label="Watermark Image (Opsional, required if you wanna get the analysis result)" :formSubmitted="formSubmitted" />
+                <FileInput class="md:ms-1 md:w-full" v-model="key_matrix" label="Key Matrix (.npy)" :formSubmitted="formSubmitted" :fileType="'.npy'" />
             </div>
-            <div class="flex flex-col">
-                <label for="key_matrix" class="mb-1">Key Matrix (.npy)</label>
-                <input type="file" id="key_matrix" accept=".npy" ref="fileInput3" style="display: none" @change="handleFileChange(4, $event)" class="p-2 border rounded" />
-                <div class="flex items-center">
-                    <label for="key_matrix" class="cursor-pointer bg-gray-200 p-2 rounded">Select .npy File</label>
-                    <!-- Tampilkan nama file jika dipilih -->
-                    <span v-if="key_matrix && key_matrix.name">{{ key_matrix.name }}</span>
+            <!-- alert seection for key matrix -->
+            <div class="flex flex-col md:flex-row md:items-end" style="margin: 0">
+                <div class="md:w-1/2"></div>
+                <div class="md:w-1/2">
+                    <span v-if="formSubmitted && !key_matrix" class="text-red-500">Key Matrix (.npy) is required</span>
                 </div>
-                <span v-if="formSubmitted && !key_matrix" class="text-red-500">Key Matrix (.npy) is required</span>
             </div>
             <div class="flex flex-col">
                 <DropdownInput v-model="type" label="type" :options="typeOptions" />
@@ -108,8 +97,6 @@ const watermarked_image = ref<File | null>(null);
 const block_position = ref<File | null>(null);
 const key_matrix = ref<File | null>(null); // Tambahkan variabel untuk file .npy
 
-const imagePreviews = ref<(string | null)[]>([null]);
-
 const typeOptions = ["grayscale", "color"];
 const type = ref("grayscale");
 
@@ -118,41 +105,10 @@ const alpha = ref("0.01");
 
 var responseData = ref<ExtractionApiResponse | null>(null);
 
-function handleFileChange(index: number, event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (!target || !target.files) return;
-
-    const file = target.files[0];
-    if (!file) return;
-
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-        const result = e.target?.result;
-        if (typeof result === "string") {
-            if (index == 1) {
-                watermark_image.value = file;
-                imagePreviews.value[0] = result;
-            } else if (index === 2) {
-                watermarked_image.value = file;
-                imagePreviews.value[1] = result;
-            } else if (index === 3) {
-                block_position.value = file;
-                imagePreviews.value[2] = result;
-            }
-            // Menambahkan kondisi untuk file .npy (key_matrix)
-            else if (index === 4) {
-                key_matrix.value = file;
-            }
-        }
-    };
-    fileReader.readAsDataURL(file);
-}
-
 function validateForm() {
     return {
         watermarked_image: !!watermarked_image.value,
         block_position: !!block_position.value,
-        // Memvalidasi key_matrix
         key_matrix: !!key_matrix.value,
         type: !!type.value,
         alpha: !!alpha.value,

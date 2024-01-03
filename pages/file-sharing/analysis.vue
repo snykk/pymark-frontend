@@ -3,72 +3,49 @@
         <div>
             <h1 class="text-2xl font-bold mb-4">Form Imperceptibility Analysis</h1>
             <form @submit.prevent="submitImperceptibilityForm" class="space-y-4" enctype="multipart/form-data">
-                <div class="flex flex-col">
-                    <label for="host_image" class="mb-1">Host Image</label>
-                    <input type="file" id="host_image" accept="image/*" ref="fileInput1" style="display: none" @change="handleImageChange(1, $event)" class="p-2 border rounded" />
-                    <div class="flex items-center">
-                        <label for="host_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 1</label>
-                        <img v-if="imagePreviews[0]" :src="imagePreviews[0]" class="ml-4 h-20" alt="Preview Image 1" />
-                    </div>
-                    <span v-if="formImperceptSubmitted && !host_image" class="text-red-500">Host Image is required</span>
+                <div class="flex flex-col md:flex-row">
+                    <ImageInput class="md:me-1 w-full" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formImperceptSubmitted" />
+                    <ImageInput class="md:ms-1 w-full" v-model="watermarked_image" id="watermarked_image" label="Watermarked Image" :formSubmitted="formImperceptSubmitted" />
                 </div>
-                <div class="flex flex-col">
-                    <label for="watermarked_image" class="mb-1">Watermarked Image</label>
-                    <input type="file" id="watermarked_image" accept="image/*" ref="fileInput2" style="display: none" @change="handleImageChange(2, $event)" class="p-2 border rounded" />
-                    <div class="flex items-center">
-                        <label for="watermarked_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 2</label>
-                        <img v-if="imagePreviews[1]" :src="imagePreviews[1]" class="ml-4 h-20" alt="Preview Image 2" />
-                    </div>
-                    <span v-if="formImperceptSubmitted && !watermarked_image" class="text-red-500">Watermarked Image is required</span>
+                <div class="flex flex-col md:flex-row" style="margin: 0">
+                    <span v-if="formImperceptSubmitted && !host_image" class="text-red-500 md:me-1 w-full">Host Image is required</span>
+                    <span v-if="formImperceptSubmitted && !watermarked_image" class="text-red-500 md:ms-1 w-full">Watermarked Image is required</span>
                 </div>
-                <div class="flex justify-center">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formSubtmitting ? "submitting" : "submit" }}</button>
+                <div class="flex justify-center mt-20">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formImperceptSubtmitting ? "submitting" : "submit" }}</button>
                 </div>
             </form>
             <!-- Imperceptibility Analysis Response -->
-            <div v-if="imperceptibilityResponseData" class="mt-8">
+            <div v-if="imperceptibilityResponseData" class="mt-8 mb-5">
                 <h2 class="text-xl font-bold mb-2">Imperceptibility Analysis Response</h2>
-                <div class="bg-gray-100 p-4 rounded">
-                    <div v-if="imperceptibilityResponseData.data">
-                        <p>PSNR: {{ imperceptibilityResponseData.data.imperceptibility_analysis.psnr }}</p>
-                        <p>SSIM: {{ imperceptibilityResponseData.data.imperceptibility_analysis.ssim }}</p>
-                    </div>
+                <div v-if="imperceptibilityResponseData.data">
+                    <p>PSNR: {{ imperceptibilityResponseData.data.imperceptibility_analysis.psnr }}</p>
+                    <p>SSIM: {{ imperceptibilityResponseData.data.imperceptibility_analysis.ssim }}</p>
                 </div>
             </div>
         </div>
+
         <div>
             <h1 class="text-2xl font-bold mb-4">Form Robustness Analysis</h1>
             <form @submit.prevent="submitRobustnessForm" class="space-y-4" enctype="multipart/form-data">
-                <div class="flex flex-col">
-                    <label for="watermark_image" class="mb-1">Watermark Image</label>
-                    <input type="file" id="watermark_image" accept="image/*" ref="fileInput1" style="display: none" @change="handleImageChange(3, $event)" class="p-2 border rounded" />
-                    <div class="flex items-center">
-                        <label for="watermark_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 1</label>
-                        <img v-if="imagePreviews[2]" :src="imagePreviews[2]" class="ml-4 h-20" alt="Preview Image 1" />
-                    </div>
-                    <span v-if="formRobustSubmitted && !watermark_image" class="text-red-500">Watermark Image is required</span>
+                <div class="flex flex-col md:flex-row">
+                    <ImageInput class="md:me-1 w-full" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formRobustSubmitted" />
+                    <ImageInput class="md:ms-1 w-full" v-model="extracted_watermark_image" id="extracted_watermark_image" label="Watermarked Image" :formSubmitted="formRobustSubmitted" />
                 </div>
-                <div class="flex flex-col">
-                    <label for="extracted_watermark_image" class="mb-1">Extracted Watermark Image</label>
-                    <input type="file" id="extracted_watermark_image" accept="image/*" ref="fileInput2" style="display: none" @change="handleImageChange(4, $event)" class="p-2 border rounded" />
-                    <div class="flex items-center">
-                        <label for="extracted_watermark_image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image 2</label>
-                        <img v-if="imagePreviews[3]" :src="imagePreviews[3]" class="ml-4 h-20" alt="Preview Image 2" />
-                    </div>
-                    <span v-if="formRobustSubmitted && !extracted_watermark_image" class="text-red-500">Extracted Watermark Image is required</span>
+                <div class="flex flex-col md:flex-row" style="margin: 0">
+                    <span v-if="formRobustSubmitted && !watermark_image" class="text-red-500 md:me-1 w-full">Watermark image is required</span>
+                    <span v-if="formRobustSubmitted && !extracted_watermark_image" class="text-red-500 md:ms-1 w-full">Extracted watermark image is required</span>
                 </div>
-                <div class="flex justify-center">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formSubtmitting ? "submitting" : "submit" }}</button>
+                <div class="flex justify-center mt-20">
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ formRobustnesSubtmitting ? "submitting" : "submit" }}</button>
                 </div>
             </form>
             <!-- Robustness Analysis Response -->
             <div v-if="robustnessResponseData" class="mt-8">
                 <h2 class="text-xl font-bold mb-2">Robustness Analysis Response</h2>
-                <div class="bg-gray-100 p-4 rounded">
-                    <div v-if="robustnessResponseData.data">
-                        <p>BER: {{ robustnessResponseData.data.robustness_analysis.ber }}</p>
-                        <p>NCC: {{ robustnessResponseData.data.robustness_analysis.ncc }}</p>
-                    </div>
+                <div v-if="robustnessResponseData.data">
+                    <p>BER: {{ robustnessResponseData.data.robustness_analysis.ber }}</p>
+                    <p>NCC: {{ robustnessResponseData.data.robustness_analysis.ncc }}</p>
                 </div>
             </div>
         </div>
@@ -87,7 +64,9 @@ const config = useRuntimeConfig();
 
 const formImperceptSubmitted = ref(false);
 const formRobustSubmitted = ref(false);
-const formSubtmitting = ref(false);
+
+const formImperceptSubtmitting = ref(false);
+const formRobustnesSubtmitting = ref(false);
 
 const host_image = ref<File | null>(null);
 const watermarked_image = ref<File | null>(null);
@@ -144,13 +123,14 @@ function validateRobustnessForm() {
 
 async function submitImperceptibilityForm() {
     formImperceptSubmitted.value = true;
-    formSubtmitting.value = true;
+    formImperceptSubtmitting.value = true;
 
     const validations = validateImperceptibilityForm();
 
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
         // Handle error messages or prevent form submission
+        formImperceptSubtmitting.value = false;
         return;
     }
 
@@ -167,21 +147,22 @@ async function submitImperceptibilityForm() {
             },
             body: formData,
         });
-        formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);
     }
+
+    formImperceptSubtmitting.value = false;
 }
 
 async function submitRobustnessForm() {
     formRobustSubmitted.value = true;
-    formSubtmitting.value = true;
+    formRobustnesSubtmitting.value = true;
 
     const validations = validateRobustnessForm();
 
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
-        // Handle error messages or prevent form submission
+        formRobustnesSubtmitting.value = false;
         return;
     }
 
@@ -198,10 +179,11 @@ async function submitRobustnessForm() {
             },
             body: formData,
         });
-        formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);
     }
+
+    formRobustnesSubtmitting.value = false;
 }
 
 interface ImperceptibilityApiResponse {

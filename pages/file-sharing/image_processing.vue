@@ -2,15 +2,10 @@
     <div class="p-4">
         <h1 class="text-2xl font-bold mb-4">Form Pymark Image Processing</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
-            <div class="flex flex-col">
-                <label for="image" class="mb-1">Image</label>
-                <input type="file" id="image" accept="image/*" ref="fileInput1" style="display: none" @change="handleImageChange($event)" class="p-2 border rounded" />
-                <div class="flex items-center">
-                    <label for="image" class="cursor-pointer bg-gray-200 p-2 rounded">Select Image</label>
-                    <img v-if="imagePreviews" :src="imagePreviews" class="ml-4 h-20" alt="Preview Image 1" />
-                </div>
-                <span v-if="formSubmitted && !image" class="text-red-500">Host Image is required</span>
+            <div class="flex flex-col w-full">
+                <ImageInput class="md:me-1 w-full" v-model="image" id="image" label="Original Image" :formSubmitted="formSubmitted" />
             </div>
+            <span v-if="formSubmitted && !image" class="text-red-500">Original Image is required</span>
             <!-- Add a dropdown/select field for processing type -->
             <div class="flex flex-col">
                 <DropdownInput v-model="processingType" label="processintType" :options="processingTypeOptions" />
@@ -64,7 +59,7 @@
         </form>
         <!-- API Response Display Section -->
         <div v-if="responseData">
-            <div class="border rounded-lg p-6 bg-white shadow-lg mt-8">
+            <div class="p-6 shadow-lg mt-8">
                 <!-- API Response Details -->
                 <h2 class="text-lg font-semibold mb-4">API Response:</h2>
                 <!-- Attacked Image Preview -->
@@ -84,7 +79,7 @@
                         <!-- Uploaded File Responses -->
                         <div v-if="responseData.data.uploaded_file_responses">
                             <h4 class="text-sm font-semibold mt-4">Uploaded File Responses:</h4>
-                            <div v-for="(fileResponse, key) in responseData.data.uploaded_file_responses" :key="key" class="mt-2 border rounded p-4 bg-gray-100">
+                            <div v-for="(fileResponse, key) in responseData.data.uploaded_file_responses" :key="key" class="mt-2 p-4">
                                 <p class="font-semibold text-blue-600">File: {{ key }}</p>
                                 <p>
                                     Download Link: <a :href="fileResponse.download_link" target="_blank" class="text-blue-500">{{ fileResponse.download_link }}</a>
@@ -194,10 +189,10 @@ async function submitForm() {
         });
 
         responseData.value = response;
-        formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);
     }
+    formSubtmitting.value = false;
 }
 </script>
 

@@ -3,32 +3,8 @@
         <h1 class="text-2xl font-bold mb-4">Form Pymark Embedding</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <div class="flex flex-col md:flex-row">
-                <div class="flex flex-col md:w-1/2">
-                    <label for="host_image" class="block mb-2 text-sm font-medium">Host Image</label>
-                    <img v-if="imagePreviews[0]" :src="imagePreviews[0]" class="ml-4 h-40 w-40 mb-3" alt="Preview Host Image" />
-                    <input
-                        type="file"
-                        id="host_image"
-                        accept="image/*"
-                        ref="fileInput1"
-                        class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                        @change="handleImageChange(1, $event)"
-                    />
-                    <span v-if="formSubmitted && !host_image" class="text-red-500">Host Image is required</span>
-                </div>
-                <div class="flex flex-col md:ms-3 md:w-1/2">
-                    <label for="watermark_image" class="block mb-2 text-sm font-medium">Watermark Image</label>
-                    <img v-if="imagePreviews[1]" :src="imagePreviews[1]" class="ml-4 h-40 w-40 mb-3" alt="Preview Watermark Image" />
-                    <input
-                        type="file"
-                        id="watermark_image"
-                        accept="image/*"
-                        ref="fileInput1"
-                        class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                        @change="handleImageChange(2, $event)"
-                    />
-                    <span v-if="formSubmitted && !watermark_image" class="text-red-500">Watermark Image is required</span>
-                </div>
+                <ImageInput class="md:me-2 md:w-1/2" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formSubmitted" />
+                <ImageInput class="md:ms-2 md:w-1/2" v-model="watermark_image" id="" label="Watermark Image" :formSubmitted="formSubmitted" />
             </div>
             <div class="flex flex-col">
                 <DropdownInput v-model="type" label="type" :options="typeOptions" />
@@ -94,7 +70,6 @@ const formSubtmitting = ref(false);
 
 const host_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
-const imagePreviews = ref<(string | null)[]>([null, null]);
 
 const typeOptions = ["grayscale", "color"];
 const type = ref("grayscale");
@@ -103,28 +78,6 @@ const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "
 const alpha = ref("0.01");
 
 var responseData = ref<EmbeddingApiResponse | null>(null);
-function handleImageChange(index: number, event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (!target || !target.files) return;
-
-    const file = target.files[0];
-    if (!file) return;
-
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-        const result = e.target?.result;
-        if (typeof result === "string") {
-            if (index === 1) {
-                host_image.value = file;
-                imagePreviews.value[0] = result;
-            } else if (index === 2) {
-                watermark_image.value = file;
-                imagePreviews.value[1] = result;
-            }
-        }
-    };
-    fileReader.readAsDataURL(file);
-}
 
 function validateForm() {
     return {
