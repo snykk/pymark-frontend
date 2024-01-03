@@ -26,14 +26,7 @@
             <aside class="w-full md:w-1/3 p-4 flex flex-col">
                 <header>
                     <div class="wrapper text-center">
-                        <div class="flex justify-center pt-4 pb-2 md:pt-8 md:pb-4">
-                            <img alt="Vue logo" class="logo" src="~/assets/logo/nuxt.svg" width="125" height="125" />
-                        </div>
-                        <h1 class="text-3xl font-bold mb-4">PyMark Watermarking App</h1>
-                        <p>
-                            Seamlessly embed and extract watermarks, analyze image quality with PSNR and SSIM, ensure robustness with BER and NCC, and process images with various processing tools. Your all-in-one solution for watermarking,
-                            analysis, and image refinement.
-                        </p>
+                        <FileSharingIntro class="mb-4 pt-4 pb-2 md:pt-8 md:pb-4" />
                         <nav class="flex flex-wrap justify-center md:justify-center pt-3 xs:pt-6 md:pt-2 lg:pt-6">
                             <NavigationButton label="embedding" to="/file-sharing/embedding" />
                             <NavigationButton label="extraction" to="/file-sharing/extraction" />
