@@ -24,7 +24,7 @@
             <FileSharingSubmit class="!mt-5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
         <!-- Bagian untuk menampilkan preview dari respons API -->
-        <div v-if="responseData && responseData.data">
+        <div class="mt-6" v-if="responseData && responseData.data">
             <h2 class="text-2xl font-bold mb-4">Hasil dari Respons API</h2>
             <div>
                 <p class="mb-2">Folder Result: {{ responseData.data.folder_result }}</p>
@@ -76,13 +76,23 @@ const formSubtmitting = ref(false);
 const host_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
 
-const typeOptions = ["grayscale", "color"];
-const type = ref("grayscale");
+const typeOptions = ["gray", "rgb"];
+const type = ref("gray");
 
 const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
 const alpha = ref("0.01");
 
 var responseData = ref<EmbeddingApiResponse | null>(null);
+
+const requestLoadingElement = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    const element = document.getElementById("request_loading");
+
+    if (element) {
+        requestLoadingElement.value = element as HTMLElement;
+    }
+});
 
 function validateForm() {
     return {
@@ -94,6 +104,7 @@ function validateForm() {
 }
 
 async function submitForm() {
+    requestLoadingElement.value?.classList.remove("hidden");
     formSubmitted.value = true;
     formSubtmitting.value = true;
 
@@ -103,6 +114,7 @@ async function submitForm() {
     if (!isValid) {
         formSubtmitting.value = false;
         // Handle error messages or prevent form submission
+        requestLoadingElement.value?.classList.add("hidden");
         return;
     }
 
@@ -110,11 +122,10 @@ async function submitForm() {
 
     if (host_image.value) formData.append("host_image", host_image.value);
     if (watermark_image.value) formData.append("watermark_image", watermark_image.value);
-    formData.append("type", type.value);
     formData.append("alpha", alpha.value.toString());
 
     try {
-        const response = await $fetch<EmbeddingApiResponse>(config.public.api_base + "/pymark/embed_gray", {
+        const response = await $fetch<EmbeddingApiResponse>(config.public.api_base + "/pymark/embed_" + type.value, {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + filesharing.userJWTToken,
@@ -123,9 +134,11 @@ async function submitForm() {
         });
 
         responseData.value = response;
-        formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);
     }
+
+    formSubtmitting.value = false;
+    requestLoadingElement.value?.classList.add("hidden");
 }
 </script>

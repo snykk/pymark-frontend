@@ -36,8 +36,12 @@
                     </div>
                 </header>
             </aside>
-            <main class="w-full md:w-2/3 p-4">
+            <main class="w-full md:w-2/3 p-4 mb-5">
                 <slot />
+                <div class="mx-auto w-1/2 hidden" id="request_loading">
+                    <LoadingIndicator class="h-full w-full" :options="defaultOptions" />
+                    <h1 class="text-2xl text-center">Fetching the response</h1>
+                </div>
             </main>
         </div>
     </div>
@@ -45,6 +49,10 @@
 
 <script setup lang="ts">
 const filesharing = useFileSharingStore();
+
+import animationData from "~/assets/lotties/loading-animation2.json";
+
+const defaultOptions = ref({ animationData });
 </script>
 
 <style scoped></style>

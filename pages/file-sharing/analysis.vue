@@ -20,6 +20,9 @@
                     <ImageInput class="md:me-1 w-full" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formImperceptSubmitted" />
                     <ImageInput class="md:ms-1 w-full" v-model="watermarked_image" id="watermarked_image" label="Watermarked Image" :formSubmitted="formImperceptSubmitted" />
                 </div>
+                <div class="flex flex-col">
+                    <DropdownInput v-model="type" label="type" :options="typeOptions" />
+                </div>
                 <div class="flex flex-col md:flex-row" style="margin: 0">
                     <div class="md:me-1 w-full">
                         <span v-if="formImperceptSubmitted && !host_image" class="text-red-500">Host Image is required</span>
@@ -45,7 +48,10 @@
             <form @submit.prevent="submitRobustnessForm" class="space-y-4" enctype="multipart/form-data">
                 <div class="flex flex-col md:flex-row items-end">
                     <ImageInput class="md:me-1 w-full" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formRobustSubmitted" />
-                    <ImageInput class="md:ms-1 w-full" v-model="extracted_watermark_image" id="extracted_watermark_image" label="Watermarked Image" :formSubmitted="formRobustSubmitted" />
+                    <ImageInput class="md:ms-1 w-full" v-model="extracted_watermark_image" id="extracted_watermark_image" label="Extracted Image" :formSubmitted="formRobustSubmitted" />
+                </div>
+                <div class="flex flex-col">
+                    <DropdownInput v-model="type" label="type" :options="typeOptions" />
                 </div>
                 <div class="flex flex-col md:flex-row" style="margin: 0">
                     <span v-if="formRobustSubmitted && !watermark_image" class="text-red-500 md:me-1 w-full">Watermark image is required</span>
@@ -88,6 +94,9 @@ const watermarked_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
 const extracted_watermark_image = ref<File | null>(null);
 
+const typeOptions = ["gray", "rgb"];
+const type = ref("gray");
+
 var imperceptibilityResponseData = ref<ImperceptibilityApiResponse | null>(null);
 var robustnessResponseData = ref<RobustnessApiResponse | null>(null);
 
@@ -105,7 +114,18 @@ function validateRobustnessForm() {
     };
 }
 
+const requestLoadingElement = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    const element = document.getElementById("request_loading");
+
+    if (element) {
+        requestLoadingElement.value = element as HTMLElement;
+    }
+});
+
 async function submitImperceptibilityForm() {
+    requestLoadingElement.value?.classList.remove("hidden");
     formImperceptSubmitted.value = true;
     formImperceptSubtmitting.value = true;
 
@@ -113,8 +133,8 @@ async function submitImperceptibilityForm() {
 
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
-        // Handle error messages or prevent form submission
         formImperceptSubtmitting.value = false;
+        requestLoadingElement.value?.classList.add("hidden");
         return;
     }
 
@@ -136,6 +156,7 @@ async function submitImperceptibilityForm() {
     }
 
     formImperceptSubtmitting.value = false;
+    requestLoadingElement.value?.classList.add("hidden");
 }
 
 async function submitRobustnessForm() {

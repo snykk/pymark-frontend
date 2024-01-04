@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import animationData from "~/assets/lotties/loading-animation.json";
+import animationData from "~/assets/lotties/loading-animation2.json";
 
 const defaultOptions = ref({ animationData });
 </script>

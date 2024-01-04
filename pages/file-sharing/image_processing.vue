@@ -102,6 +102,7 @@ definePageMeta({
     middleware: ["auth-filesharing"],
 });
 
+import { resolveTypeElements } from "vue/compiler-sfc";
 import type { ImageProcessingApiResponse } from "~/types/ImageProcessingResponse";
 import { ProcessingParameters } from "~/types/ProcessingParameters";
 
@@ -115,27 +116,8 @@ const formSubmitted = ref(false);
 const formSubtmitting = ref(false);
 
 const image = ref<File | null>(null);
-const imagePreviews = ref<string | null>(null);
 
 var responseData = ref<ImageProcessingApiResponse | null>(null);
-
-function handleImageChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (!target || !target.files) return;
-
-    const file = target.files[0];
-    if (!file) return;
-
-    const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-        const result = e.target?.result;
-        if (typeof result === "string") {
-            image.value = file;
-            imagePreviews.value = result;
-        }
-    };
-    fileReader.readAsDataURL(file);
-}
 
 function validateForm() {
     return {
@@ -143,7 +125,18 @@ function validateForm() {
     };
 }
 
+const requestLoadingElement = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    const element = document.getElementById("request_loading");
+
+    if (element) {
+        requestLoadingElement.value = element as HTMLElement;
+    }
+});
+
 async function submitForm() {
+    requestLoadingElement.value?.classList.remove("hidden");
     formSubmitted.value = true;
     formSubtmitting.value = true;
 
@@ -151,7 +144,8 @@ async function submitForm() {
 
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
-        // Handle error messages or prevent form submission
+        requestLoadingElement.value?.classList.add("hidden");
+        formSubtmitting.value = false;
         return;
     }
 
@@ -191,6 +185,7 @@ async function submitForm() {
         console.error("Error:", error);
     }
     formSubtmitting.value = false;
+    requestLoadingElement.value?.classList.add("hidden");
 }
 </script>
 

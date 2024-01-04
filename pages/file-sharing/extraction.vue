@@ -95,13 +95,23 @@ const watermarked_image = ref<File | null>(null);
 const block_position = ref<File | null>(null);
 const key_matrix = ref<File | null>(null); // Tambahkan variabel untuk file .npy
 
-const typeOptions = ["grayscale", "color"];
-const type = ref("grayscale");
+const typeOptions = ["gray", "rgb"];
+const type = ref("gray");
 
 const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
 const alpha = ref("0.01");
 
 var responseData = ref<ExtractionApiResponse | null>(null);
+
+const requestLoadingElement = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    const element = document.getElementById("request_loading");
+
+    if (element) {
+        requestLoadingElement.value = element as HTMLElement;
+    }
+});
 
 function validateForm() {
     return {
@@ -114,6 +124,7 @@ function validateForm() {
 }
 
 async function submitForm() {
+    requestLoadingElement.value?.classList.remove("hidden");
     formSubmitted.value = true;
     formSubtmitting.value = true;
 
@@ -122,6 +133,7 @@ async function submitForm() {
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
         formSubtmitting.value = false;
+        requestLoadingElement.value?.classList.add("hidden");
         return;
     }
 
@@ -131,11 +143,10 @@ async function submitForm() {
     if (block_position.value) formData.append("block_position", block_position.value);
     // Mengirim key_matrix
     if (key_matrix.value) formData.append("key_matrix", key_matrix.value);
-    formData.append("type", type.value);
     formData.append("alpha", alpha.value.toString());
 
     try {
-        const response = await $fetch<ExtractionApiResponse>(config.public.api_base + "/pymark/extract_gray", {
+        const response = await $fetch<ExtractionApiResponse>(config.public.api_base + "/pymark/extract_" + type.value, {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + filesharing.userJWTToken,
@@ -144,9 +155,11 @@ async function submitForm() {
         });
 
         responseData.value = response;
-        formSubtmitting.value = false;
     } catch (error) {
         console.error("Error:", error);
     }
+
+    formSubtmitting.value = false;
+    requestLoadingElement.value?.classList.add("hidden");
 }
 </script>
