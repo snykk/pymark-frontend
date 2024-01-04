@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@pinia/nuxt": "^0.5.1",
+        "lottie-web": "^5.12.2",
         "pinia": "^2.1.7"
     }
 }

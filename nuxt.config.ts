@@ -34,6 +34,11 @@ export default defineNuxtConfig({
                     crossorigin: "anonymous",
                 },
                 {
+                    src: "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs",
+                    type: "module",
+                    defer: true, // Load the script asynchronously
+                },
+                {
                     src: "https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js",
                     body: true, // Placing the script before </body>
                 },
