@@ -1,75 +1,63 @@
 <template>
     <div>
-        <main id="app-main" class="p-4">
-            <section class="app-section bg-gray-100 rounded-lg p-4">
-                <h3 class="text-lg font-semibold mb-4">1. Log in with Facebook</h3>
-                <button v-if="!facebook.userAccessToken" @click="facebook.login" class="btn action-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Login with Facebook</button>
-                <button v-else @click="facebook.logout" class="btn action-btn bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Log out of Facebook</button>
-            </section>
-            <section v-if="facebook.userAccessToken" class="app-section mt-4 bg-gray-100 rounded-lg p-4">
-                <h3 class="text-lg font-semibold mb-4">2. Send a post to Instagram</h3>
-                <input v-model="imageUrl" placeholder="Enter a JPEG image url..." class="border rounded-lg py-2 px-4 mb-4 w-full" />
-                <textarea v-model="postCaption" placeholder="Write a caption..." rows="5" class="border rounded-lg py-2 px-4 w-full mb-4"></textarea>
-                <button @click="shareInstagramPost" :disabled="isSharingPost || !imageUrl" class="btn action-btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                    {{ isSharingPost ? "Sharing..." : "Share" }}
+        <div class="text-center px-3 xs:px-6 md:px-0">
+            <InstagramPublisherIntro class="mb-8 pt-8 pb-5 md:pt-24 md:pb-3" />
+            <div v-if="buttonReady" class="flex flex-wrap justify-center">
+                <NavigationButton v-if="isLogin" to="/instagram-publisher/dashboard" label="Go to your dashboard" />
+                <button
+                    v-else
+                    @click="loginFacebook"
+                    type="button"
+                    class="py-2 px-4 max-w-xs flex justify-center items-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                >
+                    <svg width="20" height="20" fill="currentColor" class="mr-2" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1343 12v264h-157q-86 0-116 36t-30 108v189h293l-39 296h-254v759h-306v-759h-255v-296h255v-218q0-186 104-288.5t277-102.5q147 0 228 12z"></path>
+                    </svg>
+                    Sign in with Facebook
                 </button>
-            </section>
-        </main>
-        <!-- Include other components or sections as needed -->
+            </div>
+            <div class="mt-3">
+                <span v-if="errorMessage" class="text-red-500">{{ errorMessage }}</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { getFacebookPages, getInstagramAccountId, createMediaObjectContainer, publishMediaObjectContainer } from "~/helpers/socialMediaLogic";
-
 const facebook = useFacebookStore();
+const errorMessage = ref<string>("");
+const isLogin = ref<boolean>(false);
+const buttonReady = ref(false);
 
-const imageUrl = ref("");
-const postCaption = ref("");
-const isSharingPost = ref(false);
+function loginFacebook() {
+    // Example usage:
+    facebook
+        .login()
+        .then((accessToken) => {
+            // Use accessToken for further operations
+            console.log("Logged in successfully:");
+            navigateTo("/instagram-publisher/dashboard");
+        })
+        .catch((error) => {
+            // Handle login error
+            console.error("Login failed:", error.message);
+            errorMessage.value = error.message;
+        });
+}
 
 onMounted(() => {
     if (window.FB) {
         window.FB.getLoginStatus((response: any) => {
-            facebook.setUserAccessToken(response.authResponse?.accessToken || "");
+            console.log(response);
+            if (response.status === "connected") {
+                isLogin.value = true;
+            }
         });
     }
+    buttonReady.value = true;
 });
-
-const shareInstagramPost = async () => {
-    isSharingPost.value = true;
-
-    try {
-        const facebookPages = await getFacebookPages(facebook.userAccessToken);
-
-        if (facebookPages.length > 0) {
-            const instagramAccountId = await getInstagramAccountId(facebookPages[0].id, facebook.userAccessToken);
-
-            if (instagramAccountId) {
-                const mediaObjectContainerId = await createMediaObjectContainer(instagramAccountId, facebook.userAccessToken, imageUrl.value, postCaption.value);
-
-                if (mediaObjectContainerId) {
-                    await publishMediaObjectContainer(instagramAccountId, facebook.userAccessToken, mediaObjectContainerId);
-
-                    imageUrl.value = "";
-                    postCaption.value = "";
-                } else {
-                    console.error("Media object container ID is undefined");
-                }
-            } else {
-                console.error("Instagram account ID is undefined");
-            }
-        } else {
-            console.error("No Facebook pages found");
-        }
-    } catch (error) {
-        console.error("Error sharing post:", error);
-    }
-
-    isSharingPost.value = false;
-};
 </script>
 
-<style>
-/* Include your styles here */
+<style scoped>
+/* Styling sesuai kebutuhan Anda */
 </style>
