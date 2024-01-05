@@ -7,6 +7,7 @@
                 <NavigationButton label="extraction" to="/file-sharing/extraction" />
                 <NavigationButton label="analysis" to="/file-sharing/analysis" />
                 <NavigationButton label="image processing" to="/file-sharing/image_processing" />
+                <NavigationButton label="my drive" to="/file-sharing/my_drive" />
             </div>
         </div>
     </div>
