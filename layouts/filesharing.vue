@@ -23,7 +23,8 @@
             </div>
         </div>
         <div class="md:flex">
-            <aside class="w-full md:w-1/3 p-4 flex flex-col">
+            <aside class="w-full md:w-1/3 p-4 flex flex-col md:sticky md:top-0 md:h-screen overflow-y-auto">
+                <!-- this is not scrollable in md screen -->
                 <header>
                     <div class="wrapper text-center">
                         <FileSharingIntro class="mb-4 pt-4 pb-2 md:pt-8 md:pb-4" />
@@ -36,7 +37,8 @@
                     </div>
                 </header>
             </aside>
-            <main class="w-full md:w-2/3 p-4 mb-5">
+            <main class="w-full md:w-2/3 p-4 mb-5 overflow-y-auto">
+                <!-- scrollable in md screen -->
                 <slot />
                 <div class="mx-auto w-1/2 hidden" id="request_loading">
                     <LoadingIndicator class="h-full w-full" :options="defaultOptions" />
