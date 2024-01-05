@@ -127,6 +127,7 @@ async function submitForm() {
     requestLoadingElement.value?.classList.remove("hidden");
     formSubmitted.value = true;
     formSubtmitting.value = true;
+    responseData.value = null;
 
     const validations = validateForm();
 
@@ -135,6 +136,11 @@ async function submitForm() {
         formSubtmitting.value = false;
         requestLoadingElement.value?.classList.add("hidden");
         return;
+    }
+
+    // Scroll to the loading element
+    if (requestLoadingElement.value) {
+        requestLoadingElement.value.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
     const formData = new FormData();

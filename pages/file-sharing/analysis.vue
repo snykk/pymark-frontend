@@ -20,9 +20,6 @@
                     <ImageInput class="md:me-1 w-full" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formImperceptSubmitted" />
                     <ImageInput class="md:ms-1 w-full" v-model="watermarked_image" id="watermarked_image" label="Watermarked Image" :formSubmitted="formImperceptSubmitted" />
                 </div>
-                <div class="flex flex-col">
-                    <DropdownInput v-model="type" label="type" :options="typeOptions" />
-                </div>
                 <div class="flex flex-col md:flex-row" style="margin: 0">
                     <div class="md:me-1 w-full">
                         <span v-if="formImperceptSubmitted && !host_image" class="text-red-500">Host Image is required</span>
@@ -30,6 +27,9 @@
                     <div class="md:ms-1 w-full">
                         <span v-if="formImperceptSubmitted && !watermarked_image" class="text-red-500">Watermarked Image is required</span>
                     </div>
+                </div>
+                <div class="flex flex-col">
+                    <DropdownInput v-model="type" label="type" :options="typeOptions" />
                 </div>
                 <FileSharingSubmit class="flex justify-center mt-10">{{ formImperceptSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
             </form>
@@ -50,12 +50,12 @@
                     <ImageInput class="md:me-1 w-full" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formRobustSubmitted" />
                     <ImageInput class="md:ms-1 w-full" v-model="extracted_watermark_image" id="extracted_watermark_image" label="Extracted Image" :formSubmitted="formRobustSubmitted" />
                 </div>
-                <div class="flex flex-col">
-                    <DropdownInput v-model="type" label="type" :options="typeOptions" />
-                </div>
                 <div class="flex flex-col md:flex-row" style="margin: 0">
                     <span v-if="formRobustSubmitted && !watermark_image" class="text-red-500 md:me-1 w-full">Watermark image is required</span>
                     <span v-if="formRobustSubmitted && !extracted_watermark_image" class="text-red-500 md:ms-1 w-full">Extracted watermark image is required</span>
+                </div>
+                <div class="flex flex-col">
+                    <DropdownInput v-model="type" label="type" :options="typeOptions" />
                 </div>
                 <FileSharingSubmit class="flex justify-center">{{ formRobustnesSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
             </form>
@@ -128,6 +128,7 @@ async function submitImperceptibilityForm() {
     requestLoadingElement.value?.classList.remove("hidden");
     formImperceptSubmitted.value = true;
     formImperceptSubtmitting.value = true;
+    imperceptibilityResponseData.value = null;
 
     const validations = validateImperceptibilityForm();
 
@@ -138,10 +139,16 @@ async function submitImperceptibilityForm() {
         return;
     }
 
+    // Scroll to the loading element
+    if (requestLoadingElement.value) {
+        requestLoadingElement.value.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
     const formData = new FormData();
 
     if (host_image.value) formData.append("host_image", host_image.value);
     if (watermarked_image.value) formData.append("watermarked_image", watermarked_image.value);
+    formData.append("image_type", type.value);
 
     try {
         imperceptibilityResponseData.value = await $fetch<ImperceptibilityApiResponse>(config.public.api_base + "/pymark/analysis?type=imperceptibility", {
@@ -151,6 +158,8 @@ async function submitImperceptibilityForm() {
             },
             body: formData,
         });
+
+        console.log(imperceptibilityResponseData.value);
     } catch (error) {
         console.error("Error:", error);
     }
@@ -160,6 +169,8 @@ async function submitImperceptibilityForm() {
 }
 
 async function submitRobustnessForm() {
+    requestLoadingElement.value?.classList.remove("hidden");
+    robustnessResponseData.value = null;
     formRobustSubmitted.value = true;
     formRobustnesSubtmitting.value = true;
 
@@ -168,13 +179,20 @@ async function submitRobustnessForm() {
     const isValid = Object.values(validations).every((field) => field);
     if (!isValid) {
         formRobustnesSubtmitting.value = false;
+        requestLoadingElement.value?.classList.add("hidden");
         return;
+    }
+
+    // Scroll to the loading element
+    if (requestLoadingElement.value) {
+        requestLoadingElement.value.scrollIntoView({ behavior: "smooth", block: "center" });
     }
 
     const formData = new FormData();
 
     if (watermark_image.value) formData.append("watermark_image", watermark_image.value);
     if (extracted_watermark_image.value) formData.append("extracted_watermark_image", extracted_watermark_image.value);
+    formData.append("image_type", type.value);
 
     try {
         robustnessResponseData.value = await $fetch<RobustnessApiResponse>(config.public.api_base + "/pymark/analysis?type=robustness", {
@@ -189,6 +207,7 @@ async function submitRobustnessForm() {
     }
 
     formRobustnesSubtmitting.value = false;
+    requestLoadingElement.value?.classList.add("hidden");
 }
 
 interface ImperceptibilityApiResponse {

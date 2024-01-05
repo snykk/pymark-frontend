@@ -6,7 +6,7 @@
         <h1 class="text-4xl font-bold mb-4" :class="expandHeadingClass ?? ''">PyMark Watermarking App</h1>
         <p class="max-w-2xl mx-auto" :class="expandDescriptionClass ?? ''">
             Seamlessly embed and extract watermarks, analyze image quality with PSNR and SSIM, ensure robustness with BER and NCC, and process images with various processing tools. Your all-in-one solution for watermarking, analysis, and
-            image refinement."
+            image refinement.
         </p>
     </div>
 </template>
