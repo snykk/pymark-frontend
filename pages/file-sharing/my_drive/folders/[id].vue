@@ -34,7 +34,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
-                    <img :src="previewImage" alt="Preview Image" class="w-full max-h-screen" />
+                    <img :src="previewImage" alt="Preview Image" class="w-full max-h-[80vh] max-w-[80vw] object-contain" />
                 </div>
             </div>
         </div>

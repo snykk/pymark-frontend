@@ -48,6 +48,7 @@
                 <div>
                     <h2 class="text-2xl font-bold mb-4">Link Lainnya</h2>
                     <ul class="list-disc list-inside">
+                        <li><a :href="responseData.data.uploaded_file_responses.public_compressed_image.web_view_link" target="_blank" class="text-blue-500 hover:underline">Public Compressed Image</a></li>
                         <li><a :href="responseData.data.uploaded_file_responses.block_position.web_view_link" target="_blank" class="text-blue-500 hover:underline">Link Block Position</a></li>
                         <li><a :href="responseData.data.uploaded_file_responses.embedding_result_zip.web_view_link" target="_blank" class="text-blue-500 hover:underline">Link Embedding Result Zip</a></li>
                         <li><a :href="responseData.data.uploaded_file_responses.key_matrix.web_view_link" target="_blank" class="text-blue-500 hover:underline">Link Key Matrix</a></li>

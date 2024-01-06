@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="flex justify-center">
-            <img alt="Vue logo" :class="expandLogoClass ?? ''" src="~/assets/logo/nuxt.svg" width="125" height="125" />
+            <NuxtLink to="/"> <img alt="Vue logo" :class="expandLogoClass ?? ''" src="~/assets/logo/nuxt.svg" width="125" height="125" /></NuxtLink>
         </div>
         <h1 class="text-4xl font-bold mb-4" :class="expandHeadingClass ?? ''">PyMark Instagram Publisher</h1>
         <p class="max-w-2xl mx-auto" :class="expandDescriptionClass ?? ''">

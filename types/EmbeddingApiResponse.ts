@@ -12,6 +12,7 @@ export interface EmbeddingApiResponse {
             embedding_result_zip: FileInfo;
             key_matrix: FileInfo;
             watermarked_image: FileInfo;
+            public_compressed_image: FileInfo;
         };
     };
     message: string;
