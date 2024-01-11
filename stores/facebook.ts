@@ -2,18 +2,25 @@ import { defineStore } from "pinia";
 
 interface FacebookStore {
     userAccessToken: string;
+    userEmail: string;
 }
 
 export const useFacebookStore = defineStore("facebookStore", {
     state: (): FacebookStore => ({
         userAccessToken: "", // Load from cookies if available
+        userEmail: "",
     }),
     actions: {
         me(this: FacebookStore) {
             if (this.userAccessToken) {
                 console.log("Welcome! Fetching your information.... ");
-                window.FB.api("/me", (apiResponse: { id: String; name: String }) => {
+                window.FB.api("/me?fields=id,email,name", (apiResponse: { id: string; name: string; email: string }) => {
+                    console.log(apiResponse);
                     console.log("Good to see you, " + apiResponse.name + ".");
+                    console.log("Your email is " + apiResponse.email + ".");
+
+                    // set userEmail
+                    this.userEmail = apiResponse.email;
                 });
                 return;
             }
@@ -46,7 +53,7 @@ export const useFacebookStore = defineStore("facebookStore", {
                             }
                         },
                         {
-                            scope: "instagram_basic,pages_show_list",
+                            scope: "instagram_basic,pages_show_list,email",
                         }
                     );
                 } else {

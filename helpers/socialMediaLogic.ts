@@ -1,4 +1,5 @@
 export async function getFacebookPages(userAccessToken: string) {
+    console.log("useraccess", userAccessToken);
     try {
         const response = await new Promise((resolve, reject) => {
             window.FB.api("me/accounts", { access_token: userAccessToken }, (response) => {

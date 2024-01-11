@@ -36,13 +36,11 @@
 
 <script setup lang="ts">
 import animationData from "~/assets/lotties/loading-animation.json";
-
-const defaultOptions = ref({ animationData });
-
 import { getFacebookPages, getInstagramAccountId, createMediaObjectContainer, publishMediaObjectContainer } from "~/helpers/socialMediaLogic";
 
 const facebook = useFacebookStore();
 
+const defaultOptions = ref({ animationData });
 const imageUrl = ref("");
 const postCaption = ref("");
 const isSharingPost = ref(false);
@@ -69,6 +67,8 @@ const shareInstagramPost = async () => {
 
     try {
         const facebookPages = await getFacebookPages(facebook.userAccessToken);
+
+        console.log(facebookPages);
 
         if (facebookPages.length > 0) {
             const instagramAccountId = await getInstagramAccountId(facebookPages[0].id, facebook.userAccessToken);

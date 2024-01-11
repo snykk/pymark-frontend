@@ -95,37 +95,30 @@
 </template>
 
 <script setup lang="ts">
-const filesharing = useFileSharingStore();
+import type { ImageProcessingApiResponse } from "~/types/ImageProcessingResponse";
+import { ProcessingParameters } from "~/types/ProcessingParameters";
 
 definePageMeta({
     layout: "filesharing",
     middleware: ["auth-filesharing"],
 });
 
-import { resolveTypeElements } from "vue/compiler-sfc";
-import type { ImageProcessingApiResponse } from "~/types/ImageProcessingResponse";
-import { ProcessingParameters } from "~/types/ProcessingParameters";
-
-// List of processing types
-const processingTypeOptions = ["salt_and_pepper", "blur", "gaussian", "sharpening", "median", "cropping", "jpeg_compression"];
-const processingType = ref<string>("salt_and_pepper"); // Default selected processing type
-
+const filesharing = useFileSharingStore();
 const config = useRuntimeConfig();
 
+const processingTypeOptions = ["salt_and_pepper", "blur", "gaussian", "sharpening", "median", "cropping", "jpeg_compression"];
+const processingType = ref<string>("salt_and_pepper"); // Default selected processing type
 const formSubmitted = ref(false);
 const formSubtmitting = ref(false);
-
 const image = ref<File | null>(null);
-
 var responseData = ref<ImageProcessingApiResponse | null>(null);
+const requestLoadingElement = ref<HTMLElement | null>(null);
 
 function validateForm() {
     return {
         image: !!image.value,
     };
 }
-
-const requestLoadingElement = ref<HTMLElement | null>(null);
 
 onMounted(() => {
     const element = document.getElementById("request_loading");
@@ -196,14 +189,10 @@ async function submitForm() {
 </script>
 
 <style lang="css" scoped>
-/* Your existing custom styles... */
-
-/* Adjustments for better layout */
 .input-field {
     margin-bottom: 1.5rem;
 }
 
-/* Styling for Attacked Image */
 .attacked-image-container {
     border-radius: 0.5rem;
     overflow: hidden;

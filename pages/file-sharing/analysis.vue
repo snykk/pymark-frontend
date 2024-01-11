@@ -72,33 +72,32 @@
 </template>
 
 <script setup lang="ts">
+import type { ImperceptibilityApiResponse } from "~/types/ImperceptibilityApiResponse";
+import type { RobustnessApiResponse } from "~/types/RobustnessApiResponse";
+
 definePageMeta({
     layout: "filesharing",
     middleware: ["auth-filesharing"],
 });
 
-const selectedForm = ref<"imperceptibility" | "robustness">("imperceptibility");
-
 const filesharing = useFileSharingStore();
-
 const config = useRuntimeConfig();
 
+const selectedForm = ref<"imperceptibility" | "robustness">("imperceptibility");
 const formImperceptSubmitted = ref(false);
 const formRobustSubmitted = ref(false);
-
 const formImperceptSubtmitting = ref(false);
 const formRobustnesSubtmitting = ref(false);
-
 const host_image = ref<File | null>(null);
 const watermarked_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
 const extracted_watermark_image = ref<File | null>(null);
-
-const typeOptions = ["gray", "rgb"];
 const type = ref("gray");
-
 var imperceptibilityResponseData = ref<ImperceptibilityApiResponse | null>(null);
 var robustnessResponseData = ref<RobustnessApiResponse | null>(null);
+const requestLoadingElement = ref<HTMLElement | null>(null);
+
+const typeOptions = ["gray", "rgb"];
 
 function validateImperceptibilityForm() {
     return {
@@ -113,8 +112,6 @@ function validateRobustnessForm() {
         extracted_watermark_image: !!extracted_watermark_image.value,
     };
 }
-
-const requestLoadingElement = ref<HTMLElement | null>(null);
 
 onMounted(() => {
     const element = document.getElementById("request_loading");
@@ -208,28 +205,6 @@ async function submitRobustnessForm() {
 
     formRobustnesSubtmitting.value = false;
     requestLoadingElement.value?.classList.add("hidden");
-}
-
-interface ImperceptibilityApiResponse {
-    data: {
-        imperceptibility_analysis: {
-            psnr: number;
-            ssim: number;
-        };
-    };
-    message: string;
-    status: boolean;
-}
-
-interface RobustnessApiResponse {
-    status: boolean;
-    message: string;
-    data: {
-        robustness_analysis: {
-            ber: number; // Bit Error Rate
-            ncc: number; // Normalized Cross-Correlation
-        };
-    };
 }
 </script>
 

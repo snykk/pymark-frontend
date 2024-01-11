@@ -19,14 +19,17 @@
             <table class="min-w-full text-start">
                 <thead>
                     <tr>
+                        <th></th>
                         <th class="px-4 py-2 text-left">Folder Name</th>
                         <th class="px-4 py-2 text-left">ID</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="folder in responseData?.data.watermarking_folders" :key="folder.id" class="cursor-pointer border-b border-gray-200" @click="navigateToFolder(folder.id)">
-                        <td class="px-4 py-2 flex">
-                            <img alt="Folder icon" src="~/assets/icon/folder2.svg" width="30" height="30" class="me-3" />
+                        <td>
+                            <img alt="Folder icon" src="~/assets/icon/folder2.svg" width="30" height="30" />
+                        </td>
+                        <td class="pr-4 py-2 flex">
                             {{ folder.name }}
                         </td>
                         <td class="px-4 py-2">{{ folder.id }}</td>
@@ -38,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import type { MyDriveFoldersApiResponse } from "~/types/MyDriveFoldersApiResponse";
+
 definePageMeta({
     layout: "filesharing",
     middleware: ["auth-filesharing"],
@@ -47,7 +52,7 @@ const filesharing = useFileSharingStore();
 
 const config = useRuntimeConfig();
 const selectedDrive = ref<"embedding" | "extraction" | "image-processing">("embedding");
-const responseData = ref<MyDriveFolderResponse | null>(null);
+const responseData = ref<MyDriveFoldersApiResponse | null>(null);
 
 const requestLoadingElement = ref<HTMLElement | null>(null);
 
@@ -60,7 +65,7 @@ onMounted(async () => {
 
     requestLoadingElement.value?.classList.remove("hidden");
 
-    responseData.value = await $fetch<MyDriveFolderResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=" + selectedDrive.value, {
+    responseData.value = await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=" + selectedDrive.value, {
         method: "get",
         headers: {
             Authorization: "Bearer " + filesharing.userJWTToken,
@@ -85,7 +90,7 @@ const fetchData = async (feature: "embedding" | "extraction" | "image-processing
 
     requestLoadingElement.value?.classList.remove("hidden");
     try {
-        responseData.value = await $fetch<MyDriveFolderResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=" + feature, {
+        responseData.value = await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=" + feature, {
             method: "get",
             headers: {
                 Authorization: "Bearer " + filesharing.userJWTToken,
@@ -98,20 +103,6 @@ const fetchData = async (feature: "embedding" | "extraction" | "image-processing
 
     requestLoadingElement.value?.classList.add("hidden");
 };
-
-interface MyDriveFolderResponse {
-    data: {
-        pymark_featur: string;
-        watermarking_folders: Folder[];
-    };
-    message: string;
-    status: boolean;
-}
-
-interface Folder {
-    id: string;
-    name: string;
-}
 </script>
 
 <style scoped>

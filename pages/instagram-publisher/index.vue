@@ -25,6 +25,7 @@
 
 <script setup lang="ts">
 const facebook = useFacebookStore();
+
 const errorMessage = ref<string>("");
 const isLogin = ref<boolean>(false);
 const buttonReady = ref(false);

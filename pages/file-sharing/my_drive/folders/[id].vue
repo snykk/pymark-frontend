@@ -42,6 +42,9 @@
 </template>
 
 <script setup lang="ts">
+import type { MyDriveFolderDetailApiResponse } from "~/types/MyDriveFolderDetailApiResponse";
+import { isImageFile } from "~/helpers/image";
+
 definePageMeta({
     layout: "filesharing",
     middleware: "auth-filesharing",
@@ -51,9 +54,10 @@ const filesharing = useFileSharingStore();
 const route = useRoute();
 const config = useRuntimeConfig();
 
-const responseData = ref<ApiResponse | null>(null);
+const responseData = ref<MyDriveFolderDetailApiResponse | null>(null);
 const showModal = ref(false);
 const previewImage = ref("");
+const requestLoadingElement = ref<HTMLElement | null>(null);
 
 const showImagePreview = (imageUrl: string) => {
     previewImage.value = imageUrl;
@@ -66,28 +70,6 @@ const closeModal = () => {
     showModal.value = false;
 };
 
-interface FileLinks {
-    download_link: string;
-    web_view_link: string;
-}
-
-interface File {
-    id: string;
-    links: FileLinks;
-    name: string;
-}
-
-interface ApiResponse {
-    data: {
-        files: File[];
-        folder_id: string;
-    };
-    message: string;
-    status: boolean;
-}
-
-const requestLoadingElement = ref<HTMLElement | null>(null);
-
 onMounted(async () => {
     const element = document.getElementById("request_loading2");
 
@@ -98,7 +80,7 @@ onMounted(async () => {
     requestLoadingElement.value?.classList.remove("hidden");
 
     try {
-        responseData.value = await $fetch<ApiResponse>(config.public.api_base + "/mydrive/folder/" + route.params.id, {
+        responseData.value = await $fetch<MyDriveFolderDetailApiResponse>(config.public.api_base + "/mydrive/folder/" + route.params.id, {
             method: "get",
             headers: {
                 Authorization: "Bearer " + filesharing.userJWTToken,
@@ -110,16 +92,6 @@ onMounted(async () => {
 
     requestLoadingElement.value?.classList.add("hidden");
 });
-
-function getFileExtension(filename: string): string {
-    return filename.split(".").pop()?.toLowerCase() || "";
-}
-
-function isImageFile(filename: string): boolean {
-    const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "tiff"]; // Add more image extensions as needed
-    const extension = getFileExtension(filename);
-    return imageExtensions.includes(extension);
-}
 </script>
 
 <style scoped>

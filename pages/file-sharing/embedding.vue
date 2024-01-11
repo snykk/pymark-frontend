@@ -60,32 +60,26 @@
 </template>
 
 <script setup lang="ts">
+import type { EmbeddingApiResponse } from "~/types/EmbeddingApiResponse";
 definePageMeta({
     layout: "filesharing",
     middleware: ["auth-filesharing"],
 });
 
 const filesharing = useFileSharingStore();
-
-import type { EmbeddingApiResponse } from "~/types/EmbeddingApiResponse";
-
 const config = useRuntimeConfig();
 
 const formSubmitted = ref(false);
 const formSubtmitting = ref(false);
-
 const host_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
+const type = ref("gray");
+const alpha = ref("0.01");
+var responseData = ref<EmbeddingApiResponse | null>(null);
+const requestLoadingElement = ref<HTMLElement | null>(null);
 
 const typeOptions = ["gray", "rgb"];
-const type = ref("gray");
-
 const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
-const alpha = ref("0.01");
-
-var responseData = ref<EmbeddingApiResponse | null>(null);
-
-const requestLoadingElement = ref<HTMLElement | null>(null);
 
 onMounted(() => {
     const element = document.getElementById("request_loading");
