@@ -14,7 +14,7 @@
         </nav>
 
         <!-- Content -->
-        <div v-if="responseData">
+        <div v-if="responseData?.status === true">
             <h2 class="text-xl font-semibold mb-4">Folder List</h2>
             <table class="min-w-full text-start">
                 <thead>
@@ -37,11 +37,19 @@
                 </tbody>
             </table>
         </div>
+        <div v-else-if="responseData?.status === false">
+            <div class="mx-auto w-1/2" id="loading_no_data">
+                <LoadingIndicator class="h-full w-full" :options="defaultOptionNoData" />
+            </div>
+        </div>
     </main>
 </template>
 
 <script setup lang="ts">
 import type { MyDriveFoldersApiResponse } from "~/types/MyDriveFoldersApiResponse";
+import loadingNoData from "~/assets/lotties/loading-animation4.json";
+
+const defaultOptionNoData = ref({ animationData: loadingNoData });
 
 definePageMeta({
     layout: "filesharing",

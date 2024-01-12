@@ -64,7 +64,7 @@
                 <div v-if="responseData.data && responseData.data.uploaded_file_responses.attacked_image">
                     <h4 class="text-sm font-semibold mb-2">Attacked Image Preview:</h4>
                     <div class="rounded-lg shadow-md overflow-hidden attacked-image-container">
-                        <img :src="responseData.data.uploaded_file_responses.attacked_image.download_link" alt="Attacked Image" />
+                        <img :src="responseData.data.uploaded_file_responses.attacked_image.thumbnail_link.replace(/=s\d+$/, '')" alt="Attacked Image" />
                     </div>
                 </div>
                 <!-- Detailed Response Data -->

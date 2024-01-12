@@ -45,7 +45,7 @@
             <div>
                 <p class="mb-2">Folder Result: {{ responseData.data.folder_result }}</p>
                 <div v-if="responseData.data.robustness_analysis" class="mb-4">
-                    <p class="font-semibold">Robustness Analysis:</p>
+                    <p class="text-xl font-bold">Robustness Analysis:</p>
                     <ul>
                         <li>BER: {{ responseData.data.robustness_analysis.ber }}</li>
                         <li>NCC: {{ responseData.data.robustness_analysis.ncc }}</li>
@@ -53,22 +53,26 @@
                 </div>
             </div>
             <div v-if="responseData.data.uploaded_file_responses">
-                <h2 class="text-2xl font-bold mb-4">Preview Gambar Watermarked</h2>
-                <div class="border rounded-lg overflow-hidden">
-                    <img :src="responseData.data.uploaded_file_responses.extracted_watermark.download_link" alt="Preview Watermarked Image" class="h-64 w-full object-cover" />
-                    <div class="p-4">
-                        <p class="mb-2">ID: {{ responseData.data.uploaded_file_responses.extracted_watermark.id }}</p>
-                        <a :href="responseData.data.uploaded_file_responses.extracted_watermark.web_view_link" target="_blank" class="text-blue-500 hover:underline">Tautan Tampilan Web</a>
+                <div class="mt-6">
+                    <div v-if="responseData.data.uploaded_file_responses">
+                        <h2 class="text-xl font-bold mb-4">Preview Gambar Extracted Watermark</h2>
+                        <div class="overflow-hidden">
+                            <img :src="responseData.data.uploaded_file_responses.extracted_watermark.thumbnail_link.replace(/=s\d+$/, '')" alt="Preview Extracted Watermark" />
+                            <div class="p-4">
+                                <a :href="responseData.data.uploaded_file_responses.extracted_watermark.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Extracted Watermark</a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="text-xl font-bold mb-4">Link Lainnya</h2>
+                            <ul class="list-disc list-inside">
+                                <li><a :href="responseData.data.uploaded_file_responses.block_position.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Block Position</a></li>
+                                <li><a :href="responseData.data.uploaded_file_responses.embedding_result_zip.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Embedding Result Zip</a></li>
+                                <li><a :href="responseData.data.uploaded_file_responses.extracted_watermark.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Extracted Watermark</a></li>
+                                <li><a :href="responseData.data.uploaded_file_responses.key_matrix.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Key Matrix</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <h2 class="text-2xl font-bold mb-4">Link Lainnya</h2>
-                    <ul class="list-disc list-inside">
-                        <li><a :href="responseData.data.uploaded_file_responses.block_position.web_view_link" target="_blank" class="text-blue-500 hover:underline">Link Block Position</a></li>
-                        <li><a :href="responseData.data.uploaded_file_responses.embedding_result_zip.web_view_link" target="_blank" class="text-blue-500 hover:underline">Link Embedding Result Zip</a></li>
-                        <li><a :href="responseData.data.uploaded_file_responses.extracted_watermark.web_view_link" target="_blank" class="text-blue-500 hover:underline">Link Extracted Watermark</a></li>
-                        <li><a :href="responseData.data.uploaded_file_responses.key_matrix.web_view_link" target="_blank" class="text-blue-500 hover:underline">Link Key Matrix</a></li>
-                    </ul>
                 </div>
             </div>
         </div>

@@ -18,7 +18,7 @@
                             <td class="py-4 px-6">
                                 <a :href="file.links.download_link" target="_blank" class="text-blue-500 dark:text-blue-400">Download</a>
                                 <span class="mx-2 text-gray-400 dark:text-gray-600">|</span>
-                                <a v-if="isImageFile(file.name)" href="#" @click.prevent="showImagePreview(file.links.download_link)" class="text-blue-500 dark:text-blue-400">Web View</a>
+                                <a v-if="isImageFile(file.name)" href="#" @click.prevent="showImagePreview(file.links.thumbnail_link.replace(/=s\d+$/, ''))" class="text-blue-500 dark:text-blue-400">Web View</a>
                                 <a v-else :href="file.links.web_view_link" target="blank" class="text-blue-500 dark:text-blue-400">Web View</a>
                             </td>
                         </tr>
