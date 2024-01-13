@@ -26,13 +26,13 @@ export default defineNuxtConfig({
                 },
             ],
             script: [
-                {
-                    id: "facebook-jssdk",
-                    src: "https://connect.facebook.net/en_US/sdk.js",
-                    defer: true,
-                    async: true,
-                    crossorigin: "anonymous",
-                },
+                // {
+                //     id: "facebook-jssdk",
+                //     src: "https://connect.facebook.net/en_US/sdk.js",
+                //     defer: true,
+                //     async: true,
+                //     crossorigin: "anonymous",
+                // },
                 {
                     src: "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs",
                     type: "module",

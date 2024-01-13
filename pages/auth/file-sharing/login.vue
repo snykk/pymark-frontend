@@ -28,7 +28,7 @@ definePageMeta({
             const jwtTOken = useCookie("userJWTToken");
             if (jwtTOken.value) {
                 userJWTToken.value = jwtTOken.value;
-                useRouter().push("/file-sharing/embedding");
+                return navigateTo("/file-sharing/embedding");
             }
         },
     ],
@@ -54,15 +54,14 @@ const submitForm = async () => {
     try {
         filesharing
             .login(user.value)
-            .then((response: unknown) => {
-                const typedResponse = response as LoginFileSharingResponse;
-                if (typedResponse.status) {
-                    filesharing.setUserJWTToken(typedResponse.data!.access_token!, typedResponse.data!.user!.username, typedResponse.data!.user!.email);
+            .then((response: LoginFileSharingResponse) => {
+                if (response.status) {
+                    filesharing.setUserJWTToken(response.data!.access_token!, response.data!.user!.username, response.data!.user!.email);
                     navigateTo("/file-sharing/embedding");
                     return;
                 }
 
-                errorMessage.value = typedResponse.message;
+                errorMessage.value = response.message;
             })
             .catch((error) => {
                 errorMessage.value = "Failed to login";
