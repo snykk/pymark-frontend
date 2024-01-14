@@ -22,6 +22,7 @@
                         <th></th>
                         <th class="px-4 py-2 text-left">Folder Name</th>
                         <th class="px-4 py-2 text-left">ID</th>
+                        <th class="px-4 py-2 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +34,9 @@
                             {{ folder.name }}
                         </td>
                         <td class="px-4 py-2">{{ folder.id }}</td>
+                        <td class="px-4 py-2">
+                            <button @click.stop="confirmDeleteFolder(folder.id)" class="text-red-600 hover:text-red-800">Delete</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -110,6 +114,40 @@ const fetchData = async (feature: "embedding" | "extraction" | "image-processing
     }
 
     requestLoadingElement.value?.classList.add("hidden");
+};
+
+const confirmDeleteFolder = (folderId: string) => {
+    const isConfirmed = confirm("Are you sure you want to delete this folder?");
+
+    if (isConfirmed) {
+        // Call the API to delete the folder
+        deleteFolder(folderId);
+    }
+};
+
+const deleteFolder = async (folderId: string) => {
+    requestLoadingElement.value?.classList.remove("hidden");
+    responseData.value = null;
+
+    try {
+        const response = await $fetch(config.public.api_base + `/mydrive/folder/${folderId}`, {
+            method: "delete",
+            headers: {
+                Authorization: "Bearer " + filesharing.userJWTToken,
+            },
+        });
+
+        console.log("response delete:", response);
+
+        if (response.status) {
+            // Folder deleted successfully, refresh the folder list
+            fetchData(selectedDrive.value);
+        } else {
+            console.error("Error deleting folder:", response.message);
+        }
+    } catch (error) {
+        console.error("Error deleting folder:", error);
+    }
 };
 </script>
 
