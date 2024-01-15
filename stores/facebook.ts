@@ -3,12 +3,14 @@ import { defineStore } from "pinia";
 interface FacebookStore {
     userAccessToken: string;
     userEmail: string;
+    userName: string;
 }
 
 export const useFacebookStore = defineStore("facebookStore", {
     state: (): FacebookStore => ({
         userAccessToken: "", // Load from cookies if available
         userEmail: "",
+        userName: "",
     }),
     actions: {
         me(this: FacebookStore) {
@@ -21,6 +23,7 @@ export const useFacebookStore = defineStore("facebookStore", {
 
                     // set userEmail
                     this.userEmail = apiResponse.email;
+                    this.userName = apiResponse.name;
                 });
                 return;
             }

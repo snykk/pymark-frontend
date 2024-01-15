@@ -1,8 +1,8 @@
 <template>
     <section class="">
-        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
+        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:pt-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
             <div class="flex flex-col justify-center">
-                <FileSharingIntro expandHeadingClass="pb-2 pt-10" />
+                <FileSharingIntro class="mx-auto" expandHeadingClass="pb-2 pt-10" />
                 <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" target="blank" class="text-blue-600 dark:text-blue-500 hover:underline font-medium text-lg inline-flex items-center"
                     >Read more about our app
                     <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

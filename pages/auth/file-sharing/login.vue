@@ -51,24 +51,21 @@ const submitForm = async () => {
         return;
     }
 
-    try {
-        filesharing
-            .login(user.value)
-            .then((response: LoginFileSharingResponse) => {
-                if (response.status) {
-                    filesharing.setUserJWTToken(response.data!.access_token!, response.data!.user!.username, response.data!.user!.email);
-                    navigateTo("/file-sharing/embedding");
-                    return;
-                }
-
-                errorMessage.value = response.message;
-            })
-            .catch((error) => {
-                errorMessage.value = "Failed to login";
-            });
-    } catch (error) {
-        errorMessage.value = "Something went wrong";
-    }
+    filesharing
+        .login(user.value)
+        .then((response: LoginFileSharingResponse) => {
+            if (response.status === true) {
+                // Successful login (HTTP 200)
+                filesharing.setUserJWTToken(response.data!.access_token!, response.data!.user!.username, response.data!.user!.email);
+                navigateTo("/file-sharing/embedding");
+                return;
+            } else {
+                errorMessage.value = response.message || "Failed to login";
+            }
+        })
+        .catch((error) => {
+            errorMessage.value = error.response._data.message || "Something went wrong";
+        });
 };
 </script>
 
