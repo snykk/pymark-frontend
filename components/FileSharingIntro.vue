@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex justify-center mb-3">
+        <div class="flex justify-center">
             <NuxtLink to="/" class="logo-container">
                 <img src="~/assets/logo/nuxt.svg" class="logo logo-top-left" alt="Nuxt.js Logo" />
                 <img src="~/assets/logo/google-drive.svg" class="logo logo-bottom-right" alt="Google Drive Logo" />

@@ -1,31 +1,35 @@
 <template>
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Sign Up to PyMark</h2>
-    <form class="mt-8 space-y-6" @submit.prevent="submitForm">
-        <div>
-            <AuthInput v-model="user.username" placeholder="John Doe" label="username" />
-            <span v-if="formSubmitted && !user.username" class="text-red-500">Username is required</span>
-        </div>
-        <div>
-            <AuthInput v-model="user.email" placeholder="name@company.com" label="email" />
-            <span v-if="formSubmitted && !user.email" class="text-red-500">Email is required</span>
-        </div>
-        <div>
-            <AuthInput v-model="user.password" placeholder="************" label="password" />
-            <span v-if="formSubmitted && !user.password" class="text-red-500">Password is required</span>
-        </div>
-        <div v-if="formSubmitted && errorMessage" class="text-red-500">{{ errorMessage }}</div>
-        <AuthSubmit>Create an account</AuthSubmit>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">
-            Already have an account?
-            <NuxtLink to="/auth/file-sharing/login" class="text-blue-600 hover:underline dark:text-blue-500">Login Now!</NuxtLink>
-        </div>
-    </form>
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center">Sign Up to PyMark</h2>
+        <form class="mt-8 space-y-6" @submit.prevent="submitForm">
+            <div>
+                <AuthInput v-model="user.username" placeholder="John Doe" label="username" />
+                <span v-if="formSubmitted && !user.username" class="text-red-500">Username is required</span>
+            </div>
+            <div>
+                <AuthInput v-model="user.email" placeholder="name@company.com" label="email" />
+                <span v-if="formSubmitted && !user.email" class="text-red-500">Email is required</span>
+            </div>
+            <div>
+                <AuthInput v-model="user.password" placeholder="************" label="password" />
+                <span v-if="formSubmitted && !user.password" class="text-red-500">Password is required</span>
+            </div>
+            <div v-if="formSubmitted && errorMessage" class="text-red-500">{{ errorMessage }}</div>
+            <AuthSubmit class="w-48">Create an account</AuthSubmit>
+            <div class="text-sm font-medium text-gray-900 dark:text-white">
+                Already have an account?
+                <NuxtLink to="/auth/file-sharing/login" class="text-blue-600 hover:underline dark:text-blue-500">Login Now!</NuxtLink>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script setup lang="ts">
 import type RegisFileSharingResponse from "~/types/RegisFileSharingResponse";
 
 const filesharing = useFileSharingStore();
+const config = useRuntimeConfig();
+
 definePageMeta({
     layout: "auth-filesharing",
     middleware: [
@@ -59,11 +63,16 @@ const submitForm = async () => {
     try {
         filesharing
             .regis(user.value)
-            .then((response: unknown) => {
+            .then(async (response: unknown) => {
                 const typedResponse = response as RegisFileSharingResponse;
                 if (typedResponse.status) {
-                    navigateTo("/auth/file-sharing/login");
-                    return;
+                    const otpResponse = await sendOTP(user.value.email);
+
+                    if (otpResponse.status) {
+                        return navigateTo("/auth/file-sharing/verif-otp?email=" + user.value.email);
+                    } else {
+                        errorMessage.value = otpResponse.message;
+                    }
                 }
 
                 errorMessage.value = typedResponse.message;
@@ -75,6 +84,24 @@ const submitForm = async () => {
         errorMessage.value = "Something went wrong";
     }
 };
+
+const sendOTP = async (email: string) => {
+    const formData = new FormData();
+
+    formData.append("email", email);
+
+    const response = await $fetch<OTPResponse>(config.public.api_base + "/auth/send_otp", {
+        method: "POST",
+        body: formData,
+    });
+
+    return response;
+};
+
+interface OTPResponse {
+    message: string;
+    status: boolean;
+}
 </script>
 
 <style>

@@ -1,21 +1,23 @@
 <template>
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Sign in to PyMark</h2>
-    <form class="mt-8 space-y-6" @submit.prevent="submitForm">
-        <div>
-            <AuthInput v-model="user.email" placeholder="name@company.com" label="email" />
-            <span v-if="formSubmitted && !user.email" class="text-red-500">Email is required</span>
-        </div>
-        <div>
-            <AuthInput v-model="user.password" placeholder="************" label="password" />
-            <span v-if="formSubmitted && !user.password" class="text-red-500">Password is required</span>
-        </div>
-        <div v-if="formSubmitted && errorMessage" class="text-red-500">{{ errorMessage }}</div>
-        <AuthSubmit>Login to your account</AuthSubmit>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">
-            Not registered yet?
-            <NuxtLink to="/auth/file-sharing/regis" class="text-blue-600 hover:underline dark:text-blue-500">Create account</NuxtLink>
-        </div>
-    </form>
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center">Sign in to PyMark</h2>
+        <form class="mt-8 space-y-6" @submit.prevent="submitForm">
+            <div>
+                <AuthInput v-model="user.email" placeholder="name@company.com" label="email" />
+                <span v-if="formSubmitted && !user.email" class="text-red-500">Email is required</span>
+            </div>
+            <div>
+                <AuthInput v-model="user.password" placeholder="************" label="password" />
+                <span v-if="formSubmitted && !user.password" class="text-red-500">Password is required</span>
+            </div>
+            <div v-if="formSubmitted && errorMessage" class="text-red-500">{{ errorMessage }}</div>
+            <AuthSubmit class="w-56">Login to your account</AuthSubmit>
+            <div class="text-sm font-medium text-gray-900 dark:text-white">
+                Not registered yet?
+                <NuxtLink to="/auth/file-sharing/regis" class="text-blue-600 hover:underline dark:text-blue-500">Create account</NuxtLink>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script setup lang="ts">
