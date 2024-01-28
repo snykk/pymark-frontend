@@ -72,6 +72,10 @@ onMounted(async () => {
     requestLoadingElement.value?.classList.add("hidden");
 });
 
+onBeforeUnmount(async () => {
+    requestLoadingElement.value?.classList.add("hidden");
+});
+
 function navigateToFolder(folder_id: string) {
     navigateTo("/instagram-publisher/my_post/folders/" + folder_id);
 }

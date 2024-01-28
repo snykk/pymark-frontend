@@ -92,6 +92,10 @@ onMounted(async () => {
 
     requestLoadingElement.value?.classList.add("hidden");
 });
+
+onBeforeUnmount(async () => {
+    requestLoadingElement.value?.classList.add("hidden");
+});
 </script>
 
 <style scoped>

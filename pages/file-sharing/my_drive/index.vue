@@ -87,6 +87,10 @@ onMounted(async () => {
     requestLoadingElement.value?.classList.add("hidden");
 });
 
+onBeforeUnmount(async () => {
+    requestLoadingElement.value?.classList.add("hidden");
+});
+
 function navigateToFolder(folder_id: string) {
     navigateTo("/file-sharing/my_drive/folders/" + folder_id);
 }

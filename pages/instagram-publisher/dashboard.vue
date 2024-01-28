@@ -18,7 +18,7 @@
             <DropdownInput v-model="type" label="type" :options="typeOptions" />
         </div>
 
-        <TextAreaInput v-model="postCaption" class="mt-2 mb-4" aria-placeholder="Write a caption" id="caption" label="Post Caption" />
+        <TextAreaInput v-model="post_caption" class="mt-2 mb-4" aria-placeholder="Write a caption" id="caption" label="Post Caption" />
         <FileSharingSubmit v-if="!formSubmitting" @click="shareInstagramPost">Share</FileSharingSubmit>
         <div v-else class="relative w-full h-14 overflow-hidden flex items-center justify-center">
             <LoadingIndicator class="h-32 absolute top-[-1.75rem]" :options="optionLoadingSubmit" />
@@ -38,7 +38,7 @@ const facebook = useFacebookStore();
 const config = useRuntimeConfig();
 
 const optionLoadingSubmit = ref({ animationData: animationDataLoadingSubmit });
-const postCaption = ref("");
+const post_caption = ref("");
 const formSubmitting = ref(false);
 const formSubmitted = ref(false);
 const host_image = ref<File | null>(null);
@@ -53,6 +53,7 @@ function validateForm() {
         host_image: !!host_image.value,
         watermark_image: !!watermark_image.value,
         type: !!type.value,
+        post_caption: !!post_caption.value,
     };
 }
 
@@ -89,7 +90,7 @@ const shareInstagramPost = async () => {
         // upload post scenario
         const postData = {
             image_url: responseEmbedding.data.uploaded_file_responses.public_compressed_image.download_link,
-            post_caption: postCaption.value,
+            post_caption: post_caption.value,
         };
 
         const responseUpload = await $fetch(config.public.api_base + "/instagram/upload_post", {
@@ -105,7 +106,7 @@ const shareInstagramPost = async () => {
             // process is done
             alert("upload berhasil");
             type.value = "gray";
-            postCaption.value = "";
+            post_caption.value = "";
 
             // Increment the key to force a re-render of ImageInput components
             imageInputKey.value += 1;

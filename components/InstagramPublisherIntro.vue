@@ -1,7 +1,10 @@
 <template>
     <div>
         <div class="flex justify-center">
-            <NuxtLink to="/"> <img alt="Vue logo" :class="expandLogoClass ?? ''" src="~/assets/logo/nuxt.svg" width="125" height="125" /></NuxtLink>
+            <NuxtLink to="/" class="logo-container">
+                <img src="~/assets/logo/nuxt.svg" class="logo logo-top-left" alt="Nuxt.js Logo" />
+                <img src="~/assets/logo/instagram.svg" class="logo logo-bottom-right" alt="Google Drive Logo" />
+            </NuxtLink>
         </div>
         <h1 class="text-4xl font-bold mb-4" :class="expandHeadingClass ?? ''">PyMark Instagram Publisher</h1>
         <p class="max-w-2xl mx-auto" :class="expandDescriptionClass ?? ''">
@@ -25,4 +28,25 @@ const { expandLogoClass, expandHeadingClass, expandDescriptionClass } = definePr
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.logo-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.logo {
+    position: absolute;
+    width: 100px;
+}
+
+.logo-top-left {
+    top: 15px;
+    left: 0;
+}
+
+.logo-bottom-right {
+    bottom: 15px;
+    right: 0;
+}
+</style>
