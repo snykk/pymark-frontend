@@ -18,7 +18,7 @@
             <AuthSubmit class="w-48">Create an account</AuthSubmit>
             <div class="text-sm font-medium text-gray-900 dark:text-white">
                 Already have an account?
-                <NuxtLink to="/auth/file-sharing/login" class="text-blue-600 hover:underline dark:text-blue-500">Login Now!</NuxtLink>
+                <NuxtLink to="/file-sharing/auth/login" class="text-blue-600 hover:underline dark:text-blue-500">Login Now!</NuxtLink>
             </div>
         </form>
     </div>
@@ -69,7 +69,7 @@ const submitForm = async () => {
                     const otpResponse = await sendOTP(user.value.email);
 
                     if (otpResponse.status) {
-                        return navigateTo("/auth/file-sharing/verif-otp?email=" + user.value.email);
+                        return navigateTo("/file-sharing/auth/verif-otp?email=" + user.value.email);
                     } else {
                         errorMessage.value = otpResponse.message;
                     }

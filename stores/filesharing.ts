@@ -88,7 +88,7 @@ export const useFileSharingStore = defineStore("fileSharingStore", {
             const email = useCookie("pymarkEmail");
             email.value = null;
 
-            navigateTo("/auth/file-sharing/login");
+            navigateTo("/file-sharing/auth/login");
         },
     },
 });

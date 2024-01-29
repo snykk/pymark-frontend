@@ -2,8 +2,8 @@
     <div>
         <div class="flex justify-center">
             <NuxtLink to="/" class="logo-container">
-                <img src="~/assets/logo/nuxt.svg" class="logo logo-top-left" alt="Nuxt.js Logo" />
-                <img src="~/assets/logo/instagram.svg" class="logo logo-bottom-right" alt="Google Drive Logo" />
+                <img src="~/assets/logo/nuxt.svg" id="nuxt-logo" class="logo logo-top-left" alt="Nuxt.js Logo" />
+                <img src="~/assets/logo/instagram.svg" id="instagram-logo" class="logo logo-bottom-right" alt="Google Drive Logo" />
             </NuxtLink>
         </div>
         <h1 class="text-4xl font-bold mb-4" :class="expandHeadingClass ?? ''">PyMark Instagram Publisher</h1>
@@ -48,5 +48,14 @@ const { expandLogoClass, expandHeadingClass, expandDescriptionClass } = definePr
 .logo-bottom-right {
     bottom: 15px;
     right: 0;
+}
+
+#nuxt-logo {
+    animation: bounce 1s infinite;
+}
+
+#instagram-logo {
+    animation: bounce 1s infinite;
+    animation-delay: 200ms;
 }
 </style>

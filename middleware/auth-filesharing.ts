@@ -16,6 +16,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
 
     if (!filesharing.userJWTToken) {
-        return navigateTo("/auth/file-sharing/login");
+        return navigateTo("/file-sharing/auth/login");
     }
 });

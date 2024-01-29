@@ -1,7 +1,6 @@
 // plugins/facebook-sdk.ts
-import type { Plugin } from "@nuxt/types";
 
-const initFacebookSDK: Plugin = ({ app }) => {
+export default defineNuxtPlugin(({ app }) => {
     const config = useRuntimeConfig();
     const FACEBOOK_APP_ID = config.public.facebook_app_id;
 
@@ -34,6 +33,4 @@ const initFacebookSDK: Plugin = ({ app }) => {
             window.fbAsyncInit?.();
         }
     });
-};
-
-export default initFacebookSDK;
+});

@@ -73,7 +73,7 @@ const submitForm = async () => {
         if (response.status) {
             // OTP verification successful
             // Redirect to login form
-            return navigateTo("/auth/file-sharing/login");
+            return navigateTo("/file-sharing/auth/login");
         } else {
             errorMessage.value = response.message || "Failed to verify OTP";
         }

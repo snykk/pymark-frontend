@@ -14,7 +14,7 @@
             <AuthSubmit class="w-56">Login to your account</AuthSubmit>
             <div class="text-sm font-medium text-gray-900 dark:text-white">
                 Not registered yet?
-                <NuxtLink to="/auth/file-sharing/regis" class="text-blue-600 hover:underline dark:text-blue-500">Create account</NuxtLink>
+                <NuxtLink to="/file-sharing/auth/regis" class="text-blue-600 hover:underline dark:text-blue-500">Create account</NuxtLink>
             </div>
         </form>
     </div>
