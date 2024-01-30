@@ -48,6 +48,7 @@ export default defineNuxtConfig({
     plugins: [
         { src: "~/plugins/facebook-sdk.ts", mode: "client" },
         { src: "~/plugins/sweetalert2", mode: "client" },
+        { src: "~/plugins/toastr", mode: "client" },
         // Plugin lainnya...
     ],
     modules: [

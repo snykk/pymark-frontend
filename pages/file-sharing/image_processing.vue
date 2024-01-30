@@ -97,6 +97,7 @@
 <script setup lang="ts">
 import type ImageProcessingApiResponse from "~/types/ImageProcessingResponse";
 import { ProcessingParameters } from "~/types/ProcessingParameters";
+import { useToast } from "vue-toastification";
 
 definePageMeta({
     layout: "filesharing",
@@ -180,9 +181,11 @@ async function submitForm() {
         });
 
         responseData.value = response;
-    } catch (error) {
-        console.error("Error:", error);
+        useToast().success(response.message);
+    } catch (error: any) {
+        useToast().error(error.response._data.message);
     }
+
     formSubtmitting.value = false;
     requestLoadingElement.value?.classList.add("hidden");
 }

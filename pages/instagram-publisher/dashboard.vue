@@ -29,6 +29,8 @@
 <script setup lang="ts">
 import animationDataLoadingSubmit from "~/assets/lotties/loading-animation5.json";
 import type EmbeddingApiResponse from "~/types/EmbeddingApiResponse";
+import { useToast } from "vue-toastification";
+import type BaseApiResponse from "~/types/BaseApiResponse";
 
 definePageMeta({
     layout: "instagram",
@@ -93,7 +95,7 @@ const shareInstagramPost = async () => {
             post_caption: post_caption.value,
         };
 
-        const responseUpload = await $fetch(config.public.api_base + "/instagram/upload_post", {
+        const responseUpload: BaseApiResponse<null> = await $fetch(config.public.api_base + "/instagram/upload_post", {
             method: "POST",
             headers: {
                 Authorization: "Facebook " + facebook.userAccessToken,
@@ -104,15 +106,15 @@ const shareInstagramPost = async () => {
 
         if (responseUpload.status) {
             // process is done
-            alert("upload berhasil");
             type.value = "gray";
             post_caption.value = "";
 
             // Increment the key to force a re-render of ImageInput components
             imageInputKey.value += 1;
         }
-    } catch (error) {
-        console.error("Error sharing post:", error);
+        useToast().success(responseUpload.message);
+    } catch (error: any) {
+        useToast().error(error.response._data.message);
     }
 
     formSubmitting.value = false;

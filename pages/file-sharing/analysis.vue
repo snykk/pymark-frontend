@@ -74,6 +74,7 @@
 <script setup lang="ts">
 import type ImperceptibilityApiResponse from "~/types/ImperceptibilityApiResponse";
 import type RobustnessApiResponse from "~/types/RobustnessApiResponse";
+import { useToast } from "vue-toastification";
 
 definePageMeta({
     layout: "filesharing",
@@ -156,9 +157,9 @@ async function submitImperceptibilityForm() {
             body: formData,
         });
 
-        console.log(imperceptibilityResponseData.value);
-    } catch (error) {
-        console.error("Error:", error);
+        useToast().success(imperceptibilityResponseData.value.message);
+    } catch (error: any) {
+        useToast().error(error.response._data.message);
     }
 
     formImperceptSubtmitting.value = false;
@@ -199,8 +200,10 @@ async function submitRobustnessForm() {
             },
             body: formData,
         });
-    } catch (error) {
-        console.error("Error:", error);
+
+        useToast().success(robustnessResponseData.value.message);
+    } catch (error: any) {
+        useToast().error(error.response._data.message);
     }
 
     formRobustnesSubtmitting.value = false;
