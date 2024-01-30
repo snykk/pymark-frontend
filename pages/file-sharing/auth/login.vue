@@ -48,6 +48,7 @@ const errorMessage = ref("");
 
 const submitForm = async () => {
     formSubmitted.value = true;
+    errorMessage.value = "";
 
     if (!user.value.email || !user.value.password) {
         return;

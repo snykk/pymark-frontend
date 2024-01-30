@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageProcessingApiResponse } from "~/types/ImageProcessingResponse";
+import type ImageProcessingApiResponse from "~/types/ImageProcessingResponse";
 import { ProcessingParameters } from "~/types/ProcessingParameters";
 
 definePageMeta({

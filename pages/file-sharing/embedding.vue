@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EmbeddingApiResponse } from "~/types/EmbeddingApiResponse";
+import type EmbeddingApiResponse from "~/types/EmbeddingApiResponse";
 definePageMeta({
     layout: "filesharing",
     middleware: ["auth-filesharing"],

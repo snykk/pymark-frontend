@@ -1,20 +1,20 @@
-import type { FileInfo } from "~/types/FileInfo";
+import type FileInfo from "~/types/FileInfo";
+import type BaseApiResponse from "~/types/BaseApiResponse";
 
-export interface EmbeddingApiResponse {
-    data: {
-        folder_result: number;
-        imperceptibility_analysis: {
-            psnr: number;
-            ssim: number;
-        };
-        uploaded_file_responses: {
-            block_position: FileInfo;
-            embedding_result_zip: FileInfo;
-            key_matrix: FileInfo;
-            watermarked_image: FileInfo;
-            public_compressed_image: FileInfo;
-        };
+interface EmbeddingData {
+    folder_result: number;
+    imperceptibility_analysis: {
+        psnr: number;
+        ssim: number;
     };
-    message: string;
-    status: boolean;
+    uploaded_file_responses: {
+        block_position: FileInfo;
+        embedding_result_zip: FileInfo;
+        key_matrix: FileInfo;
+        watermarked_image: FileInfo;
+        public_compressed_image: FileInfo;
+    };
 }
+
+// export type EmbeddingApiResponse = BaseApiResponse<EmbeddingData>;
+export default interface EmbeddingApiResponse extends BaseApiResponse<EmbeddingData> {}

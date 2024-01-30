@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MyDriveFolderDetailApiResponse } from "~/types/MyDriveFolderDetailApiResponse";
+import type MyDriveFolderDetailApiResponse from "~/types/MyDriveFolderDetailApiResponse";
 import { isImageFile } from "~/helpers/image";
 
 definePageMeta({

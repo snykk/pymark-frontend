@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ExtractionApiResponse } from "~/types/ExtractionApiResponse";
+import type ExtractionApiResponse from "~/types/ExtractionApiResponse";
 definePageMeta({
     layout: "filesharing",
     middleware: ["auth-filesharing"],

@@ -36,12 +36,19 @@
 
             <div class="text-sm font-medium text-gray-900 dark:text-white">
                 You didn't receive the code?
-                <span @click="sendOTP" class="text-blue-600 hover:underline dark:text-blue-500 cursor-pointer">Resend!</span>
+                <span @click="!isResendingOTP && sendOTP()" :class="{ 'text-gray-400 cursor-not-allowed': isResendingOTP }" class="text-blue-600 hover:underline dark:text-blue-500 cursor-pointer">
+                    {{ isResendingOTP ? "Sending..." : "Resend!" }}
+                </span>
+            </div>
+            <div v-if="successMessage" class="text-green-500">
+                {{ successMessage }}
             </div>
         </form>
     </div>
 </template>
 <script setup lang="ts">
+import type BaseApiResponse from "~/types/BaseApiResponse";
+
 definePageMeta({
     layout: "auth-filesharing",
 });
@@ -49,6 +56,8 @@ definePageMeta({
 const otp = ref<string[]>(Array(6).fill(""));
 const formSubmitted = ref(false);
 const errorMessage = ref("");
+const successMessage = ref("");
+const isResendingOTP = ref(false);
 
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -69,20 +78,24 @@ const submitForm = async () => {
     }
 
     try {
-        const response = await verifyOTP(otp.value.join(""), email); // Call OTP verification function
+        const response: BaseApiResponse<null> = await $fetch(config.public.api_base + `/auth/verify_otp?email=${email}&otp=${otp.value.join("")}`, {
+            method: "GET",
+        });
+
         if (response.status) {
             // OTP verification successful
             // Redirect to login form
             return navigateTo("/file-sharing/auth/login");
-        } else {
-            errorMessage.value = response.message || "Failed to verify OTP";
         }
-    } catch (error) {
-        errorMessage.value = error.message || "Something went wrong";
+
+        errorMessage.value = response.message;
+    } catch (error: any) {
+        errorMessage.value = error.response._data.message || "Something went wrong";
     }
 };
 
 const sendOTP = async () => {
+    isResendingOTP.value = true;
     const formData = new FormData();
 
     const email = route.query.email as string;
@@ -93,26 +106,13 @@ const sendOTP = async () => {
 
     formData.append("email", email);
 
-    const response = await $fetch(config.public.api_base + "/auth/send_otp", {
+    const response: BaseApiResponse<null> = await $fetch(config.public.api_base + "/auth/send_otp", {
         method: "POST",
         body: formData,
     });
-};
 
-const verifyOTP = async (otp: string, email: string | null) => {
-    try {
-        if (!email) {
-            throw new Error("Email is missing");
-        }
-
-        const response = await $fetch<OTPResponse>(config.public.api_base + `/auth/verify_otp?email=${email}&otp=${otp}`, {
-            method: "GET",
-        });
-
-        return response;
-    } catch (error) {
-        throw new Error("Failed to verify OTP");
-    }
+    successMessage.value = response.message;
+    isResendingOTP.value = false;
 };
 
 const handleKeyDown = (index: number, event: KeyboardEvent) => {
@@ -164,11 +164,6 @@ const focusNext = (index: number) => {
         otpInputs.value[nextIndex].focus();
     }
 };
-
-interface OTPResponse {
-    message: string;
-    status: boolean;
-}
 </script>
 
 <style scoped>

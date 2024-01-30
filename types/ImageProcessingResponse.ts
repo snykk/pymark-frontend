@@ -1,13 +1,13 @@
-import type { FileInfo } from "~/types/FileInfo";
+import type FileInfo from "~/types/FileInfo";
+import type BaseApiResponse from "~/types/BaseApiResponse";
 
-export interface ImageProcessingApiResponse {
-    data: {
-        folder_result: number;
-        uploaded_file_responses: {
-            original_image: FileInfo;
-            attacked_image: FileInfo;
-        };
+interface ImageProcessingData {
+    folder_result: number;
+    uploaded_file_responses: {
+        original_image: FileInfo;
+        attacked_image: FileInfo;
     };
-    message: string;
-    status: boolean;
 }
+
+// export type ImageProcessingApiResponse = BaseApiResponse<ImageProcessingData>;
+export default interface ImageProcessingApiResponse extends BaseApiResponse<ImageProcessingData> {}

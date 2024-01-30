@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import animationDataLoadingSubmit from "~/assets/lotties/loading-animation5.json";
-import type { EmbeddingApiResponse } from "~/types/EmbeddingApiResponse";
+import type EmbeddingApiResponse from "~/types/EmbeddingApiResponse";
 
 definePageMeta({
     layout: "instagram",

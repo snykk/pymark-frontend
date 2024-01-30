@@ -1,3 +1,5 @@
+import type BaseApiResponse from "~/types/BaseApiResponse";
+
 interface FileLinks {
     download_link: string;
     web_view_link: string;
@@ -10,11 +12,10 @@ interface File {
     name: string;
 }
 
-export interface MyDriveFolderDetailApiResponse {
-    data: {
-        files: File[];
-        folder_id: string;
-    };
-    message: string;
-    status: boolean;
+interface MyDriveFolderDetailData {
+    files: File[];
+    folder_id: string;
 }
+
+// export type MyDriveFolderDetailApiResponse = BaseApiResponse<MyDriveFolderDetailData>;
+export default interface MyDriveFolderDetailApiResponse extends BaseApiResponse<MyDriveFolderDetailData> {}

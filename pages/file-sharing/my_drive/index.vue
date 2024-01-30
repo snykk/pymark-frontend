@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MyDriveFoldersApiResponse } from "~/types/MyDriveFoldersApiResponse";
+import type MyDriveFoldersApiResponse from "~/types/MyDriveFoldersApiResponse";
 import loadingNoData from "~/assets/lotties/loading-animation4.json";
 
 const defaultOptionNoData = ref({ animationData: loadingNoData });

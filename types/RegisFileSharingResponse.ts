@@ -1,11 +1,12 @@
-export default interface RegisFileSharingResponse {
-    status: boolean;
-    message: string;
-    data?: {
-        user?: {
-            id: number;
-            email: string;
-            password: string;
-        };
+// RegisFileSharingResponse.ts
+import type BaseApiResponse from "~/types/BaseApiResponse";
+
+export interface RegisData {
+    user?: {
+        id: number;
+        email: string;
+        password: string;
     };
 }
+
+export default interface RegisFileSharingResponse extends BaseApiResponse<RegisData | null> {}
