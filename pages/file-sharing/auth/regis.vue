@@ -66,13 +66,7 @@ const submitForm = async () => {
             .then(async (response: unknown) => {
                 const typedResponse = response as RegisFileSharingResponse;
                 if (typedResponse.status) {
-                    const otpResponse = await sendOTP(user.value.email);
-
-                    if (otpResponse.status) {
-                        return navigateTo("/file-sharing/auth/verif-otp?email=" + user.value.email);
-                    } else {
-                        errorMessage.value = otpResponse.message;
-                    }
+                    return navigateTo("/file-sharing/auth/verif-otp?email=" + user.value.email);
                 }
 
                 errorMessage.value = typedResponse.message;
@@ -84,24 +78,6 @@ const submitForm = async () => {
         errorMessage.value = "Something went wrong";
     }
 };
-
-const sendOTP = async (email: string) => {
-    const formData = new FormData();
-
-    formData.append("email", email);
-
-    const response = await $fetch<OTPResponse>(config.public.api_base + "/auth/send_otp", {
-        method: "POST",
-        body: formData,
-    });
-
-    return response;
-};
-
-interface OTPResponse {
-    message: string;
-    status: boolean;
-}
 </script>
 
 <style>

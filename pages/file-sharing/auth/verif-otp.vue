@@ -2,10 +2,13 @@
     <div class="text-center">
         <!-- Enhanced Message Info -->
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-5">Verify Your Account</h2>
-        <p class="text-gray-600 dark:text-gray-400">
-            We emailed you the six digit code to <span class="text-gray-200">{{ route.query.email }}</span>
-        </p>
-        <p class="text-gray-600 dark:text-gray-400">Enter the code below to confirm your email address</p>
+        <div v-if="isOTPSended">
+            <p class="text-gray-600 dark:text-gray-400">
+                We emailed you the six digit code to <span class="text-gray-200">{{ route.query.email }}</span>
+            </p>
+            <p class="text-gray-600 dark:text-gray-400">Enter the code below to confirm your email address</p>
+        </div>
+
         <!-- New message info -->
 
         <form class="mt-8 space-y-6" @submit.prevent="submitForm">
@@ -58,11 +61,47 @@ const formSubmitted = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
 const isResendingOTP = ref(false);
+const isOTPSended = ref(false);
 
 const config = useRuntimeConfig();
 const route = useRoute();
+const { $swal } = useNuxtApp();
 
 const otpInputs = ref<HTMLElement[]>([]); // Create ref for inputs
+
+onMounted(async () => {
+    const email = route.query.email as string;
+    console.log("ini emailnya");
+    if (!email) {
+        $swal
+            .fire({
+                title: "The Email?",
+                text: "The OTP email is not found",
+                icon: "question",
+                confirmButtonText: "Back",
+            })
+            .then((result: any) => {
+                if (result.isConfirmed) {
+                    // Here you can navigate the user using Nuxt.js router
+                    return navigateTo("/"); // Replace '/' with the desired route
+                }
+            });
+
+        return;
+    }
+
+    try {
+        const otpResponse = await sendOTP(email);
+
+        // If the function call is successful, you can use the response data here
+        console.log("OTP sent successfully:", otpResponse);
+        isOTPSended.value = true;
+    } catch (error) {
+        // If an error occurs during the function call, it will be caught here
+        console.error("Error sending OTP:", error);
+        // Handle the error gracefully, display an error message to the user, etc.
+    }
+});
 
 const submitForm = async () => {
     formSubmitted.value = true;
@@ -94,25 +133,28 @@ const submitForm = async () => {
     }
 };
 
-const sendOTP = async () => {
-    isResendingOTP.value = true;
-    const formData = new FormData();
+const sendOTP = async (email: string) => {
+    try {
+        const formData = new FormData();
+        formData.append("email", email);
 
-    const email = route.query.email as string;
+        const response: BaseApiResponse<null> = await $fetch(config.public.api_base + "/auth/send_otp", {
+            method: "POST",
+            body: formData,
+        });
 
-    if (!email) {
-        errorMessage.value = "Email is null";
+        if (!response.status) {
+            // If the response is not successful, throw an error
+            throw new Error("Failed to send OTP. Status: " + response.status);
+        }
+
+        // If the response is successful, return the data
+        return response;
+    } catch (error) {
+        // Catch any errors that occur during the execution of the function
+        console.error("Error sending OTP:", error);
+        throw error; // Re-throw the error to propagate it to the caller
     }
-
-    formData.append("email", email);
-
-    const response: BaseApiResponse<null> = await $fetch(config.public.api_base + "/auth/send_otp", {
-        method: "POST",
-        body: formData,
-    });
-
-    successMessage.value = response.message;
-    isResendingOTP.value = false;
 };
 
 const handleKeyDown = (index: number, event: KeyboardEvent) => {

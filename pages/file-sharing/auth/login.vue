@@ -10,7 +10,10 @@
                 <AuthInput v-model="user.password" placeholder="************" label="password" />
                 <span v-if="formSubmitted && !user.password" class="text-red-500">Password is required</span>
             </div>
-            <div v-if="formSubmitted && errorMessage" class="text-red-500">{{ errorMessage }}</div>
+            <div v-if="formSubmitted && errorMessage" class="text-red-500">
+                {{ errorMessage }}
+                <span v-if="errorMessage.includes('email verification')" @click="navigateTo('/file-sharing/auth/verif-otp?email=' + user.email)" class="text-blue-500 cursor-pointer hover:text-blue-700">verify now</span>
+            </div>
             <AuthSubmit class="w-56">Login to your account</AuthSubmit>
             <div class="text-sm font-medium text-gray-900 dark:text-white">
                 Not registered yet?
@@ -42,7 +45,6 @@ const user = ref({
     email: "",
     password: "",
 });
-
 const formSubmitted = ref(false);
 const errorMessage = ref("");
 
