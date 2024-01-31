@@ -6,15 +6,14 @@
             <table class="min-w-full text-start">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th class="px-4 py-2 text-left">Folder Name</th>
+                        <th colspan="2" class="py-2 text-left">Folder Name</th>
                         <th class="px-4 py-2 text-left">ID</th>
                         <th class="px-4 py-2 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="folder in responseData?.data.watermarking_folders" :key="folder.id" class="cursor-pointer border-b border-gray-200" @click="navigateToFolder(folder.id)">
-                        <td>
+                    <tr v-for="folder in responseData?.data.watermarking_folders" :key="folder.id" class="cursor-pointer border-b border-gray-200" @click="!isProcessing && navigateToFolder(folder.id)">
+                        <td class="w-[35px]">
                             <img alt="Folder icon" src="~/assets/icon/folder2.svg" width="30" height="30" />
                         </td>
                         <td class="pr-4 py-2 flex">
@@ -22,7 +21,9 @@
                         </td>
                         <td class="px-4 py-2">{{ folder.id }}</td>
                         <td class="px-4 py-2">
-                            <button @click.stop="confirmDeleteFolder(folder.id)" class="text-red-600 hover:text-red-800">Delete</button>
+                            <button @click.stop="confirmDeleteFolder(folder.id)" :disabled="isProcessing" :class="{ 'opacity-50 cursor-not-allowed': isProcessing }" class="text-red-600 hover:text-red-800">
+                                {{ deletingFolderId === folder.id ? "Deleting..." : "Delete" }}
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -47,8 +48,11 @@ definePageMeta({
 });
 
 const facebook = useFacebookStore();
-
 const config = useRuntimeConfig();
+const { $swal } = useNuxtApp();
+
+const isProcessing = ref(false);
+const deletingFolderId = ref<string | null>(null);
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
 
 const requestLoadingElement = ref<HTMLElement | null>(null);
@@ -89,33 +93,41 @@ const fetchData = async () => {
     responseData.value = null;
 
     requestLoadingElement.value?.classList.remove("hidden");
-    try {
-        responseData.value = await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=instagram-post", {
-            method: "get",
-            headers: {
-                Authorization: "Facebook " + facebook.userAccessToken,
-            },
-        });
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
+
+    await refreshFolderList();
 
     requestLoadingElement.value?.classList.add("hidden");
 };
 
-const confirmDeleteFolder = (folderId: string) => {
-    const isConfirmed = confirm("Are you sure you want to delete this folder?");
+const confirmDeleteFolder = async (folderId: string) => {
+    try {
+        const result = await $swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        });
 
-    if (isConfirmed) {
-        // Call the API to delete the folder
-        deleteFolder(folderId);
+        if (result.isConfirmed) {
+            isProcessing.value = true;
+            deletingFolderId.value = folderId;
+            await deleteFolder(folderId);
+        }
+    } catch (error: any) {
+        $swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+        });
+    } finally {
+        isProcessing.value = false;
     }
 };
 
 const deleteFolder = async (folderId: string) => {
-    requestLoadingElement.value?.classList.remove("hidden");
-    responseData.value = null;
-
     try {
         const response = await $fetch(config.public.api_base + `/mydrive/folder/${folderId}`, {
             method: "delete",
@@ -124,16 +136,37 @@ const deleteFolder = async (folderId: string) => {
             },
         });
 
-        console.log("response delete:", response);
-
         if (response.status) {
             // Folder deleted successfully, refresh the folder list
-            fetchData();
+            await refreshFolderList();
         } else {
             console.error("Error deleting folder:", response.message);
         }
     } catch (error) {
         console.error("Error deleting folder:", error);
+    }
+};
+
+const fetchDataFromAPI = async (endpoint: string, method: "GET" | "POST" | "PUT" | "DELETE" = "GET") => {
+    try {
+        return await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + endpoint, {
+            method: method,
+            headers: {
+                Authorization: "Facebook " + facebook.userAccessToken,
+            },
+        });
+    } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+    }
+};
+("/mydrive/folders?pymark_feature=instagram-post");
+
+const refreshFolderList = async () => {
+    try {
+        responseData.value = await fetchDataFromAPI("/mydrive/folders?pymark_feature=instagram-post");
+    } catch (error) {
+        console.error("Error fetching data:", error);
     }
 };
 </script>

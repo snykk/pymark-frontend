@@ -3,11 +3,19 @@
         <!-- Navbar -->
         <nav class="flex mb-4">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                <li :class="{ 'font-extrabold': selectedDrive === 'embedding' }" @click="handleClick('embedding')" class="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer">Embedding</li>
+                <li :class="{ 'font-extrabold': selectedDrive === 'embedding' }" @click="!isProcessing && handleClick('embedding')" class="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer">
+                    Embedding
+                </li>
                 <span class="mx-2 text-gray-400 text-xl">/</span>
-                <li :class="{ 'font-extrabold': selectedDrive === 'extraction' }" @click="handleClick('extraction')" class="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer">Extraction</li>
+                <li :class="{ 'font-extrabold': selectedDrive === 'extraction' }" @click="!isProcessing && handleClick('extraction')" class="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer">
+                    Extraction
+                </li>
                 <span class="mx-2 text-gray-400 text-xl">/</span>
-                <li :class="{ 'font-extrabold': selectedDrive === 'image-processing' }" @click="handleClick('image-processing')" class="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer">
+                <li
+                    :class="{ 'font-extrabold': selectedDrive === 'image-processing' }"
+                    @click="!isProcessing && handleClick('image-processing')"
+                    class="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white cursor-pointer"
+                >
                     Image Processing
                 </li>
             </ol>
@@ -19,15 +27,14 @@
             <table class="min-w-full text-start">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th class="px-4 py-2 text-left">Folder Name</th>
+                        <th class="py-2 text-left" colspan="2">Folder Name</th>
                         <th class="px-4 py-2 text-left">ID</th>
                         <th class="px-4 py-2 text-left">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="folder in responseData?.data.watermarking_folders" :key="folder.id" class="cursor-pointer border-b border-gray-200" @click="navigateToFolder(folder.id)">
-                        <td>
+                    <tr v-for="folder in responseData?.data.watermarking_folders" :key="folder.id" class="cursor-pointer border-b border-gray-200" @click="!isProcessing && navigateToFolder(folder.id)">
+                        <td class="w-[35px]">
                             <img alt="Folder icon" src="~/assets/icon/folder2.svg" width="30" height="30" />
                         </td>
                         <td class="pr-4 py-2 flex">
@@ -35,7 +42,9 @@
                         </td>
                         <td class="px-4 py-2">{{ folder.id }}</td>
                         <td class="px-4 py-2">
-                            <button @click.stop="confirmDeleteFolder(folder.id)" class="text-red-600 hover:text-red-800">Delete</button>
+                            <button @click.stop="confirmDeleteFolder(folder.id)" :disabled="isProcessing" :class="{ 'opacity-50 cursor-not-allowed': isProcessing }" class="text-red-600 hover:text-red-800">
+                                {{ deletingFolderId === folder.id ? "Deleting..." : "Delete" }}
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -61,8 +70,11 @@ definePageMeta({
 });
 
 const filesharing = useFileSharingStore();
-
 const config = useRuntimeConfig();
+const { $swal } = useNuxtApp();
+
+const isProcessing = ref(false);
+const deletingFolderId = ref<string | null>(null); // Store the id of the folder being deleted
 const selectedDrive = ref<"embedding" | "extraction" | "image-processing">("embedding");
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
 
@@ -77,14 +89,7 @@ onMounted(async () => {
 
     requestLoadingElement.value?.classList.remove("hidden");
 
-    responseData.value = await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=" + selectedDrive.value, {
-        method: "get",
-        headers: {
-            Authorization: "Bearer " + filesharing.userJWTToken,
-        },
-    });
-
-    requestLoadingElement.value?.classList.add("hidden");
+    fetchData(selectedDrive.value);
 });
 
 onBeforeUnmount(async () => {
@@ -103,54 +108,79 @@ const handleClick = (feature: "embedding" | "extraction" | "image-processing") =
 const fetchData = async (feature: "embedding" | "extraction" | "image-processing") => {
     console.log(config.public.api_base);
     responseData.value = null;
-
+    isProcessing.value = true;
     requestLoadingElement.value?.classList.remove("hidden");
-    try {
-        responseData.value = await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=" + feature, {
-            method: "get",
-            headers: {
-                Authorization: "Bearer " + filesharing.userJWTToken,
-            },
-        });
-        selectedDrive.value = feature;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
+
+    await refreshFolderList(feature);
 
     requestLoadingElement.value?.classList.add("hidden");
+    isProcessing.value = false;
 };
 
-const confirmDeleteFolder = (folderId: string) => {
-    const isConfirmed = confirm("Are you sure you want to delete this folder?");
+const confirmDeleteFolder = async (folderId: string) => {
+    try {
+        const result = await $swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        });
 
-    if (isConfirmed) {
-        // Call the API to delete the folder
-        deleteFolder(folderId);
+        if (result.isConfirmed) {
+            isProcessing.value = true;
+            deletingFolderId.value = folderId;
+            await deleteFolder(folderId);
+        }
+    } catch (error: any) {
+        $swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something went wrong!",
+        });
+    } finally {
+        isProcessing.value = false;
     }
 };
 
 const deleteFolder = async (folderId: string) => {
-    requestLoadingElement.value?.classList.remove("hidden");
-    responseData.value = null;
-
     try {
-        const response = await $fetch(config.public.api_base + `/mydrive/folder/${folderId}`, {
-            method: "delete",
-            headers: {
-                Authorization: "Bearer " + filesharing.userJWTToken,
-            },
-        });
-
+        const response = await fetchDataFromAPI(`/mydrive/folder/${folderId}`, "DELETE");
         console.log("response delete:", response);
-
         if (response.status) {
-            // Folder deleted successfully, refresh the folder list
-            fetchData(selectedDrive.value);
+            await refreshFolderList(selectedDrive.value);
         } else {
             console.error("Error deleting folder:", response.message);
         }
     } catch (error) {
         console.error("Error deleting folder:", error);
+    } finally {
+        deletingFolderId.value = null;
+    }
+};
+
+const fetchDataFromAPI = async (endpoint: string, method: "GET" | "POST" | "PUT" | "DELETE" = "GET") => {
+    try {
+        return await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + endpoint, {
+            method: method,
+            headers: {
+                Authorization: "Bearer " + filesharing.userJWTToken,
+            },
+        });
+    } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+    }
+};
+
+const refreshFolderList = async (feature: "embedding" | "extraction" | "image-processing") => {
+    try {
+        responseData.value = await fetchDataFromAPI(`/mydrive/folders?pymark_feature=${selectedDrive.value}`);
+        selectedDrive.value = feature;
+    } catch (error) {
+        console.error("Error fetching data:", error);
     }
 };
 </script>

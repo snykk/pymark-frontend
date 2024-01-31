@@ -18,7 +18,11 @@
                     <img class="w-8 h-8 rounded-full" src="https://avatars.githubusercontent.com/u/71829822?v=4" alt="user photo" />
                 </button>
                 <!-- Dropdown menu -->
-                <div :class="{ hidden: isDropdownHidden }" class="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 dropdown-container" id="user-dropdown">
+                <div
+                    :class="{ hidden: isDropdownHidden }"
+                    class="absolute top-11 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 dropdown-container"
+                    id="user-dropdown"
+                >
                     <div class="px-4 py-3 cursor-pointer">
                         <span class="block text-sm text-gray-900 dark:text-white">{{ facebook.userName }}</span>
                         <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ facebook.userEmail ?? "no email" }}</span>
