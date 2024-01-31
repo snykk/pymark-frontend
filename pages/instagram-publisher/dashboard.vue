@@ -104,14 +104,16 @@ const shareInstagramPost = async () => {
             body: JSON.stringify(postData), // ubah formData menjadi JSON.stringify(postData)
         });
 
-        if (responseUpload.status) {
-            // process is done
-            type.value = "gray";
-            post_caption.value = "";
-
-            // Increment the key to force a re-render of ImageInput components
-            imageInputKey.value += 1;
+        if (!responseUpload.status) {
+            useToast().error(responseUpload.message);
         }
+
+        // process is done
+        type.value = "gray";
+        post_caption.value = "";
+
+        // Increment the key to force a re-render of ImageInput components
+        imageInputKey.value += 1;
         useToast().success(responseUpload.message);
     } catch (error: any) {
         useToast().error(error.response._data.message);
@@ -121,15 +123,4 @@ const shareInstagramPost = async () => {
 };
 </script>
 
-<style scope>
-/* Include your styles here
-
-/* Add a class for the dropdown container */
-.dropdown-container {
-    position: absolute;
-    top: 2.7rem; /* Adjust this value to control the distance between the button and the dropdown */
-    right: 0;
-    z-index: 50;
-    /* Add other styling properties as needed */
-}
-</style>
+<style scope></style>

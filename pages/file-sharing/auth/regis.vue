@@ -28,7 +28,7 @@
 import type RegisFileSharingResponse from "~/types/RegisFileSharingResponse";
 
 const filesharing = useFileSharingStore();
-const config = useRuntimeConfig();
+const flasher = useFlashStore();
 
 definePageMeta({
     layout: "auth-filesharing",
@@ -66,7 +66,9 @@ const submitForm = async () => {
             .then(async (response: unknown) => {
                 const typedResponse = response as RegisFileSharingResponse;
                 if (typedResponse.status) {
-                    return navigateTo("/file-sharing/auth/verif-otp?email=" + user.value.email);
+                    flasher.setFlashMessage(typedResponse.message, "success");
+                    return navigateTo("/file-sharing/auth/login");
+                    // return navigateTo("/file-sharing/auth/verif-otp?email=" + user.value.email);
                 }
 
                 errorMessage.value = typedResponse.message;

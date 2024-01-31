@@ -15,7 +15,7 @@
                     <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ filesharing.email ?? "no email" }}</span>
                 </div>
                 <ul class="py-2" aria-labelledby="user-menu-button">
-                    <button @click="filesharing.logout" class="block w-full text-start px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
+                    <button @click="logout" class="block w-full text-start px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
                 </ul>
             </div>
         </div>
@@ -56,10 +56,16 @@ import animationData from "~/assets/lotties/loading-animation2.json";
 import animationData2 from "~/assets/lotties/loading-animation3.json";
 
 const filesharing = useFileSharingStore();
+const flasher = useFlashStore();
 
 const isDropdownHidden = ref(true);
 const defaultOptions = ref({ animationData });
 const defaultOptions2 = ref({ animationData: animationData2 });
+
+const logout = () => {
+    filesharing.logout();
+    flasher.setFlashMessage("Logged out successfuly", FlashLabel.SUCCESS);
+};
 </script>
 
 <style scoped></style>

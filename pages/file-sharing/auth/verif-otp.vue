@@ -2,12 +2,17 @@
     <div class="text-center">
         <!-- Enhanced Message Info -->
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-5">Verify Your Account</h2>
-        <div v-if="isOTPSended">
+        <div v-if="sendingState === 'sending'">
+            <LoadingIndicator class="h-full mx-auto w-1/4" :options="defaultOptions" />
+            <p class="w-full">Sending the otp code . . .</p>
+        </div>
+        <div v-else-if="sendingState === 'sended'">
             <p class="text-gray-600 dark:text-gray-400">
                 We emailed you the six digit code to <span class="text-gray-200">{{ route.query.email }}</span>
             </p>
             <p class="text-gray-600 dark:text-gray-400">Enter the code below to confirm your email address</p>
         </div>
+        <div v-else-if="sendingState === 'idle'">??????</div>
 
         <!-- New message info -->
 
@@ -39,7 +44,7 @@
 
             <div class="text-sm font-medium text-gray-900 dark:text-white">
                 You didn't receive the code?
-                <span @click="!isResendingOTP && sendOTP()" :class="{ 'text-gray-400 cursor-not-allowed': isResendingOTP }" class="text-blue-600 hover:underline dark:text-blue-500 cursor-pointer">
+                <span @click="!isResendingOTP && resendOTP()" :class="{ 'text-gray-400 cursor-not-allowed': isResendingOTP }" class="text-blue-600 hover:underline dark:text-blue-500 cursor-pointer">
                     {{ isResendingOTP ? "Sending..." : "Resend!" }}
                 </span>
             </div>
@@ -51,6 +56,9 @@
 </template>
 <script setup lang="ts">
 import type BaseApiResponse from "~/types/BaseApiResponse";
+import animationData from "~/assets/lotties/loading-animation6.json";
+
+const defaultOptions = ref({ animationData });
 
 definePageMeta({
     layout: "auth-filesharing",
@@ -61,17 +69,18 @@ const formSubmitted = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
 const isResendingOTP = ref(false);
-const isOTPSended = ref(false);
+const sendingState = ref<"idle" | "sending" | "sended">("idle");
 
 const config = useRuntimeConfig();
 const route = useRoute();
 const { $swal } = useNuxtApp();
+const flasher = useFlashStore();
 
 const otpInputs = ref<HTMLElement[]>([]); // Create ref for inputs
 
 onMounted(async () => {
     const email = route.query.email as string;
-    console.log("ini emailnya");
+
     if (!email) {
         $swal
             .fire({
@@ -91,19 +100,21 @@ onMounted(async () => {
     }
 
     try {
+        sendingState.value = "sending";
         const otpResponse = await sendOTP(email);
 
         // If the function call is successful, you can use the response data here
         console.log("OTP sent successfully:", otpResponse);
-        isOTPSended.value = true;
     } catch (error) {
         // If an error occurs during the function call, it will be caught here
         console.error("Error sending OTP:", error);
         // Handle the error gracefully, display an error message to the user, etc.
     }
+    sendingState.value = "sended";
 });
 
 const submitForm = async () => {
+    errorMessage.value = "";
     formSubmitted.value = true;
     const email = route.query.email as string;
 
@@ -124,6 +135,7 @@ const submitForm = async () => {
         if (response.status) {
             // OTP verification successful
             // Redirect to login form
+            flasher.setFlashMessage(response.message, FlashLabel.SUCCESS);
             return navigateTo("/file-sharing/auth/login");
         }
 
@@ -131,6 +143,25 @@ const submitForm = async () => {
     } catch (error: any) {
         errorMessage.value = error.response._data.message || "Something went wrong";
     }
+};
+
+const resendOTP = async () => {
+    successMessage.value = "";
+    isResendingOTP.value = true;
+    const email = route.query.email as string;
+
+    try {
+        const otpResponse = await sendOTP(email);
+        if (!otpResponse.status) {
+            errorMessage.value = otpResponse.message;
+        }
+
+        successMessage.value = otpResponse.message;
+    } catch (error: any) {
+        errorMessage.value = error.response._data.message;
+    }
+
+    isResendingOTP.value = false;
 };
 
 const sendOTP = async (email: string) => {
