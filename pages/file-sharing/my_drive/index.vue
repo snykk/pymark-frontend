@@ -23,7 +23,6 @@
 
         <!-- Content -->
         <div v-if="responseData?.status === true">
-            <h2 class="text-xl font-semibold mb-4">Folder List</h2>
             <table class="min-w-full text-start">
                 <thead>
                     <tr>
@@ -127,12 +126,21 @@ const confirmDeleteFolder = async (folderId: string) => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!",
+            timer: 5000,
         });
 
         if (result.isConfirmed) {
             isProcessing.value = true;
             deletingFolderId.value = folderId;
             await deleteFolder(folderId);
+        } else if (result.isDismissed) {
+            $swal.fire({
+                title: "Action canceled",
+                icon: "info",
+                timer: 4000,
+                showConfirmButton: false,
+                toast: true,
+            });
         }
     } catch (error: any) {
         $swal.fire({

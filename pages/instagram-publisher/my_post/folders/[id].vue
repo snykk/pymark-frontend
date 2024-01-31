@@ -1,8 +1,8 @@
 <template>
     <div>
         <div v-if="responseData">
-            <h2 class="text-2xl font-semibold mb-6">Folder Details</h2>
-            <div class="overflow-x-auto">
+            <h2 class="text-2xl font-semibold mb-4">Folder Details</h2>
+            <div class="overflow-x-auto mt-2">
                 <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                     <thead class="bg-gray-100 dark:bg-gray-700">
                         <tr>
@@ -25,6 +25,15 @@
                     </tbody>
                 </table>
             </div>
+
+            <NuxtLink class="flex justify-end mt-4" to="/instagram-publisher/my_post"
+                ><button
+                    type="button"
+                    class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+                >
+                    Back to My Post
+                </button></NuxtLink
+            >
 
             <!-- Modal -->
             <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

@@ -76,9 +76,9 @@
                         <h3 class="text-md font-semibold mt-4">Folder Result: {{ responseData.data.folder_result }}</h3>
                         <!-- Uploaded File Responses -->
                         <div v-if="responseData.data.uploaded_file_responses">
-                            <h4 class="text-sm font-semibold mt-4">Uploaded File Responses:</h4>
-                            <div v-for="(fileResponse, key) in responseData.data.uploaded_file_responses" :key="key" class="mt-2 p-4">
-                                <p class="font-semibold text-blue-600">File: {{ key }}</p>
+                            <h4 class="font-bold mt-4">Uploaded File Responses:</h4>
+                            <div v-for="(fileResponse, key) in responseData.data.uploaded_file_responses" :key="key" class="mt-2">
+                                <p class="font-bold">File: {{ key }}</p>
                                 <p>
                                     Download Link: <a :href="fileResponse.download_link" target="_blank" class="text-blue-500">{{ fileResponse.download_link }}</a>
                                 </p>

@@ -2,7 +2,7 @@
     <main>
         <!-- Content -->
         <div v-if="responseData?.status === true">
-            <h2 class="text-xl font-semibold mb-4">Folder List</h2>
+            <h2 class="text-xl font-extrabold mb-4">My Post Folder</h2>
             <table class="min-w-full text-start">
                 <thead>
                     <tr>
@@ -41,8 +41,6 @@
 import type MyDriveFoldersApiResponse from "~/types/MyDriveFoldersApiResponse";
 import loadingNoData from "~/assets/lotties/loading-animation4.json";
 
-const defaultOptionNoData = ref({ animationData: loadingNoData });
-
 definePageMeta({
     layout: "instagram",
 });
@@ -52,6 +50,7 @@ const config = useRuntimeConfig();
 const { $swal } = useNuxtApp();
 
 const isProcessing = ref(false);
+const defaultOptionNoData = ref({ animationData: loadingNoData });
 const deletingFolderId = ref<string | null>(null);
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
 
@@ -109,12 +108,21 @@ const confirmDeleteFolder = async (folderId: string) => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!",
+            timer: 5000,
         });
 
         if (result.isConfirmed) {
             isProcessing.value = true;
             deletingFolderId.value = folderId;
             await deleteFolder(folderId);
+        } else if (result.isDismissed) {
+            $swal.fire({
+                title: "Action canceled",
+                icon: "info",
+                timer: 4000,
+                showConfirmButton: false,
+                toast: true,
+            });
         }
     } catch (error: any) {
         $swal.fire({

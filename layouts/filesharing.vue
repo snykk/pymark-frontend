@@ -57,14 +57,38 @@ import animationData2 from "~/assets/lotties/loading-animation3.json";
 
 const filesharing = useFileSharingStore();
 const flasher = useFlashStore();
+const { $swal } = useNuxtApp();
 
 const isDropdownHidden = ref(true);
 const defaultOptions = ref({ animationData });
 const defaultOptions2 = ref({ animationData: animationData2 });
 
 const logout = () => {
-    filesharing.logout();
-    flasher.setFlashMessage("Logged out successfuly", FlashLabel.SUCCESS);
+    let timerInterval;
+    $swal
+        .fire({
+            title: "Auto close alert!",
+            html: "I will close in <b></b> milliseconds.",
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                $swal.showLoading();
+                const timer = $swal.getPopup().querySelector("b");
+                timerInterval = setInterval(() => {
+                    timer.textContent = `${$swal.getTimerLeft()}`;
+                }, 100);
+            },
+            willClose: () => {
+                clearInterval(timerInterval);
+            },
+        })
+        .then((result: any) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === $swal.DismissReason.timer) {
+                filesharing.logout();
+                flasher.setFlashMessage("Logged out successfuly", FlashLabel.SUCCESS);
+            }
+        });
 };
 </script>
 

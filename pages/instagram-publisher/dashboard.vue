@@ -91,7 +91,7 @@ const shareInstagramPost = async () => {
 
         // upload post scenario
         const postData = {
-            image_url: responseEmbedding.data.uploaded_file_responses.public_compressed_image.download_link,
+            image_url: responseEmbedding.data.uploaded_file_responses.public_compressed_image.thumbnail_link,
             post_caption: post_caption.value,
         };
 

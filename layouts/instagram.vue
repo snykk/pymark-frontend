@@ -28,7 +28,7 @@
                         <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ facebook.userEmail ?? "no email" }}</span>
                     </div>
                     <ul class="py-2" aria-labelledby="user-menu-button">
-                        <button @click="facebook.logout" class="block w-full text-start px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
+                        <button @click="logoutFacebook()" class="block w-full text-start px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
                     </ul>
                 </div>
             </div>
@@ -62,6 +62,7 @@ const defaultOptions = ref({ animationData });
 const defaultOptions2 = ref({ animationData: animationData2 });
 const isLoading = ref(true);
 const isDropdownHidden = ref(true);
+const { $swal } = useNuxtApp();
 
 onNuxtReady(async () => {
     if (window.FB) {
@@ -73,9 +74,51 @@ onNuxtReady(async () => {
                 facebook.me();
                 isLoading.value = false;
             } else {
-                await navigateTo("/instagram-publisher");
+                await $swal.fire({
+                    title: "Invalid user",
+                    text: "You are not authenticated yet",
+                    icon: "warning",
+                    confirmButtonText: "Back",
+                });
+                // .then((result: any) => {
+                //     if (result.isConfirmed) {
+                //         // Here you can navigate the user using Nuxt.js router
+                //         return navigateTo("/"); // Replace '/' with the desired route
+                //     }
+                // });
+                return navigateTo("/instagram-publisher");
             }
         });
     }
 });
+
+const logoutFacebook = () => {
+    // facebook.logout;
+
+    let timerInterval;
+    $swal
+        .fire({
+            title: "Auto close alert!",
+            html: "I will close in <b></b> milliseconds.",
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: () => {
+                $swal.showLoading();
+                const timer = $swal.getPopup().querySelector("b");
+                timerInterval = setInterval(() => {
+                    timer.textContent = `${$swal.getTimerLeft()}`;
+                }, 100);
+            },
+            willClose: () => {
+                clearInterval(timerInterval);
+            },
+        })
+        .then((result: any) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === $swal.DismissReason.timer) {
+                facebook.logout();
+                console.log("ketutup harusnya");
+            }
+        });
+};
 </script>
