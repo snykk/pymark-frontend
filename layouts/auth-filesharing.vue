@@ -1,5 +1,5 @@
 <template>
-    <section class="">
+    <section :color="$colorMode.value" ref="authfilesharing_root">
         <div class="py-5 px-4 mx-auto max-w-screen-xl lg:pt-10 grid lg:grid-cols-2 gap-5 lg:gap-10">
             <div class="flex flex-col">
                 <FileSharingIntro class="mx-auto lg:mt-[5rem]" expandHeadingClass="pb-2 pt-5" />
@@ -24,6 +24,16 @@
     </section>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const colorMode = useColorMode();
+const authfilesharing_root = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    if (process.client) {
+        authfilesharing_root.value?.classList.add(colorMode.value);
+        authfilesharing_root.value?.classList.remove("system");
+    }
+});
+</script>
 
 <style scoped></style>

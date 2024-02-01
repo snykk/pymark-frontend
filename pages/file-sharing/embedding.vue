@@ -4,7 +4,7 @@
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <div class="flex flex-col md:flex-row items-end">
                 <ImageInput class="md:me-2 w-full md:w-1/2" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formSubmitted" />
-                <ImageInput class="md:ms-2 w-full md:w-1/2" v-model="watermark_image" id="" label="Watermark Image" :formSubmitted="formSubmitted" />
+                <ImageInput class="md:ms-2 w-full md:w-1/2" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formSubmitted" />
             </div>
             <div class="flex flex-col md:flex-row" style="margin: 0">
                 <div class="md:me-2 md:w-1/2">

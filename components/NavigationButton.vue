@@ -11,7 +11,7 @@
         >
             <span
                 :class="[
-                    'relative py-2 px-4 rounded-md transition-all duration-300 capitalize',
+                    'relative py-2 px-4 rounded-md transition-all duration-300 capitalize text-black dark:text-white',
                     {
                         'bg-white dark:bg-gray-900': $route.path.split('/').slice(0, 3).join('/') !== to,
                         'bg-opacity-0': $route.path.split('/').slice(0, 3).join('/') === to,

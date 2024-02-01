@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div ref="landing_instagram_root" :class="$colorMode.value">
         <div class="text-center px-3 xs:px-6 md:px-0">
             <InstagramPublisherIntro class="mb-8 pt-8 pb-5 md:pt-24 md:pb-3" />
             <div v-if="buttonReady" class="flex flex-wrap justify-center">
@@ -25,10 +25,12 @@
 
 <script setup lang="ts">
 const facebook = useFacebookStore();
+const colorMode = useColorMode();
 
 const errorMessage = ref<string>("");
 const isLogin = ref<boolean>(false);
 const buttonReady = ref(false);
+const landing_instagram_root = ref<HTMLElement | null>(null);
 
 function loginFacebook() {
     // Example usage:
@@ -56,6 +58,11 @@ onMounted(() => {
         });
     }
     buttonReady.value = true;
+
+    if (process.client) {
+        landing_instagram_root.value?.classList.add(colorMode.value);
+        landing_instagram_root.value?.classList.remove("system");
+    }
 });
 </script>
 

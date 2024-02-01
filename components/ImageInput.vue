@@ -65,4 +65,12 @@ const handleImageChange = (event) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.dark input[type="file"]::file-selector-button {
+    @apply bg-gray-600 hover:bg-gray-500 text-white;
+}
+
+input[type="file"]::file-selector-button {
+    @apply bg-gray-200 hover:bg-gray-300 text-black;
+}
+</style>

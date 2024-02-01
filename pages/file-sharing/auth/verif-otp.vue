@@ -8,11 +8,11 @@
         </div>
         <div v-else-if="sendingState === 'sended'">
             <p class="text-gray-600 dark:text-gray-400">
-                We emailed you the six digit code to <span class="text-gray-200">{{ route.query.email }}</span>
+                We emailed you the six digit code to <span class="font-bold text-black dark:text-gray-200">{{ route.query.email }}</span>
             </p>
             <p class="text-gray-600 dark:text-gray-400">Enter the code below to confirm your email address</p>
         </div>
-        <div v-else-if="sendingState === 'idle'">??????</div>
+        <div v-else-if="sendingState === 'idle'" class="text-black dark:text-white">??????</div>
 
         <!-- New message info -->
 
@@ -39,6 +39,7 @@
             </div>
             <div v-if="formSubmitted && errorMessage" class="text-red-500">
                 {{ errorMessage }}
+                <NuxtLink to="/file-sharing/auth/login" class="text-blue-500">Back to Login</NuxtLink>
             </div>
             <AuthSubmit class="w-full">Send OTP Code</AuthSubmit>
 

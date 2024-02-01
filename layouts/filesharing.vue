@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div ref="filesharing_root" :class="$colorMode.value">
         <div>
             <button type="button" class="absolute top-5 right-5 flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" @click="isDropdownHidden = !isDropdownHidden">
                 <img class="w-8 h-8 rounded-full" src="https://avatars.githubusercontent.com/u/71829822?v=4" alt="user photo" />
@@ -14,6 +14,7 @@
                     <span class="block text-sm text-gray-900 dark:text-white">{{ filesharing.username }}</span>
                     <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ filesharing.email ?? "no email" }}</span>
                 </div>
+                <ThemeSwitcherButton class="px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" />
                 <ul class="py-2" aria-labelledby="user-menu-button">
                     <button @click="logout" class="block w-full text-start px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
                 </ul>
@@ -90,6 +91,16 @@ const logout = () => {
             }
         });
 };
+
+const colorMode = useColorMode();
+const filesharing_root = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    if (process.client) {
+        filesharing_root.value?.classList.add(colorMode.value);
+        filesharing_root.value?.classList.remove("system");
+    }
+});
 </script>
 
 <style scoped></style>

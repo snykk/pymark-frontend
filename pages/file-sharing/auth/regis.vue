@@ -67,8 +67,7 @@ const submitForm = async () => {
                 const typedResponse = response as RegisFileSharingResponse;
                 if (typedResponse.status) {
                     flasher.setFlashMessage(typedResponse.message, "success");
-                    return navigateTo("/file-sharing/auth/login");
-                    // return navigateTo("/file-sharing/auth/verif-otp?email=" + user.value.email);
+                    return navigateTo("/file-sharing/auth/verif-otp?email=" + user.value.email);
                 }
 
                 errorMessage.value = typedResponse.message;

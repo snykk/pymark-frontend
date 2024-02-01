@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="$colorMode.value" ref="instagram_root">
         <div v-if="isLoading" class="flex justify-center items-center h-screen">
             <div class="flex flex-col justify-center w-1/3">
                 <LoadingIndicator class="h-full" :options="defaultOptions" />
@@ -27,6 +27,7 @@
                         <span class="block text-sm text-gray-900 dark:text-white">{{ facebook.userName }}</span>
                         <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ facebook.userEmail ?? "no email" }}</span>
                     </div>
+                    <ThemeSwitcherButton class="px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" />
                     <ul class="py-2" aria-labelledby="user-menu-button">
                         <button @click="logoutFacebook()" class="block w-full text-start px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</button>
                     </ul>
@@ -56,13 +57,23 @@
 <script setup lang="ts">
 import animationData from "~/assets/lotties/loading-animation.json";
 import animationData2 from "~/assets/lotties/loading-animation3.json";
+
 const facebook = useFacebookStore();
+const { $swal } = useNuxtApp();
+const colorMode = useColorMode();
 
 const defaultOptions = ref({ animationData });
 const defaultOptions2 = ref({ animationData: animationData2 });
 const isLoading = ref(true);
 const isDropdownHidden = ref(true);
-const { $swal } = useNuxtApp();
+const instagram_root = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    if (process.client) {
+        instagram_root.value?.classList.add(colorMode.value);
+        instagram_root.value?.classList.remove("system");
+    }
+});
 
 onNuxtReady(async () => {
     if (window.FB) {
