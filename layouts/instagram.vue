@@ -14,6 +14,7 @@
                     class="absolute top-5 right-5 flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                     id="user-menu-button"
                     @click="isDropdownHidden = !isDropdownHidden"
+                    v-click-outside="closeDropdown"
                 >
                     <img class="w-8 h-8 rounded-full" src="https://avatars.githubusercontent.com/u/71829822?v=4" alt="user photo" />
                 </button>
@@ -67,6 +68,16 @@ const defaultOptions2 = ref({ animationData: animationData2 });
 const isLoading = ref(true);
 const isDropdownHidden = ref(true);
 const instagram_root = ref<HTMLElement | null>(null);
+
+const closeDropdown = (event) => {
+    console.log("outside");
+    const dropdownMenu = document.getElementById("user-dropdown");
+    const isClickInsideDropdown = dropdownMenu.contains(event.target);
+
+    if (!isClickInsideDropdown) {
+        isDropdownHidden.value = true;
+    }
+};
 
 onMounted(() => {
     if (process.client) {

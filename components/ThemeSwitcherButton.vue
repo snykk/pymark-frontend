@@ -1,11 +1,11 @@
 <template>
     <div class="flex justify-between items-center cursor-pointer h-10" @click="toggleDarkMode">
-        <div>{{ $colorMode.value }}</div>
+        <div ref="theme_element"></div>
         <div>
             <!-- <svg id="theme-toggle-dark-icon" class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20" v-if="$colorMode.preference !== 'dark'">
                 <path d="M17.8 13.75a1 1 0 0 0-.859-.5A7.488 7.488 0 0 1 10.52 2a1 1 0 0 0 0-.969A1.035 1.035 0 0 0 9.687.5h-.113a9.5 9.5 0 1 0 8.222 14.247 1 1 0 0 0 .004-.997Z"></path>
             </svg> -->
-            <svg id="theme-toggle-dark-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" aria-hidden="true" v-if="$colorMode.preference !== 'dark'">
+            <svg id="theme-toggle-dark-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" aria-hidden="true" v-if="$colorMode.value !== 'dark'">
                 <path
                     d="M19.0647 5.43757C19.3421 5.43757 19.567 5.21271 19.567 4.93534C19.567 4.65796 19.3421 4.43311 19.0647 4.43311C18.7874 4.43311 18.5625 4.65796 18.5625 4.93534C18.5625 5.21271 18.7874 5.43757 19.0647 5.43757Z"
                     fill="currentColor"
@@ -74,9 +74,17 @@
 
 <script setup lang="ts">
 const colorMode = useColorMode();
+const theme_element = ref<HTMLElement | null>(null);
 const toggleDarkMode = () => {
     colorMode.preference = colorMode.preference === "dark" ? "light" : "dark";
+    theme_element.value!.innerHTML = colorMode.value;
 };
+
+onMounted(() => {
+    if (process.client) {
+        theme_element.value!.innerHTML = colorMode.value;
+    }
+});
 </script>
 
 <style scoped>
