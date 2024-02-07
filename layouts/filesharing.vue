@@ -40,11 +40,13 @@
             <main class="w-full md:w-2/3 p-4 mb-5 overflow-y-auto">
                 <!-- scrollable in md screen -->
                 <slot />
-                <div class="mx-auto w-1/2 hidden" id="request_loading">
+                <div class="mx-auto w-1/2 hidden" id="loading_submit_request">
                     <LoadingIndicator class="h-full w-full" :options="defaultOptions" />
-                    <h1 class="text-2xl text-center">Fetching the response</h1>
+                    <h1 class="text-2xl text-center">
+                        <!-- field handled in script -->
+                    </h1>
                 </div>
-                <div class="mx-auto w-1/2 hidden" id="request_loading2">
+                <div class="mx-auto w-1/2 hidden" id="loading_fetching_data">
                     <LoadingIndicator class="h-full w-full" :options="defaultOptions2" />
                     <h1 class="text-2xl text-center">Fetching the data</h1>
                 </div>
@@ -54,60 +56,17 @@
 </template>
 
 <script setup lang="ts">
+import Swal from "sweetalert2";
 import animationData from "~/assets/lotties/loading-animation2.json";
 import animationData2 from "~/assets/lotties/loading-animation3.json";
 
+const colorMode = useColorMode();
 const filesharing = useFileSharingStore();
 const flasher = useFlashStore();
-const { $swal } = useNuxtApp();
 
 const isDropdownHidden = ref(true);
 const defaultOptions = ref({ animationData });
 const defaultOptions2 = ref({ animationData: animationData2 });
-
-const toggleDropdown = () => {
-    isDropdownHidden.value = !isDropdownHidden.value;
-};
-
-const closeDropdown = (event) => {
-    console.log("outside");
-    const dropdownMenu = document.getElementById("user-dropdown");
-    const isClickInsideDropdown = dropdownMenu.contains(event.target);
-
-    if (!isClickInsideDropdown) {
-        isDropdownHidden.value = true;
-    }
-};
-
-const logout = () => {
-    let timerInterval;
-    $swal
-        .fire({
-            title: "Auto close alert!",
-            html: "I will close in <b></b> milliseconds.",
-            timer: 1000,
-            timerProgressBar: true,
-            didOpen: () => {
-                $swal.showLoading();
-                const timer = $swal.getPopup().querySelector("b");
-                timerInterval = setInterval(() => {
-                    timer.textContent = `${$swal.getTimerLeft()}`;
-                }, 100);
-            },
-            willClose: () => {
-                clearInterval(timerInterval);
-            },
-        })
-        .then((result: any) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === $swal.DismissReason.timer) {
-                filesharing.logout();
-                flasher.setFlashMessage("Logged out successfuly", FlashLabel.SUCCESS);
-            }
-        });
-};
-
-const colorMode = useColorMode();
 const filesharing_root = ref<HTMLElement | null>(null);
 
 onMounted(() => {
@@ -116,6 +75,47 @@ onMounted(() => {
         filesharing_root.value?.classList.remove("system");
     }
 });
+
+const toggleDropdown = () => {
+    isDropdownHidden.value = !isDropdownHidden.value;
+};
+
+const closeDropdown = (event: MouseEvent) => {
+    const dropdownMenu = document.getElementById("user-dropdown");
+    const isClickInsideDropdown = dropdownMenu?.contains(event.target as Node);
+
+    if (!isClickInsideDropdown) {
+        // Assuming isDropdownHidden is a reactive variable
+        isDropdownHidden.value = true;
+    }
+};
+
+const logout = () => {
+    let timerInterval: NodeJS.Timeout;
+
+    Swal.fire({
+        title: "Auto close alert!",
+        html: "I will close in <b></b> milliseconds.",
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup()!.querySelector("b")!;
+            timerInterval = setInterval(() => {
+                timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        },
+    }).then((result: any) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+            // Assuming filesharing and flasher are defined elsewhere
+            filesharing.logout();
+            flasher.setFlashMessage("Logged out successfully", FlashLabel.SUCCESS);
+        }
+    });
+};
 </script>
 
 <style scoped></style>

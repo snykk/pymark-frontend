@@ -38,8 +38,10 @@
 </template>
 
 <script setup lang="ts">
+import Swal from "sweetalert2";
 import type MyDriveFoldersApiResponse from "~/types/MyDriveFoldersApiResponse";
 import loadingNoData from "~/assets/lotties/loading-animation4.json";
+import type BaseApiResponse from "~/types/BaseApiResponse";
 
 definePageMeta({
     layout: "instagram",
@@ -47,17 +49,15 @@ definePageMeta({
 
 const facebook = useFacebookStore();
 const config = useRuntimeConfig();
-const { $swal } = useNuxtApp();
 
 const isProcessing = ref(false);
 const defaultOptionNoData = ref({ animationData: loadingNoData });
 const deletingFolderId = ref<string | null>(null);
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
-
 const requestLoadingElement = ref<HTMLElement | null>(null);
 
 onMounted(async () => {
-    const element = document.getElementById("request_loading2");
+    const element = document.getElementById("loading_fetching_data");
 
     if (element) {
         requestLoadingElement.value = element as HTMLElement;
@@ -100,7 +100,7 @@ const fetchData = async () => {
 
 const confirmDeleteFolder = async (folderId: string) => {
     try {
-        const result = await $swal.fire({
+        const result = await Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -116,16 +116,16 @@ const confirmDeleteFolder = async (folderId: string) => {
             deletingFolderId.value = folderId;
             await deleteFolder(folderId);
         } else if (result.isDismissed) {
-            $swal.fire({
+            Swal.fire({
                 title: "Action canceled",
                 icon: "info",
-                timer: 4000,
+                timer: 2000,
                 showConfirmButton: false,
                 toast: true,
             });
         }
     } catch (error: any) {
-        $swal.fire({
+        Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "Something went wrong!",
@@ -137,7 +137,7 @@ const confirmDeleteFolder = async (folderId: string) => {
 
 const deleteFolder = async (folderId: string) => {
     try {
-        const response = await $fetch(config.public.api_base + `/mydrive/folder/${folderId}`, {
+        const response: BaseApiResponse<null> = await $fetch(config.public.api_base + `/mydrive/folder/${folderId}`, {
             method: "delete",
             headers: {
                 Authorization: "Facebook " + facebook.userAccessToken,

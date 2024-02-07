@@ -15,6 +15,7 @@
 
 <script setup lang="ts">
 const colorMode = useColorMode();
+
 const landing_filesharing_root = ref<HTMLElement | null>(null);
 
 onMounted(() => {

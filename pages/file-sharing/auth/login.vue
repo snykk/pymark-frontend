@@ -32,8 +32,17 @@
 </template>
 
 <script setup lang="ts">
+import type LoginFileSharingResponse from "~/types/LoginFileSharingResponse";
+
 const filesharing = useFileSharingStore();
 const flasher = useFlashStore();
+const route = useRoute();
+
+const user = ref({
+    email: "",
+    password: "",
+});
+const formSubmitted = ref(false);
 
 definePageMeta({
     layout: "auth-filesharing",
@@ -53,15 +62,6 @@ onUnmounted(() => {
     flasher.clearFlashMessage();
 });
 
-import type LoginFileSharingResponse from "~/types/LoginFileSharingResponse";
-
-const user = ref({
-    email: "",
-    password: "",
-});
-const formSubmitted = ref(false);
-// const errorMessage = ref("");
-
 const submitForm = async () => {
     formSubmitted.value = true;
     // errorMessage.value = "";
@@ -77,16 +77,21 @@ const submitForm = async () => {
             if (response.status === true) {
                 // Successful login (HTTP 200)
                 filesharing.setUserJWTToken(response.data!.access_token!, response.data!.user!.username, response.data!.user!.email);
+
+                const redirectFrom = route.query.redirectFrom as string;
+                if (redirectFrom) {
+                    navigateTo(redirectFrom);
+                    return;
+                }
+
                 navigateTo("/file-sharing/embedding");
                 return;
-            } else {
-                console.log("ke sini kan");
-                flasher.setFlashMessage(response.message, FlashLabel.DANGER);
-                // errorMessage.value = response.message || "Failed to login";
             }
+
+            flasher.setFlashMessage(response.message, FlashLabel.DANGER);
+            // errorMessage.value = response.message || "Failed to login";
         })
         .catch((error) => {
-            console.log("oh sin ya");
             flasher.setFlashMessage(error.response._data.message, FlashLabel.DANGER);
             // errorMessage.value = error.response._data.message || "Something went wrong";
         });

@@ -1,12 +1,11 @@
 <template>
     <div class="flex flex-col">
         <label :for="id" class="block mb-2 text-sm font-medium">{{ label }}</label>
-        <img v-if="preview" :src="preview" class="ml-4 h-40 w-40 mb-3" :alt="alt" />
+        <img v-if="previewSource" :src="previewSource" class="ml-4 h-40 w-40 mb-3" :alt="alt" />
         <input
             :type="type"
             :id="id"
             :accept="accept"
-            ref="fileInput"
             class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
             @change="handleImageChange($event)"
         />
@@ -43,11 +42,10 @@ const {
 
 const emit = defineEmits(["update:modelValue"]);
 
-const fileInput = ref(null);
-const preview = ref(null);
+const previewSource = ref("");
 
-const handleImageChange = (event) => {
-    const target = event.target;
+const handleImageChange = (event: Event) => {
+    const target = event.target as HTMLInputElement;
     if (!target || !target.files) return;
 
     const file = target.files[0];
@@ -58,7 +56,7 @@ const handleImageChange = (event) => {
         const result = e.target?.result;
         if (typeof result === "string") {
             emit("update:modelValue", file);
-            preview.value = result;
+            previewSource.value = result;
         }
     };
     fileReader.readAsDataURL(file);

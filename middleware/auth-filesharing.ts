@@ -1,4 +1,8 @@
+const flasher = useFlashStore();
+
 export default defineNuxtRouteMiddleware((to, from) => {
+    console.log(to);
+    console.log(from);
     const filesharing = useFileSharingStore();
     const { userJWTToken, username, email } = storeToRefs(useFileSharingStore());
 
@@ -16,6 +20,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
 
     if (!filesharing.userJWTToken) {
-        return navigateTo("/file-sharing/auth/login");
+        flasher.setFlashMessage("You are not authenticated yet", FlashLabel.DANGER);
+        return navigateTo("/file-sharing/auth/login?redirectFrom=" + to.fullPath);
     }
 });

@@ -67,19 +67,8 @@ const showModal = ref(false);
 const previewImage = ref("");
 const requestLoadingElement = ref<HTMLElement | null>(null);
 
-const showImagePreview = (imageUrl: string) => {
-    previewImage.value = imageUrl;
-    showModal.value = true;
-    console.log(previewImage.value);
-};
-
-const closeModal = () => {
-    previewImage.value = "";
-    showModal.value = false;
-};
-
 onMounted(async () => {
-    const element = document.getElementById("request_loading2");
+    const element = document.getElementById("loading_fetching_data");
 
     if (element) {
         requestLoadingElement.value = element as HTMLElement;
@@ -104,6 +93,17 @@ onMounted(async () => {
 onBeforeUnmount(async () => {
     requestLoadingElement.value?.classList.add("hidden");
 });
+
+const showImagePreview = (imageUrl: string) => {
+    previewImage.value = imageUrl;
+    showModal.value = true;
+    console.log(previewImage.value);
+};
+
+const closeModal = () => {
+    previewImage.value = "";
+    showModal.value = false;
+};
 </script>
 
 <style scoped>

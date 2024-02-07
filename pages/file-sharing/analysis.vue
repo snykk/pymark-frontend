@@ -94,11 +94,19 @@ const watermarked_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
 const extracted_watermark_image = ref<File | null>(null);
 const type = ref("gray");
-var imperceptibilityResponseData = ref<ImperceptibilityApiResponse | null>(null);
-var robustnessResponseData = ref<RobustnessApiResponse | null>(null);
+const imperceptibilityResponseData = ref<ImperceptibilityApiResponse | null>(null);
+const robustnessResponseData = ref<RobustnessApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
 
 const typeOptions = ["gray", "rgb"];
+
+onMounted(() => {
+    const element = document.getElementById("loading_submit_request");
+
+    if (element) {
+        requestLoadingElement.value = element as HTMLElement;
+    }
+});
 
 function validateImperceptibilityForm() {
     return {
@@ -114,15 +122,14 @@ function validateRobustnessForm() {
     };
 }
 
-onMounted(() => {
-    const element = document.getElementById("request_loading");
-
-    if (element) {
-        requestLoadingElement.value = element as HTMLElement;
-    }
-});
-
 async function submitImperceptibilityForm() {
+    const h1Element = requestLoadingElement.value?.querySelector("h1");
+
+    if (h1Element) {
+        // Check if the h1 element exists
+        h1Element.textContent = "Imperceptibility analysis is running";
+    }
+
     requestLoadingElement.value?.classList.remove("hidden");
     formImperceptSubmitted.value = true;
     formImperceptSubtmitting.value = true;
@@ -167,6 +174,13 @@ async function submitImperceptibilityForm() {
 }
 
 async function submitRobustnessForm() {
+    const h1Element = requestLoadingElement.value?.querySelector("h1");
+
+    if (h1Element) {
+        // Check if the h1 element exists
+        h1Element.textContent = "Robustness analysis is running";
+    }
+
     requestLoadingElement.value?.classList.remove("hidden");
     robustnessResponseData.value = null;
     formRobustSubmitted.value = true;

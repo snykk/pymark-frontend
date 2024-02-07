@@ -58,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import Swal from "sweetalert2";
 import type MyDriveFoldersApiResponse from "~/types/MyDriveFoldersApiResponse";
 import loadingNoData from "~/assets/lotties/loading-animation4.json";
 
@@ -70,17 +71,15 @@ definePageMeta({
 
 const filesharing = useFileSharingStore();
 const config = useRuntimeConfig();
-const { $swal } = useNuxtApp();
 
 const isProcessing = ref(false);
 const deletingFolderId = ref<string | null>(null); // Store the id of the folder being deleted
 const selectedDrive = ref<"embedding" | "extraction" | "image-processing">("embedding");
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
-
 const requestLoadingElement = ref<HTMLElement | null>(null);
 
 onMounted(async () => {
-    const element = document.getElementById("request_loading2");
+    const element = document.getElementById("loading_fetching_data");
 
     if (element) {
         requestLoadingElement.value = element as HTMLElement;
@@ -118,7 +117,7 @@ const fetchData = async (feature: "embedding" | "extraction" | "image-processing
 
 const confirmDeleteFolder = async (folderId: string) => {
     try {
-        const result = await $swal.fire({
+        const result = await Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -134,16 +133,16 @@ const confirmDeleteFolder = async (folderId: string) => {
             deletingFolderId.value = folderId;
             await deleteFolder(folderId);
         } else if (result.isDismissed) {
-            $swal.fire({
+            Swal.fire({
                 title: "Action canceled",
                 icon: "info",
-                timer: 4000,
+                timer: 2000,
                 showConfirmButton: false,
                 toast: true,
             });
         }
     } catch (error: any) {
-        $swal.fire({
+        Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "Something went wrong!",

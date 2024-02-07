@@ -39,9 +39,9 @@
             </div>
             <div v-if="formSubmitted && errorMessage" class="text-red-500">
                 {{ errorMessage }}
-                <NuxtLink to="/file-sharing/auth/login" class="text-blue-500">Back to Login</NuxtLink>
+                <NuxtLink v-if="errorMessage === 'User already activated'" to="/file-sharing/auth/login" class="text-blue-500">Back to Login</NuxtLink>
             </div>
-            <AuthSubmit class="w-full">Send OTP Code</AuthSubmit>
+            <AuthSubmit class="w-full">Submit</AuthSubmit>
 
             <div class="text-sm font-medium text-gray-900 dark:text-white">
                 You didn't receive the code?
@@ -56,15 +56,15 @@
     </div>
 </template>
 <script setup lang="ts">
+import Swal from "sweetalert2";
 import type BaseApiResponse from "~/types/BaseApiResponse";
 import animationData from "~/assets/lotties/loading-animation6.json";
-
-const defaultOptions = ref({ animationData });
 
 definePageMeta({
     layout: "auth-filesharing",
 });
 
+const defaultOptions = ref({ animationData });
 const otp = ref<string[]>(Array(6).fill(""));
 const formSubmitted = ref(false);
 const errorMessage = ref("");
@@ -74,28 +74,26 @@ const sendingState = ref<"idle" | "sending" | "sended">("idle");
 
 const config = useRuntimeConfig();
 const route = useRoute();
-const { $swal } = useNuxtApp();
 const flasher = useFlashStore();
 
-const otpInputs = ref<HTMLElement[]>([]); // Create ref for inputs
+const otpInputs = ref<HTMLInputElement[]>([]); // Create ref for inputs
 
 onMounted(async () => {
     const email = route.query.email as string;
 
     if (!email) {
-        $swal
-            .fire({
-                title: "The Email?",
-                text: "The OTP email is not found",
-                icon: "question",
-                confirmButtonText: "Back",
-            })
-            .then((result: any) => {
-                if (result.isConfirmed) {
-                    // Here you can navigate the user using Nuxt.js router
-                    return navigateTo("/"); // Replace '/' with the desired route
-                }
-            });
+        Swal.fire({
+            title: "The Email?",
+            text: "The OTP email is not found",
+            icon: "question",
+            confirmButtonText: "Back",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Here you can navigate the user using Nuxt.js router
+                navigateTo("/"); // Replace '/' with the desired route
+                return;
+            }
+        });
 
         return;
     }
@@ -214,8 +212,9 @@ const handleKeyUp = (index: number, event: KeyboardEvent) => {
     }
 };
 
-const handleInput = (index: number, event: InputEvent) => {
-    const inputValue = event.target.value;
+const handleInput = (index: number, event: Event) => {
+    const inputElement = event.target as HTMLInputElement;
+    const inputValue = inputElement.value;
     const numericValue = parseInt(inputValue, 10);
 
     if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 9) {

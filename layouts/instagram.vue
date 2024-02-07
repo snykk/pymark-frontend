@@ -34,7 +34,7 @@
                     </ul>
                 </div>
             </div>
-            <aside class="w-full md:w-1/3 p-4 flex flex-col">
+            <aside class="w-full md:w-1/3 p-4 flex flex-col md:sticky md:top-0 md:h-screen overflow-y-auto">
                 <header>
                     <div class="wrapper text-center">
                         <InstagramPublisherIntro class="mb-4 pt-4 pb-2 md:pt-8 md:pb-4" />
@@ -46,7 +46,7 @@
             <main class="w-full md:w-2/3 p-4">
                 <slot />
                 <!-- loading to fetch data -->
-                <div class="mx-auto w-1/2 hidden" id="request_loading2">
+                <div class="mx-auto w-1/2 hidden" id="loading_fetching_data">
                     <LoadingIndicator class="h-full w-full" :options="defaultOptions2" />
                     <h1 class="text-2xl text-center">Fetching the data</h1>
                 </div>
@@ -56,11 +56,11 @@
 </template>
 
 <script setup lang="ts">
+import Swal from "sweetalert2";
 import animationData from "~/assets/lotties/loading-animation.json";
 import animationData2 from "~/assets/lotties/loading-animation3.json";
 
 const facebook = useFacebookStore();
-const { $swal } = useNuxtApp();
 const colorMode = useColorMode();
 
 const defaultOptions = ref({ animationData });
@@ -68,16 +68,6 @@ const defaultOptions2 = ref({ animationData: animationData2 });
 const isLoading = ref(true);
 const isDropdownHidden = ref(true);
 const instagram_root = ref<HTMLElement | null>(null);
-
-const closeDropdown = (event) => {
-    console.log("outside");
-    const dropdownMenu = document.getElementById("user-dropdown");
-    const isClickInsideDropdown = dropdownMenu.contains(event.target);
-
-    if (!isClickInsideDropdown) {
-        isDropdownHidden.value = true;
-    }
-};
 
 onMounted(() => {
     if (process.client) {
@@ -96,51 +86,52 @@ onNuxtReady(async () => {
                 facebook.me();
                 isLoading.value = false;
             } else {
-                await $swal.fire({
+                await Swal.fire({
                     title: "Invalid user",
                     text: "You are not authenticated yet",
                     icon: "warning",
                     confirmButtonText: "Back",
                 });
-                // .then((result: any) => {
-                //     if (result.isConfirmed) {
-                //         // Here you can navigate the user using Nuxt.js router
-                //         return navigateTo("/"); // Replace '/' with the desired route
-                //     }
-                // });
+
                 return navigateTo("/instagram-publisher");
             }
         });
     }
 });
 
+const closeDropdown = (event: MouseEvent) => {
+    const dropdownMenu = document.getElementById("user-dropdown");
+    const isClickInsideDropdown = dropdownMenu?.contains(event.target as Node);
+
+    if (!isClickInsideDropdown) {
+        isDropdownHidden.value = true;
+    }
+};
+
 const logoutFacebook = () => {
     // facebook.logout;
-
-    let timerInterval;
-    $swal
-        .fire({
-            title: "Auto close alert!",
-            html: "I will close in <b></b> milliseconds.",
-            timer: 1000,
-            timerProgressBar: true,
-            didOpen: () => {
-                $swal.showLoading();
-                const timer = $swal.getPopup().querySelector("b");
-                timerInterval = setInterval(() => {
-                    timer.textContent = `${$swal.getTimerLeft()}`;
-                }, 100);
-            },
-            willClose: () => {
-                clearInterval(timerInterval);
-            },
-        })
-        .then((result: any) => {
-            /* Read more about handling dismissals below */
-            if (result.dismiss === $swal.DismissReason.timer) {
-                facebook.logout();
-                console.log("ketutup harusnya");
-            }
-        });
+    let timerInterval: NodeJS.Timeout;
+    Swal.fire({
+        title: "Auto close alert!",
+        html: "I will close in <b></b> milliseconds.",
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup()!.querySelector("b")!;
+            timerInterval = setInterval(() => {
+                timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        },
+    }).then((result: any) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+            facebook.logout();
+            console.log("ketutup harusnya");
+        }
+    });
 };
 </script>

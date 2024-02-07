@@ -112,7 +112,7 @@ const processingType = ref<string>("salt_and_pepper"); // Default selected proce
 const formSubmitted = ref(false);
 const formSubtmitting = ref(false);
 const image = ref<File | null>(null);
-var responseData = ref<ImageProcessingApiResponse | null>(null);
+const responseData = ref<ImageProcessingApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
 
 function validateForm() {
@@ -122,7 +122,7 @@ function validateForm() {
 }
 
 onMounted(() => {
-    const element = document.getElementById("request_loading");
+    const element = document.getElementById("loading_submit_request");
 
     if (element) {
         requestLoadingElement.value = element as HTMLElement;
@@ -130,6 +130,13 @@ onMounted(() => {
 });
 
 async function submitForm() {
+    const h1Element = requestLoadingElement.value?.querySelector("h1");
+
+    if (h1Element) {
+        // Check if the h1 element exists
+        h1Element.textContent = "Image processing is running";
+    }
+
     requestLoadingElement.value?.classList.remove("hidden");
     formSubmitted.value = true;
     formSubtmitting.value = true;

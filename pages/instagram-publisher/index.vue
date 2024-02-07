@@ -32,22 +32,6 @@ const isLogin = ref<boolean>(false);
 const buttonReady = ref(false);
 const landing_instagram_root = ref<HTMLElement | null>(null);
 
-function loginFacebook() {
-    // Example usage:
-    facebook
-        .login()
-        .then((accessToken) => {
-            // Use accessToken for further operations
-            console.log("Logged in successfully:");
-            navigateTo("/instagram-publisher/dashboard");
-        })
-        .catch((error) => {
-            // Handle login error
-            console.error("Login failed:", error.message);
-            errorMessage.value = error.message;
-        });
-}
-
 onMounted(() => {
     if (window.FB) {
         window.FB.getLoginStatus((response: any) => {
@@ -64,6 +48,22 @@ onMounted(() => {
         landing_instagram_root.value?.classList.remove("system");
     }
 });
+
+function loginFacebook() {
+    // Example usage:
+    facebook
+        .login()
+        .then((accessToken) => {
+            // Use accessToken for further operations
+            console.log("Logged in successfully:");
+            navigateTo("/instagram-publisher/dashboard");
+        })
+        .catch((error) => {
+            // Handle login error
+            console.error("Login failed:", error.message);
+            errorMessage.value = error.message;
+        });
+}
 </script>
 
 <style scoped>

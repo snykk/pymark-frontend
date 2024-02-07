@@ -72,14 +72,14 @@ const host_image = ref<File | null>(null);
 const watermark_image = ref<File | null>(null);
 const type = ref("gray");
 const alpha = ref("0.01");
-var responseData = ref<EmbeddingApiResponse | null>(null);
+const responseData = ref<EmbeddingApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
 
 const typeOptions = ["gray", "rgb"];
 const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
 
 onMounted(() => {
-    const element = document.getElementById("request_loading");
+    const element = document.getElementById("loading_submit_request");
 
     if (element) {
         requestLoadingElement.value = element as HTMLElement;
@@ -96,6 +96,13 @@ function validateForm() {
 }
 
 async function submitForm() {
+    const h1Element = requestLoadingElement.value?.querySelector("h1");
+
+    if (h1Element) {
+        // Check if the h1 element exists
+        h1Element.textContent = "Embedding process is running";
+    }
+
     requestLoadingElement.value?.classList.remove("hidden");
     formSubmitted.value = true;
     formSubtmitting.value = true;
