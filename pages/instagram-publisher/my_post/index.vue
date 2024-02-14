@@ -65,12 +65,16 @@ onMounted(async () => {
 
     requestLoadingElement.value?.classList.remove("hidden");
 
-    responseData.value = await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=instagram-post", {
-        method: "get",
-        headers: {
-            Authorization: "Facebook " + facebook.userAccessToken,
-        },
-    });
+    try {
+        responseData.value = await $fetch<MyDriveFoldersApiResponse>(config.public.api_base + "/mydrive/folders?pymark_feature=instagram-post", {
+            method: "get",
+            headers: {
+                Authorization: "Facebook " + facebook.userAccessToken,
+            },
+        });
+    } catch (error: any) {
+        responseData.value = error.response._data;
+    }
 
     requestLoadingElement.value?.classList.add("hidden");
 });
@@ -82,10 +86,6 @@ onBeforeUnmount(async () => {
 function navigateToFolder(folder_id: string) {
     navigateTo("/instagram-publisher/my_post/folders/" + folder_id);
 }
-
-const handleClick = () => {
-    fetchData();
-};
 
 const fetchData = async () => {
     console.log(config.public.api_base);

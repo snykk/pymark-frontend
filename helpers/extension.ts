@@ -7,3 +7,8 @@ export function isImageFile(filename: string): boolean {
     const extension = getFileExtension(filename);
     return imageExtensions.includes(extension);
 }
+
+export function isTextFile(filename: string): boolean {
+    const extension = getFileExtension(filename);
+    return extension === "txt";
+}

@@ -2,6 +2,7 @@ import type FileInfo from "~/types/FileInfo";
 import type BaseApiResponse from "~/types/BaseApiResponse";
 
 interface EmbeddingData {
+    folder_id: string;
     folder_result: number;
     imperceptibility_analysis: {
         psnr: number;

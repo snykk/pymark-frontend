@@ -186,7 +186,8 @@ const refreshFolderList = async (feature: "embedding" | "extraction" | "image-pr
     try {
         responseData.value = await fetchDataFromAPI(`/mydrive/folders?pymark_feature=${selectedDrive.value}`);
         selectedDrive.value = feature;
-    } catch (error) {
+    } catch (error: any) {
+        responseData.value = error.response._data;
         console.error("Error fetching data:", error);
     }
 };

@@ -40,7 +40,7 @@
         </form>
 
         <!-- Bagian untuk menampilkan preview dari respons API -->
-        <div v-if="responseData && responseData.data">
+        <div class="mt-5" v-if="responseData && responseData.data">
             <h2 class="text-2xl font-bold mb-4">Hasil dari Respons API</h2>
             <div>
                 <p class="mb-2">Folder Result: {{ responseData.data.folder_result }}</p>

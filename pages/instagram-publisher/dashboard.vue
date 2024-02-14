@@ -78,6 +78,7 @@ const shareInstagramPost = async () => {
     if (watermark_image.value) formData.append("watermark_image", watermark_image.value);
     formData.append("alpha", "0.1");
     formData.append("embed_folder", "pymark-instagram-post");
+    formData.append("post_caption", post_caption.value);
 
     try {
         // embedding scenario

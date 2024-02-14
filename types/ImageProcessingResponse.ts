@@ -2,6 +2,7 @@ import type FileInfo from "~/types/FileInfo";
 import type BaseApiResponse from "~/types/BaseApiResponse";
 
 interface ImageProcessingData {
+    folder_id: string;
     folder_result: number;
     uploaded_file_responses: {
         original_image: FileInfo;
