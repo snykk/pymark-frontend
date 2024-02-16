@@ -56,36 +56,37 @@
             <FileSharingSubmit class="!mt5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
         <!-- API Response Display Section -->
-        <div v-if="responseData">
-            <div class="p-6 shadow-lg mt-8">
-                <!-- API Response Details -->
-                <h2 class="text-lg font-semibold mb-4">API Response:</h2>
-                <!-- Attacked Image Preview -->
-                <div v-if="responseData.data && responseData.data.uploaded_file_responses.attacked_image">
-                    <h4 class="text-sm font-semibold mb-2">Attacked Image Preview:</h4>
-                    <div class="rounded-lg shadow-md overflow-hidden attacked-image-container">
-                        <img :src="responseData.data.uploaded_file_responses.attacked_image.thumbnail_link.replace(/=s\d+$/, '')" alt="Attacked Image" />
-                    </div>
-                </div>
-                <!-- Detailed Response Data -->
-                <div class="mt-6">
-                    <p class="text-sm font-semibold">Status: {{ responseData.status }}</p>
-                    <p class="mt-2">{{ responseData.message }}</p>
+        <div v-if="responseData" class="space-y-4 bg-slate-100 dark:bg-gray-800 p-4 rounded-lg mt-5">
+            <!-- API Response Details -->
+            <h2 class="text-2xl font-bold">Image Processing Result</h2>
+            <div class="mb-2">
+                <p class="">Folder ID: {{ responseData.data.folder_id }}</p>
+                <p class="">Folder Name: {{ responseData.data.folder_result }}</p>
+            </div>
 
-                    <div v-if="responseData.data">
-                        <h3 class="text-md font-semibold mt-4">Folder Result: {{ responseData.data.folder_result }}</h3>
-                        <!-- Uploaded File Responses -->
-                        <div v-if="responseData.data.uploaded_file_responses">
-                            <h4 class="font-bold mt-4">Uploaded File Responses:</h4>
-                            <div v-for="(fileResponse, key) in responseData.data.uploaded_file_responses" :key="key" class="mt-2">
-                                <p class="font-bold">File: {{ key }}</p>
-                                <p>
-                                    Download Link: <a :href="fileResponse.download_link" target="_blank" class="text-blue-500">{{ fileResponse.download_link }}</a>
-                                </p>
-                                <p>
-                                    Web View Link: <a :href="fileResponse.web_view_link" target="_blank" class="text-blue-500">{{ fileResponse.web_view_link }}</a>
-                                </p>
-                            </div>
+            <!-- Attacked Image Preview -->
+            <div class="space-y-2" v-if="responseData.data && responseData.data.uploaded_file_responses.attacked_image">
+                <h3 class="text-xl font-bold">Attacked Image Preview</h3>
+                <div class="rounded-lg overflow-hidden">
+                    <a :href="responseData.data.uploaded_file_responses.attacked_image.web_view_link" target="_blank" class="text-blue-500 hover:underline attacked-image-container">
+                        <img :src="responseData.data.uploaded_file_responses.attacked_image.thumbnail_link.replace(/=s\d+$/, '')" alt="Attacked Image" />
+                    </a>
+                </div>
+            </div>
+            <!-- Detailed Response Data -->
+            <div class="mt-6">
+                <div v-if="responseData.data">
+                    <!-- Uploaded File Responses -->
+                    <div v-if="responseData.data.uploaded_file_responses">
+                        <h4 class="font-bold mt-4">Uploaded File Responses:</h4>
+                        <div v-for="(fileResponse, key) in responseData.data.uploaded_file_responses" :key="key" class="mt-2">
+                            <p class="font-bold">File: {{ key }}</p>
+                            <p>
+                                Download Link: <a :href="fileResponse.download_link" target="_blank" class="text-blue-500">{{ fileResponse.download_link }}</a>
+                            </p>
+                            <p>
+                                Web View Link: <a :href="fileResponse.web_view_link" target="_blank" class="text-blue-500">{{ fileResponse.web_view_link }}</a>
+                            </p>
                         </div>
                     </div>
                 </div>

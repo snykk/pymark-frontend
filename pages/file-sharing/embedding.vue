@@ -24,24 +24,27 @@
             <FileSharingSubmit class="!mt-5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
         <!-- Bagian untuk menampilkan preview dari respons API -->
-        <div class="mt-6" v-if="responseData && responseData.data">
-            <h2 class="text-2xl font-bold mb-4">Hasil dari Respons API</h2>
-            <div v-if="responseData.data.uploaded_file_responses">
-                <p class="mb-2">Folder Result: {{ responseData.data.folder_result }}</p>
-                <h2 class="text-xl font-bold mb-4">Imperceptibility Analysis</h2>
-                <p>PSNR (Peak Signal-to-Noise Ratio): {{ responseData.data.imperceptibility_analysis.psnr }}</p>
-                <p>SSIM (Structural Similarity Index): {{ responseData.data.imperceptibility_analysis.ssim }}</p>
-
-                <h2 class="text-xl font-bold mb-4">Watermarked Image Preview</h2>
-                <div class="border rounded-lg overflow-hidden">
-                    <img :src="responseData.data.uploaded_file_responses.watermarked_image.thumbnail_link.replace(/=s\d+$/, '')" alt="Preview Watermarked Image" />
-                    <div class="p-4">
-                        <a :href="responseData.data.uploaded_file_responses.watermarked_image.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Watermarked Image</a>
-                    </div>
+        <div class="mt-5 space-y-4 bg-slate-100 dark:bg-gray-800 p-4 rounded-lg" v-if="responseData && responseData.data">
+            <h2 class="text-2xl font-bold">Embedding Result</h2>
+            <div v-if="responseData.data.uploaded_file_responses" class="space-y-4">
+                <div class="mb-2">
+                    <p class="">Folder ID: {{ responseData.data.folder_id }}</p>
+                    <p class="">Folder Name: {{ responseData.data.folder_result }}</p>
+                </div>
+                <div class="space-y-1">
+                    <h2 class="text-xl font-bold">Imperceptibility Analysis</h2>
+                    <p>PSNR (Peak Signal-to-Noise Ratio): {{ responseData.data.imperceptibility_analysis.psnr }}</p>
+                    <p>SSIM (Structural Similarity Index): {{ responseData.data.imperceptibility_analysis.ssim }}</p>
                 </div>
 
+                <h3 class="text-xl font-bold">Watermarked Image Preview</h3>
+                <div class="rounded-lg overflow-hidden">
+                    <a :href="responseData.data.uploaded_file_responses.watermarked_image.web_view_link" target="_blank" class="text-blue-500 hover:underline">
+                        <img :src="responseData.data.uploaded_file_responses.watermarked_image.thumbnail_link.replace(/=s\d+$/, '')" alt="Preview Watermarked Image" />
+                    </a>
+                </div>
                 <div>
-                    <h2 class="text-xl font-bold mb-4">Other Links</h2>
+                    <h4 class="text-xl font-bold">Other Links</h4>
                     <ul class="list-disc list-inside">
                         <li><a :href="responseData.data.uploaded_file_responses.public_compressed_image.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Public Compressed Image</a></li>
                         <li><a :href="responseData.data.uploaded_file_responses.block_position.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Block Position</a></li>

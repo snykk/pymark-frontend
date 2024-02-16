@@ -22,7 +22,7 @@
         </nav>
 
         <!-- Content -->
-        <div v-if="responseData?.status === true">
+        <div v-if="responseData?.status === true" class="max-w-full overflow-x-auto">
             <table class="min-w-full text-start">
                 <thead>
                     <tr>

@@ -7,7 +7,7 @@
             :accept="accept"
             ref="fileInput"
             @change="handleFileChange($event)"
-            class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+            class="block w-full text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
         />
     </div>
 </template>
@@ -50,4 +50,12 @@ const handleFileChange = (event) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.dark input[type="file"]::file-selector-button {
+    @apply bg-gray-600 hover:bg-gray-500 text-white;
+}
+
+input[type="file"]::file-selector-button {
+    @apply bg-gray-200 hover:bg-gray-300 text-black;
+}
+</style>

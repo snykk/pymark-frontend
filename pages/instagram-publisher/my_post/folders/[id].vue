@@ -4,7 +4,7 @@
             <h2 class="text-2xl font-semibold mb-4">Folder Details</h2>
             <div class="overflow-x-auto mt-2">
                 <div class="max-w-full overflow-x-auto">
-                    <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                    <table class="min-w-full bg-slate-200 dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                         <thead class="bg-gray-100 dark:bg-gray-700">
                             <tr>
                                 <th class="py-3 px-4 text-left">File ID</th>

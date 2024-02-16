@@ -1,7 +1,7 @@
 <template>
     <main>
         <!-- Content -->
-        <div v-if="responseData?.status === true">
+        <div v-if="responseData?.status === true" class="max-w-full overflow-x-auto">
             <h2 class="text-xl font-extrabold mb-4">My Post Folder</h2>
             <table class="min-w-full text-start">
                 <thead>

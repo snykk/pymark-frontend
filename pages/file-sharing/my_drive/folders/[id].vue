@@ -4,7 +4,7 @@
             <h2 class="text-2xl font-semibold mb-6">Folder Details</h2>
             <div class="overflow-x-auto">
                 <div class="max-w-full overflow-x-auto">
-                    <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                    <table class="min-w-full bg-gray-50 dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                         <thead class="bg-gray-100 dark:bg-gray-700">
                             <tr>
                                 <th class="py-3 px-4 text-left">File ID</th>
@@ -31,7 +31,7 @@
                 <div class="max-w-full overflow-x-auto">
                     <div v-if="textContent !== ''" class="min-w-full overflow-hidden mt-4">
                         <h2 class="text-lg font-semibold mb-2">File Content</h2>
-                        <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                        <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md">
                             <pre class="whitespace-pre overflow-x-auto overflow-y-hidden">{{ textContent }}</pre>
                         </div>
                     </div>

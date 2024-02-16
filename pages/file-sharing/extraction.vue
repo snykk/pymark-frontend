@@ -4,17 +4,19 @@
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <!-- watermarked and block position section input -->
             <div class="flex flex-col md:flex-row md:items-end">
-                <ImageInput class="md:me-1 md:w-full" v-model="watermarked_image" id="watermarked_image" label="Watermarked Image" :formSubmitted="formSubmitted" />
-                <ImageInput class="md:ms-1 md: md:w-full" v-model="block_position" id="block_position" label="Block Position" :formSubmitted="formSubmitted" />
+                <div class="md:me-1 md:w-full">
+                    <ImageInput v-model="watermarked_image" id="watermarked_image" label="Watermarked Image" :formSubmitted="formSubmitted" />
+                    <span v-if="formSubmitted && !watermarked_image" class="text-red-500">Watermarked image is required</span>
+                </div>
+                <div class="md:ms-1 md: md:w-full">
+                    <ImageInput v-model="block_position" id="block_position" label="Block Position" :formSubmitted="formSubmitted" />
+                    <span v-if="formSubmitted && !block_position" class="text-red-500">Block position image is required</span>
+                </div>
             </div>
             <!-- alert of watermarked and block position -->
             <div class="flex flex-col md:flex-row" style="margin: 0">
-                <div class="md:w-1/2">
-                    <span v-if="formSubmitted && !watermarked_image" class="text-red-500">Watermarked image is required</span>
-                </div>
-                <div class="md:w-1/2">
-                    <span v-if="formSubmitted && !block_position" class="text-red-500">Block position image is required</span>
-                </div>
+                <div class="md:w-1/2"></div>
+                <div class="md:w-1/2"></div>
             </div>
             <!-- watermark and npy file section input -->
             <div class="flex flex-col md:flex-row md:items-end">
@@ -40,11 +42,14 @@
         </form>
 
         <!-- Bagian untuk menampilkan preview dari respons API -->
-        <div class="mt-5" v-if="responseData && responseData.data">
-            <h2 class="text-2xl font-bold mb-4">Hasil dari Respons API</h2>
+        <div class="mt-5 space-y-4 bg-slate-100 dark:bg-gray-800 p-4 rounded-lg" v-if="responseData && responseData.data">
+            <h2 class="text-2xl font-bold">Extraction Result</h2>
             <div>
-                <p class="mb-2">Folder Result: {{ responseData.data.folder_result }}</p>
-                <div v-if="responseData.data.robustness_analysis" class="mb-4">
+                <div class="mb-2">
+                    <p class="">Folder ID: {{ responseData.data.folder_id }}</p>
+                    <p class="">Folder Name: {{ responseData.data.folder_result }}</p>
+                </div>
+                <div v-if="responseData.data.robustness_analysis" class="">
                     <p class="text-xl font-bold">Robustness Analysis:</p>
                     <ul>
                         <li>BER: {{ responseData.data.robustness_analysis.ber }}</li>
@@ -55,16 +60,16 @@
             <div v-if="responseData.data.uploaded_file_responses">
                 <div class="mt-6">
                     <div v-if="responseData.data.uploaded_file_responses">
-                        <h2 class="text-xl font-bold mb-4">Preview Gambar Extracted Watermark</h2>
+                        <h2 class="text-xl font-bold mb-2">Preview Gambar Extracted Watermark</h2>
                         <div class="overflow-hidden">
-                            <img :src="responseData.data.uploaded_file_responses.extracted_watermark.thumbnail_link.replace(/=s\d+$/, '')" alt="Preview Extracted Watermark" />
-                            <div class="p-4">
-                                <a :href="responseData.data.uploaded_file_responses.extracted_watermark.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Extracted Watermark</a>
-                            </div>
+                            <a :href="responseData.data.uploaded_file_responses.extracted_watermark.web_view_link" target="_blank" class="text-blue-500 hover:underline">
+                                <img :src="responseData.data.uploaded_file_responses.extracted_watermark.thumbnail_link.replace(/=s\d+$/, '')" alt="Preview Extracted Watermark" class="rounded-lg" />
+                            </a>
+                            <div class="p-4"></div>
                         </div>
 
                         <div>
-                            <h2 class="text-xl font-bold mb-4">Link Lainnya</h2>
+                            <h2 class="text-xl font-bold">Link Lainnya</h2>
                             <ul class="list-disc list-inside">
                                 <li><a :href="responseData.data.uploaded_file_responses.block_position.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Block Position</a></li>
                                 <li><a :href="responseData.data.uploaded_file_responses.embedding_result_zip.web_view_link" target="_blank" class="text-blue-500 hover:underline">View Embedding Result Zip</a></li>
