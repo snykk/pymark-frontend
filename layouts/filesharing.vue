@@ -1,13 +1,14 @@
 <template>
     <div ref="filesharing_root" :class="$colorMode.value">
-        <div>
-            <button type="button" class="absolute top-5 right-5 flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" @click="toggleDropdown">
+        <div class="relative z-50">
+            <!-- Tambahkan style="position: relative;" pada div ini -->
+            <button type="button" class="fixed top-5 right-5 flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" @click="toggleDropdown">
                 <img class="w-8 h-8 rounded-full" src="https://avatars.githubusercontent.com/u/71829822?v=4" alt="user photo" />
             </button>
             <!-- Dropdown menu -->
             <div
                 v-if="!isDropdownHidden"
-                class="absolute top-11 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 dropdown-container"
+                class="fixed top-11 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 dropdown-container"
                 id="user-dropdown"
                 v-click-outside="closeDropdown"
             >

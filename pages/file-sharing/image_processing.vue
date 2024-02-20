@@ -1,9 +1,9 @@
 <template>
-    <div class="p-4">
+    <div class="p-4 relative">
         <h1 class="text-2xl font-bold mb-4">Pymark Image Processing</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <div class="flex flex-col w-full">
-                <ImageInput class="md:me-1 w-full" v-model="image" id="image" label="Original Image" :formSubmitted="formSubmitted" />
+                <ImageInput :key="imageInputKey" class="md:me-1 w-full" v-model="image" id="image" label="Original Image" :formSubmitted="formSubmitted" />
             </div>
             <span v-if="formSubmitted && !image" class="text-red-500">Original Image is required</span>
             <!-- Add a dropdown/select field for processing type -->
@@ -91,7 +91,14 @@
                     </div>
                 </div>
             </div>
+
+            <NavToMyDrive :to="'/file-sharing/my_drive/folders/' + responseData.data.folder_id" />
         </div>
+
+        <!-- back to top button -->
+        <BackToTopButton />
+        <!-- reset button -->
+        <ResetButton v-if="isFormDirty && !formSubtmitting" @click="resetForm" />
     </div>
 </template>
 
@@ -115,6 +122,7 @@ const formSubtmitting = ref(false);
 const image = ref<File | null>(null);
 const responseData = ref<ImageProcessingApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
+const imageInputKey = ref(0);
 
 function validateForm() {
     return {
@@ -197,6 +205,19 @@ async function submitForm() {
     formSubtmitting.value = false;
     requestLoadingElement.value?.classList.add("hidden");
 }
+
+const isFormDirty = computed(() => {
+    return image.value !== null || processingType.value !== "salt_and_pepper";
+});
+
+const resetForm = () => {
+    image.value = null;
+    processingType.value = "salt_and_pepper";
+    responseData.value = null;
+
+    imageInputKey.value += 1;
+    formSubmitted.value = false;
+};
 </script>
 
 <style lang="css" scoped>

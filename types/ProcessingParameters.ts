@@ -27,7 +27,7 @@ export const ProcessingParameters: IProcessingParameters = {
         },
     ],
     sharpening: [
-        { label: "sigma", values: [0.1, 0.5, 2, 100] },
+        { label: "sigma", values: [0.1, 0.5, 2, 10] },
         { label: "alpha", values: [0.1, 0.5, 1, 2] },
     ],
 };

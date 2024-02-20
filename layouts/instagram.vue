@@ -8,10 +8,10 @@
         </div>
 
         <div v-if="!isLoading" class="md:flex">
-            <div>
+            <div style="position: relative">
                 <button
                     type="button"
-                    class="absolute top-5 right-5 flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                    class="fixed top-5 right-5 flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                     id="user-menu-button"
                     @click="isDropdownHidden = !isDropdownHidden"
                     v-click-outside="closeDropdown"
@@ -21,7 +21,7 @@
                 <!-- Dropdown menu -->
                 <div
                     :class="{ hidden: isDropdownHidden }"
-                    class="absolute top-11 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 dropdown-container"
+                    class="fixed top-11 right-0 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 dropdown-container"
                     id="user-dropdown"
                 >
                     <div class="px-4 py-3 cursor-pointer">

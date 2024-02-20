@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="relative">
         <div v-if="isloaded">
             <h2 class="text-2xl font-semibold mb-4">Folder Details</h2>
             <div class="overflow-x-auto mt-2">
@@ -74,6 +74,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- back to top button -->
+        <BackToTopButton />
     </div>
 </template>
 

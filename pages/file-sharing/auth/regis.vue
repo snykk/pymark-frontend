@@ -72,8 +72,8 @@ const submitForm = async () => {
 
                 errorMessage.value = typedResponse.message;
             })
-            .catch((error) => {
-                errorMessage.value = "Failed to create an account";
+            .catch((error: any) => {
+                errorMessage.value = error.response._data.message;
             });
     } catch (error) {
         errorMessage.value = "Something went wrong";

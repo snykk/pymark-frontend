@@ -1,5 +1,5 @@
 <template>
-    <section v-if="facebook.userAccessToken" class="app-section mt-4 rounded-lg p-4">
+    <section v-if="facebook.userAccessToken" class="app-section mt-4 rounded-lg p-4 relative">
         <h3 class="text-2xl font-semibold mb-4">Send a post to Instagram</h3>
         <div class="flex flex-col md:flex-row items-end">
             <ImageInput :key="imageInputKey" class="md:me-2 w-full md:w-1/2" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formSubmitted" />
@@ -23,6 +23,11 @@
         <div v-else class="relative w-full h-14 overflow-hidden flex items-center justify-center">
             <LoadingIndicator class="h-32 absolute top-[-1.75rem]" :options="optionLoadingSubmit" />
         </div>
+
+        <!-- back to top button -->
+        <BackToTopButton />
+        <!-- reset button -->
+        <ResetButton v-if="isFormDirty && !formSubmitting" @click="resetForm" />
     </section>
 </template>
 
@@ -109,18 +114,29 @@ const shareInstagramPost = async () => {
             useToast().error(responseUpload.message);
         }
 
-        // process is done
-        type.value = "gray";
-        post_caption.value = "";
+        resetForm();
 
-        // Increment the key to force a re-render of ImageInput components
-        imageInputKey.value += 1;
         useToast().success(responseUpload.message);
     } catch (error: any) {
         useToast().error(error.response._data.message);
     }
 
     formSubmitting.value = false;
+};
+
+const isFormDirty = computed(() => {
+    return host_image.value !== null || watermark_image.value !== null || type.value !== "gray" || post_caption.value !== "";
+});
+
+const resetForm = () => {
+    host_image.value = null;
+    watermark_image.value = null;
+    type.value = "gray";
+
+    post_caption.value = "";
+
+    imageInputKey.value += 1;
+    formSubmitted.value = false;
 };
 </script>
 

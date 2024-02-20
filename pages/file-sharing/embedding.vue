@@ -1,16 +1,14 @@
 <template>
-    <div class="px-4">
+    <div class="px-4 relative">
         <h1 class="text-2xl font-bold mb-4">Pymark Embedding</h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <div class="flex flex-col md:flex-row items-end">
-                <ImageInput class="md:me-2 w-full md:w-1/2" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formSubmitted" />
-                <ImageInput class="md:ms-2 w-full md:w-1/2" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formSubmitted" />
-            </div>
-            <div class="flex flex-col md:flex-row" style="margin: 0">
-                <div class="md:me-2 md:w-1/2">
+                <div class="md:me-2 w-full md:w-1/2">
+                    <ImageInput :key="imageInputKey" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formSubmitted" />
                     <span v-if="formSubmitted && !host_image" class="text-red-500">Host image is required</span>
                 </div>
-                <div class="md:ms-2 md:w-1/2">
+                <div class="md:ms-2 w-full md:w-1/2">
+                    <ImageInput :key="imageInputKey" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formSubmitted" />
                     <span v-if="formSubmitted && !watermark_image" class="text-red-500">Watermark image is required</span>
                 </div>
             </div>
@@ -24,7 +22,7 @@
             <FileSharingSubmit class="!mt-5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
         <!-- Bagian untuk menampilkan preview dari respons API -->
-        <div class="mt-5 space-y-4 bg-slate-100 dark:bg-gray-800 p-4 rounded-lg" v-if="responseData && responseData.data">
+        <div class="mt-5 space-y-4 bg-slate-100 dark:bg-gray-800 p-4 rounded-lg mb-10 relative" v-if="responseData && responseData.data">
             <h2 class="text-2xl font-bold">Embedding Result</h2>
             <div v-if="responseData.data.uploaded_file_responses" class="space-y-4">
                 <div class="mb-2">
@@ -53,7 +51,14 @@
                     </ul>
                 </div>
             </div>
+
+            <NavToMyDrive :to="'/file-sharing/my_drive/folders/' + responseData.data.folder_id" />
         </div>
+
+        <!-- back to top button -->
+        <BackToTopButton />
+        <!-- reset button -->
+        <ResetButton v-if="isFormDirty && !formSubtmitting" @click="resetForm" />
     </div>
 </template>
 
@@ -77,6 +82,7 @@ const type = ref("gray");
 const alpha = ref("0.01");
 const responseData = ref<EmbeddingApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
+const imageInputKey = ref(0);
 
 const typeOptions = ["gray", "rgb"];
 const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
@@ -150,4 +156,19 @@ async function submitForm() {
     formSubtmitting.value = false;
     requestLoadingElement.value?.classList.add("hidden");
 }
+
+const isFormDirty = computed(() => {
+    return host_image.value !== null || watermark_image.value !== null || type.value !== "gray" || alpha.value !== "0.01";
+});
+
+const resetForm = () => {
+    host_image.value = null;
+    watermark_image.value = null;
+    type.value = "gray";
+    alpha.value = "0.01";
+    responseData.value = null;
+
+    imageInputKey.value += 1;
+    formSubmitted.value = false;
+};
 </script>

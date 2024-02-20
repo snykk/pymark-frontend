@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col">
-        <label :for="id" class="block mb-2 text-sm font-medium">{{ label }}</label>
+        <label class="block mb-2 text-sm font-medium">{{ label }}</label>
         <img v-if="previewSource" :src="previewSource" class="ml-4 h-40 w-40 mb-3" :alt="alt" />
         <input
             :type="type"

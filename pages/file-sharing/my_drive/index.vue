@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <main class="relative">
         <!-- Navbar -->
         <nav class="flex mb-4">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -54,6 +54,9 @@
                 <LoadingIndicator class="h-full w-full" :options="defaultOptionNoData" />
             </div>
         </div>
+
+        <!-- back to top button -->
+        <BackToTopButton />
     </main>
 </template>
 
