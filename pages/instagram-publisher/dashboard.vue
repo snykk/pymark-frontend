@@ -1,6 +1,9 @@
 <template>
     <section v-if="facebook.userAccessToken" class="app-section mt-4 rounded-lg p-4 relative">
-        <h3 class="text-2xl font-semibold mb-4">Send a post to Instagram</h3>
+        <h3 class="text-2xl font-semibold mb-4">
+            Send a post to Instagram
+            <UserGuideButton @click="showUserGuideModal" />
+        </h3>
         <div class="flex flex-col md:flex-row items-end">
             <ImageInput :key="imageInputKey" class="md:me-2 w-full md:w-1/2" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formSubmitted" />
             <ImageInput :key="imageInputKey" class="md:ms-2 w-full md:w-1/2" v-model="watermark_image" id="" label="Watermark Image" :formSubmitted="formSubmitted" />
@@ -22,6 +25,29 @@
         <FileSharingSubmit v-if="!formSubmitting" @click="shareInstagramPost">Share</FileSharingSubmit>
         <div v-else class="relative w-full h-14 overflow-hidden flex items-center justify-center">
             <LoadingIndicator class="h-32 absolute top-[-1.75rem]" :options="optionLoadingSubmit" />
+        </div>
+
+        <!-- PyMark Post Now User Guide Modal -->
+        <div v-if="showUserGuide" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+                <button @click="hideUserGuideModal" class="absolute top-3 right-3 text-gray-500 dark:text-gray-400 focus:outline-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                    <h2 class="text-xl font-bold mb-4">My Post User Guide</h2>
+                    <p class="mb-4">The My Post feature allows you to automatically send watermarked images to your Instagram account using your Facebook credentials. Follow the steps below to create and share a post on Instagram:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li class="mb-1">Upload the host image and the watermark image by clicking on the respective image input fields.</li>
+                        <li class="mb-1">Choose the type of images from the dropdown menu.</li>
+                        <li class="mb-1">Write a caption for your post in the provided textarea.</li>
+                        <li class="mb-1">Click the "Share" button to automatically send the watermarked image to your Instagram account.</li>
+                    </ol>
+                    <p class="">Once shared, your post will be visible on your Instagram profile with the caption you provided.</p>
+                </div>
+            </div>
         </div>
 
         <!-- back to top button -->
@@ -138,6 +164,16 @@ const resetForm = () => {
     imageInputKey.value += 1;
     formSubmitted.value = false;
 };
+
+const showUserGuide = ref(false);
+
+function showUserGuideModal() {
+    showUserGuide.value = true;
+}
+
+function hideUserGuideModal() {
+    showUserGuide.value = false;
+}
 </script>
 
 <style scope></style>

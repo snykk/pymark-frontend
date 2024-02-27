@@ -18,6 +18,7 @@
                 >
                     Image Processing
                 </li>
+                <UserGuideButton @click="showUserGuideModal" />
             </ol>
         </nav>
 
@@ -55,6 +56,29 @@
             </div>
         </div>
 
+        <!-- PyMark My Drive User Guide Modal -->
+        <div v-if="showUserGuide" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+                <button @click="hideUserGuideModal" class="absolute top-3 right-3 text-gray-500 dark:text-gray-400 focus:outline-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                    <h2 class="text-xl font-bold mb-4">PyMark My Drive User Guide</h2>
+                    <p class="mb-4">PyMark My Drive is a feature that allows you to manage your watermarking folders, organized by different PyMark features such as Embedding, Extraction, and Image Processing.</p>
+                    <p class="mb-4">Here's a guide on how to use the PyMark My Drive feature:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li class="mb-1">Click on the desired feature (Embedding, Extraction, or Image Processing) from the navigation bar.</li>
+                        <li class="mb-1">Browse through the list of folders displayed, each representing a specific watermarking result from your previous task</li>
+                        <li class="mb-1">Click on a folder to view its details or perform actions such as deletion.</li>
+                    </ol>
+                    <p class="">You can perform various file management tasks within PyMark My Drive to organize your files efficiently.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- back to top button -->
         <BackToTopButton />
     </main>
@@ -80,6 +104,7 @@ const deletingFolderId = ref<string | null>(null); // Store the id of the folder
 const selectedDrive = ref<"embedding" | "extraction" | "image-processing">("embedding");
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
+const showUserGuide = ref(false);
 
 onMounted(async () => {
     const element = document.getElementById("loading_fetching_data");
@@ -194,6 +219,14 @@ const refreshFolderList = async (feature: "embedding" | "extraction" | "image-pr
         console.error("Error fetching data:", error);
     }
 };
+
+function showUserGuideModal() {
+    showUserGuide.value = true;
+}
+
+function hideUserGuideModal() {
+    showUserGuide.value = false;
+}
 </script>
 
 <style scoped>

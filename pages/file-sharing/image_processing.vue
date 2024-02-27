@@ -1,6 +1,9 @@
 <template>
     <div class="p-4 relative">
-        <h1 class="text-2xl font-bold mb-4">Pymark Image Processing</h1>
+        <h1 class="text-2xl font-bold mb-4">
+            Pymark Image Processing
+            <UserGuideButton @click="showUserGuideModal" />
+        </h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <div class="flex flex-col w-full">
                 <ImageInput :key="imageInputKey" class="md:me-1 w-full" v-model="image" id="image" label="Original Image" :formSubmitted="formSubmitted" />
@@ -53,8 +56,9 @@
                 </div>
             </div>
 
-            <FileSharingSubmit class="!mt5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
+            <FileSharingSubmit :disabled="formSubtmitting" class="!mt5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
+
         <!-- API Response Display Section -->
         <div v-if="responseData" class="space-y-4 bg-slate-100 dark:bg-gray-800 p-4 rounded-lg mt-5">
             <!-- API Response Details -->
@@ -95,6 +99,33 @@
             <NavToMyDrive :to="'/file-sharing/my_drive/folders/' + responseData.data.folder_id" />
         </div>
 
+        <!-- PyMark Image Processing User Guide Modal -->
+        <div v-if="showUserGuide" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+                <button @click="hideUserGuideModal" class="absolute top-3 right-3 text-gray-500 dark:text-gray-400 focus:outline-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                    <h2 class="text-xl font-bold mb-4">PyMark Image Processing User Guide</h2>
+                    <p class="mb-4">
+                        PyMark Image Processing is a feature that allows you to process images using various algorithms available in the PyMark Watermarking. This process involves applying selected image processing techniques to enhance,
+                        modify, or analyze images according to your requirements.
+                    </p>
+                    <p class="mb-4">Here's a guide on how to use the PyMark Image Processing feature:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li class="mb-1">Upload the original image that you want to process.</li>
+                        <li class="mb-1">Select the type of processing technique from the dropdown menu.</li>
+                        <li class="mb-1">Based on the selected processing technique, provide the required parameters.</li>
+                        <li class="mb-1">Click the Submit button to start the image processing.</li>
+                    </ol>
+                    <p class="">After submission, you will see the image processing result along with relevant details and preview of the processed image.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- back to top button -->
         <BackToTopButton />
         <!-- reset button -->
@@ -123,6 +154,7 @@ const image = ref<File | null>(null);
 const responseData = ref<ImageProcessingApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
 const imageInputKey = ref(0);
+const showUserGuide = ref(false);
 
 function validateForm() {
     return {
@@ -218,6 +250,14 @@ const resetForm = () => {
     imageInputKey.value += 1;
     formSubmitted.value = false;
 };
+
+function showUserGuideModal() {
+    showUserGuide.value = true;
+}
+
+function hideUserGuideModal() {
+    showUserGuide.value = false;
+}
 </script>
 
 <style lang="css" scoped>

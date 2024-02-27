@@ -2,7 +2,10 @@
     <main>
         <!-- Content -->
         <div class="relative" v-if="responseData?.status === true">
-            <h2 class="text-xl font-extrabold mb-4">My Post Folder</h2>
+            <h2 class="text-xl font-extrabold mb-4">
+                My Post Folder
+                <UserGuideButton @click="showUserGuideModal" />
+            </h2>
             <div class="max-w-full overflow-x-auto">
                 <table class="min-w-full text-start">
                     <thead>
@@ -29,6 +32,27 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- PyMark My Post User Guide Modal -->
+            <div v-if="showUserGuide" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+                    <button @click="hideUserGuideModal" class="absolute top-3 right-3 text-gray-500 dark:text-gray-400 focus:outline-none">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+
+                    <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                        <h2 class="text-xl font-bold mb-4">My Post Folder User Guide</h2>
+                        <p class="mb-4">The My Post Folder feature displays a list of folders containing your posts that have been watermarked and shared on Instagram. Follow the steps below to manage your post folders:</p>
+                        <ol class="list-decimal list-inside mb-4">
+                            <li class="mb-1">Click on a folder to view its contents and manage individual posts.</li>
+                            <li class="mb-1">To delete a folder and its associated posts, click on the "Delete" button next to the folder.</li>
+                        </ol>
+                        <p class="">Deleting a folder will permanently remove all posts contained within it.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- back to top button -->
@@ -60,6 +84,7 @@ const defaultOptionNoData = ref({ animationData: loadingNoData });
 const deletingFolderId = ref<string | null>(null);
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
+const showUserGuide = ref(false);
 
 onMounted(async () => {
     const element = document.getElementById("loading_fetching_data");
@@ -182,6 +207,14 @@ const refreshFolderList = async () => {
         console.error("Error fetching data:", error);
     }
 };
+
+function showUserGuideModal() {
+    showUserGuide.value = true;
+}
+
+function hideUserGuideModal() {
+    showUserGuide.value = false;
+}
 </script>
 
 <style scoped>

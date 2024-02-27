@@ -14,7 +14,10 @@
             </ol>
         </nav>
         <div v-if="selectedForm === 'imperceptibility'">
-            <h1 class="text-2xl font-bold mb-4">Imperceptibility Analysis</h1>
+            <h1 class="text-2xl font-bold mb-4">
+                Imperceptibility Analysis
+                <UserGuideButton @click="showImperceptibilityUserGuideModal" />
+            </h1>
             <form @submit.prevent="submitImperceptibilityForm" class="space-y-4" enctype="multipart/form-data">
                 <div class="flex flex-col md:flex-row items-end">
                     <ImageInput class="md:me-1 w-full" v-model="host_image" id="host_image" label="Host Image" :formSubmitted="formImperceptSubmitted" />
@@ -31,7 +34,7 @@
                 <div class="flex flex-col">
                     <DropdownInput v-model="type" label="type" :options="typeOptions" />
                 </div>
-                <FileSharingSubmit class="flex justify-center mt-10">{{ formImperceptSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
+                <FileSharingSubmit :disabled="formImperceptSubtmitting" class="flex justify-center mt-10">{{ formImperceptSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
             </form>
             <!-- Imperceptibility Analysis Response -->
             <div v-if="imperceptibilityResponseData" class="mt-8 mb-5">
@@ -43,8 +46,37 @@
             </div>
         </div>
 
+        <!-- PyMark Imperceptibility Analysis User Guide Modal -->
+        <div v-if="showImperceptibilityUserGuide" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+                <button @click="hideImperceptibilityUserGuideModal" class="absolute top-3 right-3 text-gray-500 dark:text-gray-400 focus:outline-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                    <h2 class="text-xl font-bold mb-4">PyMark Imperceptibility Analysis User Guide</h2>
+                    <p class="mb-4">
+                        Imperceptibility Analysis aims to evaluate how well a watermark embedded into a host image can be concealed, making it imperceptible to the human eye. This analysis involves calculating the values of PSNR (Peak
+                        Signal-to-Noise Ratio) and SSIM (Structural Similarity Index) between the host image and the watermarked image. Higher PSNR and SSIM values indicate better imperceptibility of the embedded watermark.
+                    </p>
+                    <p class="mb-4">Here's a guide on how to use the PyMark Imperceptibility Analysis feature:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li class="mb-1">Upload the host image and watermarked image.</li>
+                        <li class="mb-1">Choose the type of analysis (gray or RGB).</li>
+                        <li class="mb-1">Click the submit button to run the analysis.</li>
+                    </ol>
+                    <p class="">After submission, you will see the embedding result, imperceptibility analysis, watermarked image preview, and other related links.</p>
+                </div>
+            </div>
+        </div>
+
         <div v-else-if="selectedForm === 'robustness'">
-            <h1 class="text-2xl font-bold mb-4">Robustness Analysis</h1>
+            <h1 class="text-2xl font-bold mb-4">
+                Robustness Analysis
+                <UserGuideButton @click="showRobustnessUserGuideModal" />
+            </h1>
             <form @submit.prevent="submitRobustnessForm" class="space-y-4" enctype="multipart/form-data">
                 <div class="flex flex-col md:flex-row items-end">
                     <ImageInput class="md:me-1 w-full" v-model="watermark_image" id="watermark_image" label="Watermark Image" :formSubmitted="formRobustSubmitted" />
@@ -57,7 +89,7 @@
                 <div class="flex flex-col">
                     <DropdownInput v-model="type" label="type" :options="typeOptions" />
                 </div>
-                <FileSharingSubmit class="flex justify-center">{{ formRobustnesSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
+                <FileSharingSubmit :disabled="formRobustnesSubtmitting" class="flex justify-center">{{ formRobustnesSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
             </form>
             <!-- Robustness Analysis Response -->
             <div v-if="robustnessResponseData" class="mt-8">
@@ -65,6 +97,32 @@
                 <div v-if="robustnessResponseData.data">
                     <p>BER: {{ robustnessResponseData.data.robustness_analysis.ber }}</p>
                     <p>NCC: {{ robustnessResponseData.data.robustness_analysis.ncc }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PyMark Imperceptibility Analysis User Guide Modal -->
+        <div v-if="showRobustnessUserGuide" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+                <button @click="hideRobustnessUserGuideModal" class="absolute top-3 right-3 text-gray-500 dark:text-gray-400 focus:outline-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                    <h2 class="text-xl font-bold mb-4">PyMark Robustness Analysis User Guide</h2>
+                    <p class="mb-4">
+                        Robustness Analysis is used to assess the resilience of a watermark against specific attacks or transformations that may affect the ability to extract the watermark. Some common metrics used in robustness analysis
+                        include Bit Error Rate (BER) and Normalized Cross-Correlation (NCC). Low BER values and high NCC values indicate that the watermark can be reliably recovered even after undergoing certain attacks or transformations.
+                    </p>
+                    <p class="mb-4">Here's a guide on how to use the PyMark Robustness Analysis feature:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li class="mb-1">Upload the watermark image and extracted watermark image.</li>
+                        <li class="mb-1">Choose the type of analysis (gray or RGB).</li>
+                        <li class="mb-1">Click the submit button to run the analysis.</li>
+                    </ol>
+                    <p class="">After submission, you will see the embedding result, imperceptibility analysis, watermarked image preview, and other related links.</p>
                 </div>
             </div>
         </div>
@@ -97,6 +155,8 @@ const type = ref("gray");
 const imperceptibilityResponseData = ref<ImperceptibilityApiResponse | null>(null);
 const robustnessResponseData = ref<RobustnessApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
+const showImperceptibilityUserGuide = ref(false);
+const showRobustnessUserGuide = ref(false);
 
 const typeOptions = ["gray", "rgb"];
 
@@ -222,6 +282,22 @@ async function submitRobustnessForm() {
 
     formRobustnesSubtmitting.value = false;
     requestLoadingElement.value?.classList.add("hidden");
+}
+
+function showImperceptibilityUserGuideModal() {
+    showImperceptibilityUserGuide.value = true;
+}
+
+function showRobustnessUserGuideModal() {
+    showRobustnessUserGuide.value = true;
+}
+
+function hideImperceptibilityUserGuideModal() {
+    showImperceptibilityUserGuide.value = false;
+}
+
+function hideRobustnessUserGuideModal() {
+    showRobustnessUserGuide.value = false;
 }
 </script>
 

@@ -1,6 +1,9 @@
 <template>
-    <div class="p-4 relative">
-        <h1 class="text-2xl font-bold mb-4">Pymark Extraction</h1>
+    <div class="px-4 relative">
+        <h1 class="text-2xl font-bold mb-4">
+            Pymark Extraction
+            <UserGuideButton @click="showUserGuideModal" />
+        </h1>
         <form @submit.prevent="submitForm" class="space-y-4" enctype="multipart/form-data">
             <!-- watermarked and block position section input -->
             <div class="flex flex-col md:flex-row md:items-end">
@@ -38,7 +41,7 @@
                 <DropdownInput v-model="alpha" label="alpha" :options="alphaOptions" />
                 <span v-if="formSubmitted && !alpha" class="text-red-500">Alpha is required</span>
             </div>
-            <FileSharingSubmit class="!mt-5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
+            <FileSharingSubmit :disabled="formSubtmitting" class="!mt-5">{{ formSubtmitting ? "submitting" : "submit" }}</FileSharingSubmit>
         </form>
 
         <!-- Bagian untuk menampilkan preview dari respons API -->
@@ -84,6 +87,34 @@
             <NavToMyDrive :to="'/file-sharing/my_drive/folders/' + responseData.data.folder_id" />
         </div>
 
+        <!-- PyMark Extraction User Guide Modal -->
+        <div v-if="showUserGuide" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+                <button @click="hideUserGuideModal" class="absolute top-3 right-3 text-gray-500 dark:text-gray-400 focus:outline-none">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                    <h2 class="text-xl font-bold mb-4">PyMark Extraction User Guide</h2>
+                    <p>
+                        PyMark Extraction is a feature that allows you to extract a watermark from a watermarked image using the PyMark algorithm. This process involves analyzing the watermarked image along with the block positions to
+                        recover the embedded watermark.
+                    </p>
+                    <p class="mb-4">Here's a guide on how to use the PyMark Extraction feature:</p>
+                    <ol class="list-decimal list-inside mb-4">
+                        <li class="mb-2">Upload the watermarked image (1024x1024) and the block position image (256x256).</li>
+                        <li class="mb-2">Optionally, upload the watermark image if you want to obtain the analysis result.</li>
+                        <li class="mb-2">Select the type of image (type) from the dropdown.</li>
+                        <li class="mb-2">Select the alpha value from the dropdown.</li>
+                        <li class="mb-2">Click the Submit button to start the extraction process.</li>
+                    </ol>
+                    <p class="">After submission, you will see the extraction result, robustness analysis (if available), preview of the extracted watermark, and other related links.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- back to top button -->
         <BackToTopButton />
         <!-- reset button -->
@@ -114,6 +145,7 @@ const alpha = ref("0.01");
 const responseData = ref<ExtractionApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
 const fileInputKey = ref(0);
+const showUserGuide = ref(false);
 
 const typeOptions = ["gray", "rgb"];
 const alphaOptions = ["0.01", "0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"];
@@ -206,4 +238,12 @@ const resetForm = () => {
     fileInputKey.value += 1;
     formSubmitted.value = false;
 };
+
+function showUserGuideModal() {
+    showUserGuide.value = true;
+}
+
+function hideUserGuideModal() {
+    showUserGuide.value = false;
+}
 </script>
