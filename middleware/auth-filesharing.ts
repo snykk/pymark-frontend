@@ -1,8 +1,8 @@
+import type BaseApiResponse from "~/types/BaseApiResponse";
+
 const flasher = useFlashStore();
 
-export default defineNuxtRouteMiddleware((to, from) => {
-    console.log(to);
-    console.log(from);
+export default defineNuxtRouteMiddleware(async (to, from) => {
     const filesharing = useFileSharingStore();
     const { userJWTToken, username, email } = storeToRefs(useFileSharingStore());
 
@@ -21,6 +21,23 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
     if (!filesharing.userJWTToken) {
         flasher.setFlashMessage("You are not authenticated yet", FlashLabel.DANGER);
+        return navigateTo("/file-sharing/auth/login?redirectFrom=" + to.fullPath);
+    }
+
+    // validate token
+    const config = useRuntimeConfig();
+    try {
+        const response: BaseApiResponse<null> = await $fetch(config.public.api_base + "/users/me", {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + filesharing.userJWTToken,
+            },
+        });
+    } catch (error: any) {
+        jwtTOken.value = null;
+        pymakrUsername.value = null;
+        pymarkEmail.value = null;
+        flasher.setFlashMessage(error.response._data.message, FlashLabel.DANGER);
         return navigateTo("/file-sharing/auth/login?redirectFrom=" + to.fullPath);
     }
 });
