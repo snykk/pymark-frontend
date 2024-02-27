@@ -43,7 +43,7 @@
                         </svg>
                     </button>
 
-                    <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                    <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                         <h2 class="text-xl font-bold mb-4">My Post Folder User Guide</h2>
                         <p class="mb-4">The My Post Folder feature displays a list of folders containing your posts that have been watermarked and shared on Instagram. Follow the steps below to manage your post folders:</p>
                         <ol class="list-decimal list-inside mb-4">

@@ -108,7 +108,7 @@
                     </svg>
                 </button>
 
-                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                     <h2 class="text-xl font-bold mb-4">PyMark Image Processing User Guide</h2>
                     <p class="mb-4">
                         PyMark Image Processing is a feature that allows you to process images using various algorithms available in the PyMark Watermarking. This process involves applying selected image processing techniques to enhance,

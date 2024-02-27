@@ -65,7 +65,7 @@
                     </svg>
                 </button>
 
-                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                     <h2 class="text-xl font-bold mb-4">PyMark My Drive User Guide</h2>
                     <p class="mb-4">PyMark My Drive is a feature that allows you to manage your watermarking folders, organized by different PyMark features such as Embedding, Extraction, and Image Processing.</p>
                     <p class="mb-4">Here's a guide on how to use the PyMark My Drive feature:</p>

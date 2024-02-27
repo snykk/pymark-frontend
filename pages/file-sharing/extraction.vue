@@ -96,7 +96,7 @@
                     </svg>
                 </button>
 
-                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                     <h2 class="text-xl font-bold mb-4">PyMark Extraction User Guide</h2>
                     <p>
                         PyMark Extraction is a feature that allows you to extract a watermark from a watermarked image using the PyMark algorithm. This process involves analyzing the watermarked image along with the block positions to

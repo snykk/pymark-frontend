@@ -55,7 +55,7 @@
                     </svg>
                 </button>
 
-                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                     <h2 class="text-xl font-bold mb-4">PyMark Imperceptibility Analysis User Guide</h2>
                     <p class="mb-4">
                         Imperceptibility Analysis aims to evaluate how well a watermark embedded into a host image can be concealed, making it imperceptible to the human eye. This analysis involves calculating the values of PSNR (Peak
@@ -110,7 +110,7 @@
                     </svg>
                 </button>
 
-                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                     <h2 class="text-xl font-bold mb-4">PyMark Robustness Analysis User Guide</h2>
                     <p class="mb-4">
                         Robustness Analysis is used to assess the resilience of a watermark against specific attacks or transformations that may affect the ability to extract the watermark. Some common metrics used in robustness analysis

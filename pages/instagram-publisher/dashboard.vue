@@ -1,5 +1,5 @@
 <template>
-    <section v-if="facebook.userAccessToken" class="app-section mt-4 rounded-lg p-4 relative">
+    <section v-if="facebook.userAccessToken" class="app-section rounded-lg px-4 relative space-y-6">
         <h3 class="text-2xl font-semibold mb-4">
             Send a post to Instagram
             <UserGuideButton @click="showUserGuideModal" />
@@ -21,7 +21,7 @@
             <DropdownInput v-model="type" label="type" :options="typeOptions" />
         </div>
 
-        <TextAreaInput v-model="post_caption" class="mt-2 mb-4" aria-placeholder="Write a caption" id="caption" label="Post Caption" />
+        <TextAreaInput v-model="post_caption" aria-placeholder="Write a caption" id="caption" label="Post Caption" />
         <FileSharingSubmit v-if="!formSubmitting" @click="shareInstagramPost">Share</FileSharingSubmit>
         <div v-else class="relative w-full h-14 overflow-hidden flex items-center justify-center">
             <LoadingIndicator class="h-32 absolute top-[-1.75rem]" :options="optionLoadingSubmit" />
@@ -36,7 +36,7 @@
                     </svg>
                 </button>
 
-                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                     <h2 class="text-xl font-bold mb-4">My Post User Guide</h2>
                     <p class="mb-4">The My Post feature allows you to automatically send watermarked images to your Instagram account using your Facebook credentials. Follow the steps below to create and share a post on Instagram:</p>
                     <ol class="list-decimal list-inside mb-4">

@@ -68,7 +68,7 @@
                     </svg>
                 </button>
 
-                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-md p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
+                <div class="relative bg-gray-50 dark:bg-gray-800 w-full max-w-[80vw] p-6 rounded-lg shadow-lg overflow-y-auto max-h-[80vh] text-justify text-align-last-justify">
                     <h2 class="text-xl font-bold mb-4">PyMark Embedding User Guide</h2>
                     <p class="mb-4">
                         PyMark Embedding is a feature that allows you to embed a watermark into a host image using the PyMark algorithm. This process involves merging the watermark image with the host image in a way that the watermark
