@@ -8,7 +8,7 @@
         </div>
 
         <div v-if="!isLoading" class="md:flex">
-            <div style="position: relative">
+            <div class="relative z-50">
                 <button
                     type="button"
                     class="fixed top-5 right-5 flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
