@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="folder in responseData?.data.watermarking_folders" :key="folder.id" class="cursor-pointer border-b border-gray-200" @click="!isProcessing && navigateToFolder(folder.id)">
+                        <tr v-for="(folder, index) in displayedFolders" :key="folder.id" class="cursor-pointer border-b border-gray-200" @click="!isProcessing && navigateToFolder(folder.id)">
                             <td class="w-[35px]">
                                 <img alt="Folder icon" src="~/assets/icon/folder2.svg" width="30" height="30" />
                             </td>
@@ -55,6 +55,85 @@
                 </div>
             </div>
 
+            <!-- Pagination -->
+            <nav v-if="totalItems > 0" class="flex flex-col items-center mt-2">
+                <!-- Help text -->
+                <span class="text-sm text-gray-700 dark:text-gray-400 mb-2">
+                    Showing <span class="font-semibold text-gray-900 dark:text-white">{{ (currentPage - 1) * 10 + 1 }}</span> to
+                    <span class="font-semibold text-gray-900 dark:text-white"> {{ (currentPage - 1) * 10 + (displayedFolders ? displayedFolders.length : 0) }}</span> of
+                    <span class="font-semibold text-gray-900 dark:text-white">{{ totalItems }}</span> Entries
+                </span>
+                <ul class="flex items-center -space-x-px h-10 text-base">
+                    <li>
+                        <button
+                            @click="firstPage"
+                            :disabled="currentPage === 1"
+                            class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                            </svg>
+                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                            </svg>
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            @click="prevPage"
+                            :disabled="currentPage === 1"
+                            class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                            </svg>
+                        </button>
+                    </li>
+                    <li v-for="pageNumber in visiblePageNumbers" :key="pageNumber">
+                        <button
+                            @click="gotoPage(pageNumber)"
+                            :class="{
+                                'text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700': pageNumber === currentPage,
+                                'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white':
+                                    pageNumber !== currentPage,
+                            }"
+                            class="flex items-center justify-center px-4 h-10 leading-tight border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                            {{ pageNumber }}
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            @click="nextPage"
+                            :disabled="currentPage === totalPages"
+                            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                            <span class="sr-only">Next</span>
+                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            @click="lastPage"
+                            :disabled="currentPage === totalPages"
+                            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                            <span class="sr-only">Next</span>
+                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                            <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
             <!-- back to top button -->
             <BackToTopButton />
         </div>
@@ -70,6 +149,7 @@
 import Swal from "sweetalert2";
 import type MyDriveFoldersApiResponse from "~/types/MyDriveFoldersApiResponse";
 import loadingNoData from "~/assets/lotties/loading-animation4.json";
+import type { Folder } from "~/types/MyDriveFoldersApiResponse";
 import type BaseApiResponse from "~/types/BaseApiResponse";
 
 definePageMeta({
@@ -85,6 +165,13 @@ const deletingFolderId = ref<string | null>(null);
 const responseData = ref<MyDriveFoldersApiResponse | null>(null);
 const requestLoadingElement = ref<HTMLElement | null>(null);
 const showUserGuide = ref(false);
+
+// Pagination variables
+const itemsPerPage = ref(10);
+const currentPage = ref(1);
+const totalItems = ref(0);
+const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage.value));
+const displayedFolders = ref<Folder[]>();
 
 onMounted(async () => {
     const element = document.getElementById("loading_fetching_data");
@@ -102,6 +189,9 @@ onMounted(async () => {
                 Authorization: "Facebook " + facebook.userAccessToken,
             },
         });
+
+        displayedFolders.value = responseData.value?.data.watermarking_folders.slice(0, itemsPerPage.value);
+        totalItems.value = responseData.value?.data.watermarking_folders.length;
     } catch (error: any) {
         responseData.value = error.response._data;
     }
@@ -116,17 +206,6 @@ onBeforeUnmount(async () => {
 function navigateToFolder(folder_id: string) {
     navigateTo("/instagram-publisher/my_post/folders/" + folder_id);
 }
-
-const fetchData = async () => {
-    console.log(config.public.api_base);
-    responseData.value = null;
-
-    requestLoadingElement.value?.classList.remove("hidden");
-
-    await refreshFolderList();
-
-    requestLoadingElement.value?.classList.add("hidden");
-};
 
 const confirmDeleteFolder = async (folderId: string) => {
     try {
@@ -203,6 +282,9 @@ const fetchDataFromAPI = async (endpoint: string, method: "GET" | "POST" | "PUT"
 const refreshFolderList = async () => {
     try {
         responseData.value = await fetchDataFromAPI("/mydrive/folders?pymark_feature=instagram-post");
+
+        displayedFolders.value = responseData.value?.data.watermarking_folders.slice(0, itemsPerPage.value);
+        totalItems.value = responseData.value?.data.watermarking_folders.length;
     } catch (error) {
         console.error("Error fetching data:", error);
     }
@@ -215,6 +297,70 @@ function showUserGuideModal() {
 function hideUserGuideModal() {
     showUserGuide.value = false;
 }
+
+// Function to update displayed items based on the current page
+const updateDisplayedItems = () => {
+    const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+    const endIndex = Math.min(startIndex + itemsPerPage.value, totalItems.value);
+    displayedFolders.value = responseData.value?.data.watermarking_folders.slice(startIndex, endIndex) || [];
+};
+
+// Watch for changes in totalItems and currentPage
+watch([totalItems, currentPage], updateDisplayedItems);
+
+const firstPage = () => {
+    currentPage.value = 1;
+};
+
+const lastPage = () => {
+    currentPage.value = totalPages.value;
+};
+
+// Function to navigate to the previous page
+const prevPage = () => {
+    if (currentPage.value > 1) {
+        currentPage.value--;
+    }
+};
+
+// Function to navigate to the next page
+const nextPage = () => {
+    if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+    }
+};
+
+// Function to navigate to a specific page
+const gotoPage = (page: number) => {
+    if (page > 0 && page <= totalPages.value) {
+        currentPage.value = page;
+    }
+};
+
+// Compute the range of visible page numbers
+const visiblePageNumbers = computed(() => {
+    const pagesToShow = 5; // Number of pages to display
+    const pages = [];
+    let startPage = Math.max(1, currentPage.value - Math.floor(pagesToShow / 2));
+    let endPage = Math.min(totalPages.value, startPage + pagesToShow - 1);
+
+    if (totalPages.value <= pagesToShow) {
+        startPage = 1;
+        endPage = totalPages.value;
+    } else if (currentPage.value <= Math.ceil(pagesToShow / 2)) {
+        startPage = 1;
+        endPage = pagesToShow;
+    } else if (currentPage.value + Math.floor(pagesToShow / 2) >= totalPages.value) {
+        startPage = totalPages.value - pagesToShow + 1;
+        endPage = totalPages.value;
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+    }
+
+    return pages;
+});
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
 // MyDriveFoldersApiResponse.ts
 import type BaseApiResponse from "~/types/BaseApiResponse";
 
-interface Folder {
+export interface Folder {
     id: string;
     name: string;
 }
