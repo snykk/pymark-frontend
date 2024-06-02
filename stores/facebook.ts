@@ -56,7 +56,7 @@ export const useFacebookStore = defineStore("facebookStore", {
                             }
                         },
                         {
-                            scope: "instagram_basic,pages_show_list,email",
+                            scope: "instagram_basic,pages_show_list,email,instagram_content_publish",
                         }
                     );
                 } else {

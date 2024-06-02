@@ -107,7 +107,7 @@
                         <li class="mb-2">Upload the watermarked image (1024x1024) and the block position image (256x256).</li>
                         <li class="mb-2">Optionally, upload the watermark image if you want to obtain the analysis result.</li>
                         <li class="mb-2">Select the type of image (type) from the dropdown.</li>
-                        <li class="mb-2">Select the alpha value from the dropdown.</li>
+                        <li class="mb-2">Select the alpha value from the dropdown. this value must be the same as those used in the embedding process</li>
                         <li class="mb-2">Click the Submit button to start the extraction process.</li>
                     </ol>
                     <p class="">After submission, you will see the extraction result, robustness analysis (if available), preview of the extracted watermark, and other related links.</p>

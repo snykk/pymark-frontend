@@ -28,7 +28,7 @@
                         </select>
                         <div class="mt-2">
                             <label class="mb-1">Crop Edge (left, top, righ, bottom)</label>
-                            <div class="flex">
+                            <div class="flex space-x-1 lg:space-x-5 md:space-x-2">
                                 <NumberInput id="cropping_edge_left" placeholder="left" />
                                 <NumberInput id="cropping_edge_top" placeholder="Top" />
                                 <NumberInput id="cropping_edge_right" placeholder="Right" />

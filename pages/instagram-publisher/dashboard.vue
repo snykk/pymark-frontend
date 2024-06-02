@@ -107,7 +107,7 @@ const shareInstagramPost = async () => {
 
     if (host_image.value) formData.append("host_image", host_image.value);
     if (watermark_image.value) formData.append("watermark_image", watermark_image.value);
-    formData.append("alpha", "0.1");
+    formData.append("alpha", "0.06");
     formData.append("embed_folder", "pymark-instagram-post");
     formData.append("post_caption", post_caption.value);
 
@@ -123,7 +123,7 @@ const shareInstagramPost = async () => {
 
         // upload post scenario
         const postData = {
-            image_url: responseEmbedding.data.uploaded_file_responses.public_compressed_image.thumbnail_link,
+            image_url: responseEmbedding.data.uploaded_file_responses.public_compressed_image.download_link,
             post_caption: post_caption.value,
         };
 

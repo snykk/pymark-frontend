@@ -79,7 +79,7 @@
                         <li class="mb-1">Fill in the required fields: Host Image (1024x1024) and Watermark Image (256x256).</li>
                         <li class="mb-1">Ensure the host image is 4 times larger than the watermark image in dimensions.</li>
                         <li class="mb-1">Choose the type of embedding (type) from the dropdown.</li>
-                        <li class="mb-1">Select the alpha value from the dropdown (recommended value is 0.05).</li>
+                        <li class="mb-1">Select the alpha value from the dropdown (recommended value is 0.06).</li>
                         <li class="mb-1">Click the Submit button to start the embedding process.</li>
                     </ol>
                     <p class="">After submission, you will see the embedding result, imperceptibility analysis, watermarked image preview, and other related links.</p>
