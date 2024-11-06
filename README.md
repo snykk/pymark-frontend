@@ -119,9 +119,9 @@ This project is licensed under the [MIT License](https://github.com/snykk/pymark
 
 !["My Drive Folder List"](/assets/readme/11.%20My%20Drive%20folder%20list.png)
 
-##### My Drive Folder Detail
+##### My Drive Folder Detail (zoom browser 80%)
 
-!["My Drive Folder Detail"](</assets/readme/12.%20My%20Drive%20folder%20detail%20(zoom%20browser%2080%).png>)
+!["My Drive Folder Detail"](/assets/readme/12.%20My%20Drive%20folder%20detail%20(zoom%20browser%2080%25).png)
 
 </details>
 
@@ -165,9 +165,9 @@ This project is licensed under the [MIT License](https://github.com/snykk/pymark
 
 !["Loading Animation"](/assets/readme/20.%20Additional%20feature%20-%20Loading%20animation%20when%20process%20is%20running%20in%20every%20watermarking%20process.png)
 
-##### Process Result Display
+##### Process Result (zoom browser 33%)
 
-!["Process Result Display"](</assets/readme/21.%20Result%20of%20every%20process%20is%20on%20below%20of%20the%20form%20(zoom%20browser%2033%).png>)
+!["Process Result Display"](/assets/readme/21.%20Result%20of%20every%20process%20is%20on%20below%20of%20the%20form%20(zoom%20browser%2033%25).png)
 
 ##### Toast Popup for Notifications
 
