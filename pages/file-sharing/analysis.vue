@@ -130,8 +130,6 @@
 </template>
 
 <script setup lang="ts">
-import type ImperceptibilityApiResponse from "~/types/ImperceptibilityApiResponse";
-import type RobustnessApiResponse from "~/types/RobustnessApiResponse";
 import { useToast } from "vue-toastification";
 
 definePageMeta({

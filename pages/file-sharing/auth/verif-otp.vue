@@ -57,7 +57,6 @@
 </template>
 <script setup lang="ts">
 import Swal from "sweetalert2";
-import type BaseApiResponse from "~/types/BaseApiResponse";
 import animationData from "~/assets/lotties/loading-animation6.json";
 
 definePageMeta({

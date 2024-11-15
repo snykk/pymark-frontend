@@ -134,8 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import type ImageProcessingApiResponse from "~/types/ImageProcessingResponse";
-import { ProcessingParameters } from "~/types/ProcessingParameters";
+import { ProcessingParameters } from "@/constants/processing-parameters";
 import { useToast } from "vue-toastification";
 
 definePageMeta({

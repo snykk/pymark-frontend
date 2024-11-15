@@ -123,7 +123,6 @@
 </template>
 
 <script setup lang="ts">
-import type ExtractionApiResponse from "~/types/ExtractionApiResponse";
 import { useToast } from "vue-toastification";
 
 definePageMeta({

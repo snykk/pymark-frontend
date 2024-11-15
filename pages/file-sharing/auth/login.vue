@@ -32,8 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import type LoginFileSharingResponse from "~/types/LoginFileSharingResponse";
-
 const filesharing = useFileSharingStore();
 const flasher = useFlashStore();
 const route = useRoute();

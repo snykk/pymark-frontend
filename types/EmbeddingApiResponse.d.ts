@@ -1,6 +1,3 @@
-import type FileInfo from "~/types/FileInfo";
-import type BaseApiResponse from "~/types/BaseApiResponse";
-
 interface EmbeddingData {
     folder_id: string;
     folder_result: number;
@@ -17,5 +14,4 @@ interface EmbeddingData {
     };
 }
 
-// export type EmbeddingApiResponse = BaseApiResponse<EmbeddingData>;
-export default interface EmbeddingApiResponse extends BaseApiResponse<EmbeddingData> {}
+interface EmbeddingApiResponse extends BaseApiResponse<EmbeddingData> {}

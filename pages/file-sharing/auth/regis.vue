@@ -25,8 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import type RegisFileSharingResponse from "~/types/RegisFileSharingResponse";
-
 const filesharing = useFileSharingStore();
 const flasher = useFlashStore();
 

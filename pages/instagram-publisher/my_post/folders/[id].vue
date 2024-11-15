@@ -81,8 +81,6 @@
 </template>
 
 <script setup lang="ts">
-import type MyDriveFolderDetailApiResponse from "~/types/MyDriveFolderDetailApiResponse";
-import type BaseApiResponse from "~/types/BaseApiResponse";
 import { isImageFile, isTextFile } from "~/helpers/extension";
 
 definePageMeta({

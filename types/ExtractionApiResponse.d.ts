@@ -1,6 +1,3 @@
-import type FileInfo from "~/types/FileInfo";
-import type BaseApiResponse from "~/types/BaseApiResponse";
-
 interface ExtractionData {
     folder_id: string;
     folder_result: number;
@@ -17,5 +14,4 @@ interface ExtractionData {
     };
 }
 
-// export type ExtractionApiResponse = BaseApiResponse<ExtractionData>;
-export default interface ExtractionApiResponse extends BaseApiResponse<ExtractionData> {}
+interface ExtractionApiResponse extends BaseApiResponse<ExtractionData> {}

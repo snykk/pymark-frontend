@@ -40,7 +40,7 @@ export default defineNuxtConfig({
                 },
                 {
                     src: "https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js",
-                    body: true, // Placing the script before </body>
+                    // body: true, // Placing the script before </body>
                 },
             ],
         },

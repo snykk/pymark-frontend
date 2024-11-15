@@ -1,5 +1,3 @@
-import type BaseApiResponse from "~/types/BaseApiResponse";
-
 const flasher = useFlashStore();
 
 export default defineNuxtRouteMiddleware(async (to, from) => {

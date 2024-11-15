@@ -95,7 +95,6 @@
 </template>
 
 <script setup lang="ts">
-import type EmbeddingApiResponse from "~/types/EmbeddingApiResponse";
 import { useToast } from "vue-toastification";
 
 definePageMeta({

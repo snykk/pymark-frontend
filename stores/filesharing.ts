@@ -1,6 +1,4 @@
 import { defineStore } from "pinia";
-import type LoginFileSharingResponse from "~/types/LoginFileSharingResponse";
-import type RegisFileSharingResponse from "~/types/RegisFileSharingResponse";
 
 interface FileSharingStore {
     userJWTToken: string;
